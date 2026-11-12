@@ -133,9 +133,9 @@ export const StaffAttendance = () => {
         <div className="flex items-center gap-3">
           <button
             onClick={() => setIsQrModalOpen(true)}
-            className="px-4 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-xl font-bold text-xs shadow-md shadow-blue-500/20 transition flex items-center gap-2 cursor-pointer"
+            className="px-4 py-2.5 bg-charcoal-900 hover:bg-charcoal-800 text-sand-100 rounded-xl font-bold text-xs shadow-md border border-sand-400/50 hover:border-electric-400 transition flex items-center gap-2 cursor-pointer"
           >
-            <QrCode className="w-4 h-4" />
+            <QrCode className="w-4 h-4 text-electric-400" />
             <span>Generate Classroom QR</span>
             {activeQrSession?.isActive && (
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
@@ -330,9 +330,9 @@ export const StaffAttendance = () => {
           <button
             onClick={handleSubmit}
             disabled={isSubmitting || enrolledStudents.length === 0}
-            className="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs sm:text-sm font-semibold flex items-center gap-2 transition shadow-md disabled:opacity-50"
+            className="px-6 py-2.5 bg-charcoal-900 hover:bg-charcoal-800 text-sand-100 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-2 transition shadow-md border border-sand-400/50 hover:border-electric-400 disabled:opacity-50"
           >
-            <Save className="w-4 h-4" />
+            <Save className="w-4 h-4 text-electric-400" />
             <span>{isSubmitting ? 'Recording...' : 'Submit Attendance Record'}</span>
           </button>
         </div>

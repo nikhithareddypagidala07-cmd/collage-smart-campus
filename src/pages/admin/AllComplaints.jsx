@@ -152,9 +152,9 @@ export const AllComplaints = () => {
 
         <button
           onClick={handleExportCSV}
-          className="px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-semibold flex items-center gap-2 transition shadow-xs"
+          className="px-4 py-2.5 bg-charcoal-900 hover:bg-charcoal-800 text-sand-100 font-bold rounded-xl text-xs flex items-center gap-2 transition shadow-xs border border-sand-400/40 hover:border-electric-400"
         >
-          <Download className="w-4 h-4" />
+          <Download className="w-4 h-4 text-electric-400" />
           <span>Export Data (CSV)</span>
         </button>
       </div>

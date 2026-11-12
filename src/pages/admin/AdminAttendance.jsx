@@ -181,9 +181,9 @@ export const AdminAttendance = () => {
         <div className="flex items-center gap-3">
           <button
             onClick={activeTab === 'defaulters' ? handleExportCSV : handleExportQrLogs}
-            className="px-4 py-2.5 bg-white hover:bg-slate-50 border border-slate-300 text-slate-800 rounded-xl text-xs font-semibold shadow-2xs transition flex items-center gap-2 cursor-pointer"
+            className="px-4 py-2.5 bg-sand-100 hover:bg-sand-200 border border-sand-300 text-charcoal-900 rounded-xl text-xs font-bold shadow-xs transition flex items-center gap-2 cursor-pointer"
           >
-            <Download className="w-4 h-4 text-blue-600" />
+            <Download className="w-4 h-4 text-electric-600" />
             <span>{activeTab === 'defaulters' ? 'Export Defaulters CSV' : 'Export Wi-Fi Logs CSV'}</span>
           </button>
         </div>
@@ -301,13 +301,13 @@ export const AdminAttendance = () => {
           onClick={() => setActiveTab('qrAudit')}
           className={`px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 cursor-pointer ${
             activeTab === 'qrAudit'
-              ? 'bg-blue-600 text-white shadow-sm'
-              : 'bg-white text-slate-600 hover:text-slate-900 border border-slate-200'
+              ? 'bg-charcoal-900 text-sand-100 border border-sand-400/40 shadow-sm'
+              : 'bg-white text-charcoal-700 hover:text-charcoal-950 border border-sand-300'
           }`}
         >
-          <QrCode className="w-3.5 h-3.5" />
+          <QrCode className="w-3.5 h-3.5 text-electric-500" />
           <span>QR & Wi-Fi Check-In Audit Logs</span>
-          <span className={`px-1.5 py-0.2 rounded-full text-[10px] ${activeTab === 'qrAudit' ? 'bg-white/20 text-white' : 'bg-blue-100 text-blue-800'}`}>
+          <span className={`px-1.5 py-0.2 rounded-full text-[10px] ${activeTab === 'qrAudit' ? 'bg-electric-600 text-white' : 'bg-sand-200 text-charcoal-900'}`}>
             {(qrAuditLogs || []).length}
           </span>
         </button>

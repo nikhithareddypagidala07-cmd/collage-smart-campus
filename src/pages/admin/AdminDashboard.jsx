@@ -69,16 +69,16 @@ export const AdminDashboard = () => {
   return (
     <div className="space-y-8">
       {/* Executive Welcome Banner */}
-      <div className="bg-gradient-to-r from-navy-950 via-slate-900 to-navy-900 rounded-2xl p-6 sm:p-8 text-white shadow-md flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      <div className="bg-charcoal-950 border border-sand-400/30 rounded-2xl p-6 sm:p-8 text-sand-100 shadow-md flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/20 text-rose-300 text-xs font-semibold mb-2 border border-rose-500/30">
-            <Shield className="w-3.5 h-3.5" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-electric-600/25 text-electric-300 border border-electric-400/30 text-xs font-bold mb-2">
+            <Shield className="w-3.5 h-3.5 text-electric-400" />
             <span>Campus Executive Administration</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
             Institutional Grievance Governance
           </h1>
-          <p className="mt-1 text-xs sm:text-sm text-slate-300 max-w-xl">
+          <p className="mt-1 text-xs sm:text-sm text-sand-200/90 max-w-xl">
             Real-time campus-wide monitoring, SLA escalation controls, and departmental performance auditing.
           </p>
         </div>
@@ -86,14 +86,14 @@ export const AdminDashboard = () => {
         <div className="flex flex-wrap items-center gap-3">
           <Link
             to="/admin/analytics"
-            className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs sm:text-sm rounded-xl shadow-xs transition flex items-center gap-2"
+            className="px-4 py-2.5 bg-sand-200 hover:bg-sand-300 text-charcoal-950 font-bold text-xs sm:text-sm rounded-xl border border-sand-400 shadow-xs transition flex items-center gap-2"
           >
-            <BarChart3 className="w-4 h-4" />
+            <BarChart3 className="w-4 h-4 text-electric-600" />
             <span>Deep Analytics</span>
           </Link>
           <Link
             to="/admin/complaints"
-            className="px-4 py-2.5 bg-slate-800 hover:bg-slate-700 text-white font-semibold text-xs sm:text-sm rounded-xl border border-slate-700 transition"
+            className="px-4 py-2.5 bg-charcoal-900 hover:bg-charcoal-800 text-sand-100 font-bold text-xs sm:text-sm rounded-xl border border-sand-400/40 hover:border-electric-400 transition"
           >
             <span>All Complaints</span>
           </Link>

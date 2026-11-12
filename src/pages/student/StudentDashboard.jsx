@@ -56,35 +56,35 @@ export const StudentDashboard = () => {
   return (
     <div className="space-y-8">
       {/* Welcome Banner */}
-      <div className="bg-gradient-to-r from-blue-700 via-blue-800 to-indigo-900 rounded-2xl p-6 sm:p-8 text-white shadow-md flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      <div className="bg-gradient-to-r from-charcoal-950 via-charcoal-900 to-charcoal-950 border border-sand-400/30 rounded-2xl p-6 sm:p-8 text-sand-100 shadow-md flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div>
-          <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-blue-500/30 text-blue-100 text-xs font-semibold mb-2">
+          <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-electric-600/25 text-electric-300 border border-electric-400/30 text-xs font-bold mb-2">
             <span>Student Portal</span>
             <span>•</span>
             <span>{currentUser?.studentId}</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
             Welcome back, {currentUser?.name}!
           </h1>
-          <p className="mt-1 text-xs sm:text-sm text-blue-100 max-w-xl">
+          <p className="mt-1 text-xs sm:text-sm text-sand-200/90 max-w-xl">
             {currentUser?.course} • {currentUser?.hostelBlock} • Room {currentUser?.roomNo}
           </p>
         </div>
 
         <Link
           to="/student/submit"
-          className="px-5 py-3 bg-white text-blue-700 hover:bg-blue-50 font-bold text-xs sm:text-sm rounded-xl shadow-md flex items-center gap-2 transition whitespace-nowrap"
+          className="px-5 py-3 bg-sand-200 text-charcoal-950 hover:bg-sand-300 font-bold text-xs sm:text-sm rounded-xl shadow-md border border-sand-400 flex items-center gap-2 transition whitespace-nowrap transform hover:-translate-y-0.5"
         >
-          <PlusCircle className="w-4 h-4" />
+          <PlusCircle className="w-4 h-4 text-electric-600" />
           <span>Lodge New Complaint</span>
         </Link>
       </div>
 
       {/* Quick Tracking Search Bar */}
-      <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-xs">
+      <div className="bg-white rounded-xl border border-sand-300 p-4 shadow-xs">
         <form onSubmit={handleQuickTrack} className="flex flex-col sm:flex-row items-center gap-3">
           <div className="relative flex-1 w-full">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+            <Search className="w-4 h-4 text-charcoal-400 absolute left-3 top-3" />
             <input
               type="text"
               value={searchTrackingId}
@@ -93,12 +93,12 @@ export const StudentDashboard = () => {
                 setSearchError('');
               }}
               placeholder="Track complaint by ID (e.g. CMP-2024-8192)..."
-              className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono uppercase"
+              className="w-full pl-9 pr-3 py-2 bg-sand-50/50 border border-sand-300 rounded-lg text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-electric-500 font-mono uppercase text-charcoal-950"
             />
           </div>
           <button
             type="submit"
-            className="w-full sm:w-auto px-5 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-semibold transition"
+            className="w-full sm:w-auto px-5 py-2 bg-charcoal-900 hover:bg-charcoal-800 text-sand-100 rounded-lg text-xs font-bold transition border border-sand-400/40 hover:border-electric-400 shadow-xs"
           >
             Track Status
           </button>

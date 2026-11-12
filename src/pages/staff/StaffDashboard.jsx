@@ -59,28 +59,28 @@ export const StaffDashboard = () => {
   return (
     <div className="space-y-8">
       {/* Header Banner */}
-      <div className="bg-gradient-to-r from-slate-900 via-navy-900 to-slate-800 rounded-2xl p-6 sm:p-8 text-white shadow-md flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      <div className="bg-charcoal-950 border border-sand-400/30 rounded-2xl p-6 sm:p-8 text-sand-100 shadow-md flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/20 text-purple-200 text-xs font-semibold mb-2 border border-purple-500/30">
-            <Building className="w-3.5 h-3.5" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-electric-600/25 text-electric-300 border border-electric-400/30 text-xs font-bold mb-2">
+            <Building className="w-3.5 h-3.5 text-electric-400" />
             <span>{currentUser?.department}</span>
             <span>•</span>
             <span>{currentUser?.staffId}</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
             Staff Resolution Workbench
           </h1>
-          <p className="mt-1 text-xs sm:text-sm text-slate-300">
+          <p className="mt-1 text-xs sm:text-sm text-sand-200/90">
             Logged in as <strong>{currentUser?.name}</strong> ({currentUser?.designation})
           </p>
         </div>
 
         <Link
           to="/staff/assigned"
-          className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-xs sm:text-sm rounded-xl shadow-xs transition flex items-center gap-2"
+          className="px-5 py-2.5 bg-sand-200 hover:bg-sand-300 text-charcoal-950 font-bold text-xs sm:text-sm rounded-xl border border-sand-400 shadow-xs transition flex items-center gap-2"
         >
           <span>View All Department Tasks</span>
-          <ArrowRight className="w-4 h-4" />
+          <ArrowRight className="w-4 h-4 text-electric-600" />
         </Link>
       </div>
 

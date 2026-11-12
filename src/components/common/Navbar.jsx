@@ -62,27 +62,27 @@ export const Navbar = ({ onToggleSidebar }) => {
   };
 
   return (
-    <header className="sticky top-0 z-30 bg-white border-b border-slate-200 shadow-2xs">
+    <header className="sticky top-0 z-30 bg-white border-b border-sand-300 shadow-2xs">
       <div className="px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
         {/* Left: Mobile Menu Toggle & Title */}
         <div className="flex items-center gap-3">
           <button
             onClick={onToggleSidebar}
-            className="lg:hidden p-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition"
+            className="lg:hidden p-2 rounded-lg text-charcoal-700 hover:text-charcoal-950 hover:bg-sand-100 transition"
             aria-label="Toggle navigation menu"
           >
             <Menu className="w-5 h-5" />
           </button>
 
           <Link to="/" className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-xs">
-              <GraduationCap className="w-5 h-5" />
+            <div className="w-9 h-9 rounded-xl bg-charcoal-900 text-sand-100 border border-sand-400/40 flex items-center justify-center shadow-xs">
+              <GraduationCap className="w-5 h-5 text-electric-400" />
             </div>
             <div className="hidden sm:block">
-              <span className="font-bold text-slate-900 tracking-tight text-sm sm:text-base block leading-tight">
+              <span className="font-bold text-charcoal-950 tracking-tight text-sm sm:text-base block leading-tight">
                 Sanjay Ghodawat University
               </span>
-              <span className="text-[10px] font-semibold text-blue-600 uppercase tracking-widest block">
+              <span className="text-[10px] font-bold text-electric-600 uppercase tracking-widest block">
                 SGU Issue Resolution Portal
               </span>
             </div>
@@ -91,19 +91,19 @@ export const Navbar = ({ onToggleSidebar }) => {
 
         {/* Right Action Icons & Profile */}
         <div className="flex items-center gap-2 sm:gap-4">
-          {/* Quick Demo Role Switcher Pill */}
+          {/* Quick Demo Role Switcher Pill in Sand & Charcoal */}
           <div className="relative">
             <button
               onClick={() => setShowRoleSwitcher(!showRoleSwitcher)}
-              className="flex items-center gap-1.5 px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-medium transition border border-slate-200"
+              className="flex items-center gap-1.5 px-2.5 py-1.5 bg-sand-100 hover:bg-sand-200 text-charcoal-900 rounded-lg text-xs font-bold transition border border-sand-300"
               title="Switch user account"
             >
-              <span className="w-2 h-2 rounded-full bg-emerald-500"></span>
-              <span className="hidden md:inline text-slate-500 font-normal">Active Role:</span>
-              <span className="capitalize font-semibold text-slate-800">
+              <span className="w-2 h-2 rounded-full bg-electric-500 animate-pulse"></span>
+              <span className="hidden md:inline text-charcoal-600 font-normal">Active Role:</span>
+              <span className="capitalize font-bold text-charcoal-950">
                 {currentUser ? currentUser.role : 'Guest'}
               </span>
-              <ChevronDown className="w-3.5 h-3.5 text-slate-500" />
+              <ChevronDown className="w-3.5 h-3.5 text-charcoal-600" />
             </button>
 
             {showRoleSwitcher && (

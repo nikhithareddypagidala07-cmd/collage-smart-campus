@@ -83,10 +83,10 @@ export const ClassroomQrModal = ({ isOpen, onClose }) => {
         }`}
       >
         {/* Header */}
-        <div className="px-6 py-4 bg-navy-950 text-white flex items-center justify-between border-b border-slate-800">
+        <div className="px-6 py-4 bg-charcoal-950 text-white flex items-center justify-between border-b border-charcoal-800">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-md">
-              <QrCode className="w-5 h-5" />
+            <div className="w-10 h-10 rounded-xl bg-charcoal-900 text-sand-100 border border-sand-400/40 flex items-center justify-center shadow-md">
+              <QrCode className="w-5 h-5 text-electric-400" />
             </div>
             <div>
               <h2 className="text-base font-bold tracking-tight text-white flex items-center gap-2">
@@ -310,9 +310,9 @@ export const ClassroomQrModal = ({ isOpen, onClose }) => {
 
               <button
                 type="submit"
-                className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md transition flex items-center justify-center gap-2"
+                className="w-full py-3 bg-charcoal-900 hover:bg-charcoal-800 text-sand-100 font-bold text-xs rounded-xl border border-sand-400/50 hover:border-electric-400 shadow-md transition flex items-center justify-center gap-2"
               >
-                <QrCode className="w-4 h-4" />
+                <QrCode className="w-4 h-4 text-electric-400" />
                 <span>Launch Classroom QR Attendance Broadcast</span>
               </button>
             </form>
@@ -327,7 +327,7 @@ export const ClassroomQrModal = ({ isOpen, onClose }) => {
           </span>
           <button
             onClick={onClose}
-            className="px-3 py-1 bg-white hover:bg-slate-100 border border-slate-300 rounded-lg font-medium text-slate-700 transition"
+            className="px-3.5 py-1.5 bg-sand-100 hover:bg-sand-200 border border-sand-300 rounded-lg font-bold text-charcoal-900 transition"
           >
             Close
           </button>

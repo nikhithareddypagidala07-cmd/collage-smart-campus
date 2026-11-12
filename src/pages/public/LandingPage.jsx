@@ -37,94 +37,94 @@ export const LandingPage = () => {
   return (
     <div className="space-y-20 pb-16">
       {/* 1. Hero Section with Sanjay Ghodawat University Campus Photo Background */}
-      <section className="relative overflow-hidden pt-20 pb-24 border-b border-slate-800 min-h-[640px] flex items-center">
-        {/* Background Campus Image with Deep Vignette Gradient for Crisp Text Legibility */}
+      <section className="relative overflow-hidden pt-20 pb-24 border-b border-charcoal-800 min-h-[640px] flex items-center">
+        {/* Background Campus Image with Deep Charcoal Vignette Gradient for Crisp Text Legibility */}
         <div className="absolute inset-0 z-0">
           <img
             src="/sgu_campus_hero.jpg"
             alt="Sanjay Ghodawat University Campus"
             className="w-full h-full object-cover object-center brightness-95"
           />
-          {/* Multi-layered dark navy overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-navy-950/80 to-navy-950/65 backdrop-blur-[1px]"></div>
+          {/* Multi-layered dark charcoal overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-charcoal-950 via-charcoal-900/85 to-charcoal-950/70 backdrop-blur-[1px]"></div>
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
           <div className="text-center max-w-3xl mx-auto">
             {/* Pill Banner */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-500/20 text-blue-300 border border-blue-400/30 text-xs font-semibold mb-6 shadow-lg backdrop-blur-md">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-              Sanjay Ghodawat University • Integrated Campus Portal
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-electric-600/25 text-electric-300 border border-electric-400/40 text-xs font-semibold mb-6 shadow-lg backdrop-blur-md">
+              <span className="w-2 h-2 rounded-full bg-electric-400 animate-pulse shadow-[0_0_8px_#0066ff]"></span>
+              <span className="text-sand-100 font-medium">Sanjay Ghodawat University • Integrated Campus Portal</span>
             </div>
 
             {/* Main Headline */}
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight leading-tight sm:leading-none drop-shadow-md">
-              Your Campus. <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-300 to-indigo-300">Your Voice.</span> Our Responsibility.
+              Your Campus. <span className="text-transparent bg-clip-text bg-gradient-to-r from-electric-400 via-cyan-300 to-sand-200">Your Voice.</span> Our Responsibility.
             </h1>
 
             {/* Short Description */}
-            <p className="mt-6 text-base sm:text-lg text-slate-200 leading-relaxed max-w-2xl mx-auto drop-shadow-sm font-normal">
+            <p className="mt-6 text-base sm:text-lg text-sand-100/90 leading-relaxed max-w-2xl mx-auto drop-shadow-sm font-normal">
               The official centralized platform for Sanjay Ghodawat University to streamline student grievances, track SLA resolution across 10 departments, and monitor academic attendance compliance.
             </p>
 
-            {/* Action Buttons */}
+            {/* Action Buttons: Charcoal & Sand with Electric Blue Accents */}
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3 sm:gap-4">
               <Link
                 to="/student/submit"
-                className="px-6 py-3.5 bg-blue-600 hover:bg-blue-500 text-white font-bold text-sm rounded-xl shadow-lg shadow-blue-600/30 flex items-center gap-2 transition transform hover:-translate-y-0.5"
+                className="px-6 py-3.5 bg-charcoal-900 hover:bg-charcoal-800 text-sand-100 font-bold text-sm rounded-xl border border-sand-400/60 shadow-lg shadow-charcoal-950/60 flex items-center gap-2 transition transform hover:-translate-y-0.5 hover:border-electric-400 hover:shadow-electric-600/25"
               >
                 <span>Submit Grievance</span>
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-4 h-4 text-electric-400" />
               </Link>
               <Link
                 to="/login?tab=student"
-                className="px-5 py-3.5 bg-white/10 hover:bg-white/20 text-white font-semibold text-sm rounded-xl border border-white/20 shadow-md backdrop-blur-md flex items-center gap-2 transition transform hover:-translate-y-0.5"
+                className="px-5 py-3.5 bg-sand-200 hover:bg-sand-300 text-charcoal-950 font-bold text-sm rounded-xl border border-sand-400 shadow-md flex items-center gap-2 transition transform hover:-translate-y-0.5"
               >
-                <GraduationCap className="w-4 h-4 text-cyan-300" />
+                <GraduationCap className="w-4 h-4 text-electric-600" />
                 <span>Student Portal</span>
               </Link>
               <Link
                 to="/login?tab=staff"
-                className="px-5 py-3.5 bg-white/10 hover:bg-white/20 text-white font-semibold text-sm rounded-xl border border-white/20 shadow-md backdrop-blur-md flex items-center gap-2 transition transform hover:-translate-y-0.5"
+                className="px-5 py-3.5 bg-charcoal-900/90 hover:bg-charcoal-800 text-sand-100 font-semibold text-sm rounded-xl border border-sand-400/40 shadow-md backdrop-blur-md flex items-center gap-2 transition transform hover:-translate-y-0.5 hover:border-electric-400"
               >
-                <Briefcase className="w-4 h-4 text-purple-300" />
+                <Briefcase className="w-4 h-4 text-electric-400" />
                 <span>Staff Portal</span>
               </Link>
               <Link
                 to="/login?tab=admin"
-                className="px-5 py-3.5 bg-slate-900/80 hover:bg-slate-900 text-white font-semibold text-sm rounded-xl border border-slate-700 shadow-md backdrop-blur-md flex items-center gap-2 transition transform hover:-translate-y-0.5"
+                className="px-5 py-3.5 bg-sand-100/90 hover:bg-sand-200 text-charcoal-950 font-bold text-sm rounded-xl border border-sand-300 shadow-md backdrop-blur-md flex items-center gap-2 transition transform hover:-translate-y-0.5"
               >
-                <Shield className="w-4 h-4 text-rose-400" />
+                <Shield className="w-4 h-4 text-charcoal-800" />
                 <span>Admin Console</span>
               </Link>
             </div>
 
             {/* Institutional Security Notice */}
-            <div className="mt-6 p-3 bg-white/10 border border-white/15 rounded-xl text-xs text-slate-200 inline-flex items-center gap-2 backdrop-blur-md shadow-sm">
-              <ShieldCheck className="w-4 h-4 text-emerald-400 flex-shrink-0" />
+            <div className="mt-6 p-3 bg-charcoal-900/80 border border-sand-400/30 rounded-xl text-xs text-sand-100/90 inline-flex items-center gap-2 backdrop-blur-md shadow-sm">
+              <ShieldCheck className="w-4 h-4 text-electric-400 flex-shrink-0" />
               <span>
-                <strong>SGU Authorized Access:</strong> Secure Single Sign-On (SSO) enabled for students, faculty, and administrative staff.
+                <strong className="text-white">SGU Authorized Access:</strong> Secure Single Sign-On (SSO) enabled for students, faculty, and administrative staff.
               </span>
             </div>
           </div>
 
           {/* Quick Metrics Strip with Glassmorphism */}
           <div className="mt-14 grid grid-cols-2 lg:grid-cols-4 gap-4 max-w-4xl mx-auto">
-            <div className="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/15 text-center shadow-lg text-white">
-              <span className="block text-3xl font-extrabold text-cyan-300">22+</span>
-              <span className="text-xs text-slate-300 font-medium">Logged Campus Grievances</span>
+            <div className="bg-charcoal-900/85 backdrop-blur-md p-4 rounded-2xl border border-sand-400/30 text-center shadow-lg text-white">
+              <span className="block text-3xl font-extrabold text-electric-400">22+</span>
+              <span className="text-xs text-sand-100/80 font-medium">Logged Campus Grievances</span>
             </div>
-            <div className="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/15 text-center shadow-lg text-white">
-              <span className="block text-3xl font-extrabold text-emerald-400">{totalResolved}</span>
-              <span className="text-xs text-slate-300 font-medium">Resolved Complaints</span>
+            <div className="bg-charcoal-900/85 backdrop-blur-md p-4 rounded-2xl border border-sand-400/30 text-center shadow-lg text-white">
+              <span className="block text-3xl font-extrabold text-sand-200">{totalResolved}</span>
+              <span className="text-xs text-sand-100/80 font-medium">Resolved Complaints</span>
             </div>
-            <div className="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/15 text-center shadow-lg text-white">
+            <div className="bg-charcoal-900/85 backdrop-blur-md p-4 rounded-2xl border border-sand-400/30 text-center shadow-lg text-white">
               <span className="block text-3xl font-extrabold text-white">10</span>
-              <span className="text-xs text-slate-300 font-medium">Campus Departments</span>
+              <span className="text-xs text-sand-100/80 font-medium">Campus Departments</span>
             </div>
-            <div className="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/15 text-center shadow-lg text-white">
-              <span className="block text-3xl font-extrabold text-purple-300">&lt; 24h</span>
-              <span className="text-xs text-slate-300 font-medium">Target Avg SLA</span>
+            <div className="bg-charcoal-900/85 backdrop-blur-md p-4 rounded-2xl border border-sand-400/30 text-center shadow-lg text-white">
+              <span className="block text-3xl font-extrabold text-electric-300">&lt; 24h</span>
+              <span className="text-xs text-sand-100/80 font-medium">Target Avg SLA</span>
             </div>
           </div>
         </div>
@@ -379,23 +379,24 @@ export const LandingPage = () => {
 
       {/* 6. Bottom Banner CTA */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rounded-3xl bg-gradient-to-r from-blue-700 to-indigo-800 p-8 sm:p-12 text-white text-center shadow-xl relative overflow-hidden">
-          <h3 className="text-2xl sm:text-4xl font-extrabold mb-4">
+        <div className="rounded-3xl bg-gradient-to-r from-charcoal-950 via-charcoal-900 to-charcoal-950 p-8 sm:p-12 text-sand-100 text-center shadow-2xl border border-sand-400/30 relative overflow-hidden">
+          <div className="absolute top-0 right-1/4 w-72 h-72 bg-electric-600/10 rounded-full blur-3xl pointer-events-none"></div>
+          <h3 className="text-2xl sm:text-4xl font-extrabold mb-4 text-white">
             Ready to experience frictionless campus issue resolution?
           </h3>
-          <p className="text-blue-100 text-sm sm:text-base max-w-xl mx-auto mb-8 leading-relaxed">
+          <p className="text-sand-200 text-sm sm:text-base max-w-xl mx-auto mb-8 leading-relaxed">
             Submit your first issue or test the system with our one-click simulated student, staff, and admin accounts.
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-4">
+          <div className="flex flex-wrap items-center justify-center gap-4 relative z-10">
             <Link
               to="/student/submit"
-              className="px-6 py-3 bg-white text-blue-700 font-bold text-sm rounded-xl hover:bg-blue-50 shadow-md transition"
+              className="px-6 py-3.5 bg-sand-200 hover:bg-sand-300 text-charcoal-950 font-bold text-sm rounded-xl shadow-md border border-sand-400 transition transform hover:-translate-y-0.5"
             >
               Submit a Campus Issue
             </Link>
             <Link
               to="/login"
-              className="px-6 py-3 bg-blue-900/60 hover:bg-blue-900 text-white border border-blue-400 font-bold text-sm rounded-xl transition"
+              className="px-6 py-3.5 bg-charcoal-900 hover:bg-charcoal-800 text-sand-100 border border-sand-400/50 hover:border-electric-400 font-bold text-sm rounded-xl transition shadow-sm transform hover:-translate-y-0.5"
             >
               Browse Demo Accounts
             </Link>

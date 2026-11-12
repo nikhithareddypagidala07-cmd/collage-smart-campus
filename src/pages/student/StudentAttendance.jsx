@@ -82,25 +82,25 @@ export const StudentAttendance = () => {
       </div>
 
       {/* Smart QR Attendance & Wi-Fi Check-In Card */}
-      <div className="bg-gradient-to-r from-blue-900 via-indigo-950 to-slate-900 text-white rounded-3xl p-6 shadow-xl border border-blue-700/50 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      <div className="bg-gradient-to-r from-charcoal-950 via-charcoal-900 to-charcoal-950 text-sand-100 rounded-3xl p-6 shadow-xl border border-sand-400/30 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div className="flex items-start gap-4">
-          <div className="w-14 h-14 rounded-2xl bg-blue-600/30 text-blue-300 border border-blue-400/30 flex items-center justify-center flex-shrink-0 shadow-inner">
-            <QrCode className="w-8 h-8 text-blue-300" />
+          <div className="w-14 h-14 rounded-2xl bg-charcoal-900 text-sand-100 border border-sand-400/40 flex items-center justify-center flex-shrink-0 shadow-inner">
+            <QrCode className="w-8 h-8 text-electric-400" />
           </div>
           <div>
             <div className="flex items-center gap-2 mb-1.5">
-              <span className="text-[10px] font-bold uppercase tracking-wider bg-blue-500/20 text-blue-300 border border-blue-400/30 px-2.5 py-0.5 rounded-full">
+              <span className="text-[10px] font-bold uppercase tracking-wider bg-electric-600/25 text-electric-300 border border-electric-400/40 px-2.5 py-0.5 rounded-full">
                 Classroom Digital Attendance
               </span>
-              <span className="inline-flex items-center gap-1 text-[11px] font-mono text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded-md border border-emerald-500/40">
-                <Wifi className="w-3 h-3" />
+              <span className="inline-flex items-center gap-1 text-[11px] font-mono text-sand-100 bg-charcoal-900 px-2 py-0.5 rounded-md border border-sand-400/30">
+                <Wifi className="w-3 h-3 text-electric-400" />
                 {simulatedStudentWifi}
               </span>
             </div>
             <h2 className="text-lg font-bold text-white tracking-tight">
               Classroom QR Code Check-In
             </h2>
-            <p className="text-xs text-blue-200 mt-0.5 max-w-xl">
+            <p className="text-xs text-sand-200 mt-0.5 max-w-xl">
               Scan the live lecture QR code displayed on the classroom screen. Automatically verifies your presence via <strong>Sanjay Ghodawat University Wi-Fi</strong>.
             </p>
           </div>
@@ -108,9 +108,9 @@ export const StudentAttendance = () => {
 
         <button
           onClick={() => setIsQrScannerOpen(true)}
-          className="w-full md:w-auto px-6 py-3.5 bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-bold text-xs rounded-xl shadow-lg shadow-blue-500/30 transition flex items-center justify-center gap-2 group whitespace-nowrap cursor-pointer"
+          className="w-full md:w-auto px-6 py-3.5 bg-sand-200 hover:bg-sand-300 text-charcoal-950 font-bold text-xs rounded-xl shadow-lg border border-sand-400 transition flex items-center justify-center gap-2 group whitespace-nowrap cursor-pointer transform hover:-translate-y-0.5"
         >
-          <Camera className="w-4 h-4" />
+          <Camera className="w-4 h-4 text-electric-600" />
           <span>Scan Lecture QR Code</span>
           <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
         </button>
