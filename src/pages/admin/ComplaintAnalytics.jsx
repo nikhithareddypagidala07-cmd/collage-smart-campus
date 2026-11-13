@@ -76,7 +76,7 @@ export const ComplaintAnalytics = () => {
     { priority: 'Urgent', count: urgentCount, fill: '#dc2626' },
     { priority: 'High', count: highCount, fill: '#ea580c' },
     { priority: 'Medium', count: mediumCount, fill: '#d97706' },
-    { priority: 'Low', count: lowCount, fill: '#64748b' }
+    { priority: 'Low', count: lowCount, fill: '#a8a29e' }
   ];
 
   // 5. Department-wise Complaint Statistics (Bar Chart)
@@ -101,15 +101,15 @@ export const ComplaintAnalytics = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Institutional Grievance Analytics & Insights</h1>
-          <p className="text-xs sm:text-sm text-slate-500">
+          <h1 className="text-2xl font-bold text-sand-100">Institutional Grievance Analytics & Insights</h1>
+          <p className="text-xs sm:text-sm text-sand-300">
             Statistical breakdown of resolution rates, category loads, and departmental compliance
           </p>
         </div>
 
         <button
           onClick={handlePrint}
-          className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-semibold flex items-center gap-2 transition no-print shadow-xs"
+          className="px-4 py-2 bg-charcoal-800 hover:bg-charcoal-700 text-sand-100 border border-sand-400/40 hover:border-electric-400 rounded-xl text-xs font-semibold flex items-center gap-2 transition no-print shadow-xs"
         >
           <Download className="w-4 h-4" />
           <span>Generate Official Report</span>
@@ -118,37 +118,37 @@ export const ComplaintAnalytics = () => {
 
       {/* Top 3 Metric Callouts */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
+        <div className="bg-charcoal-900 p-5 rounded-2xl border border-charcoal-800 shadow-xl flex items-center gap-4 text-sand-100">
+          <div className="w-12 h-12 rounded-xl bg-emerald-950/80 text-emerald-400 border border-emerald-800 flex items-center justify-center font-bold">
             <CheckCircle2 className="w-6 h-6" />
           </div>
           <div>
-            <span className="text-xs text-slate-400 uppercase font-semibold">Institutional Clearance Rate</span>
-            <h3 className="text-2xl font-extrabold text-slate-900">
+            <span className="text-xs text-sand-400 uppercase font-semibold">Institutional Clearance Rate</span>
+            <h3 className="text-2xl font-extrabold text-sand-100">
               {Math.round((resolvedCount / (complaints.length || 1)) * 100)}%
             </h3>
             <span className="text-[11px] text-emerald-600 font-medium">+4.2% vs previous semester</span>
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center font-bold">
+        <div className="bg-charcoal-900 p-5 rounded-2xl border border-charcoal-800 shadow-xl flex items-center gap-4 text-sand-100">
+          <div className="w-12 h-12 rounded-xl bg-charcoal-950 text-electric-400 border border-charcoal-700 flex items-center justify-center font-bold">
             <Clock className="w-6 h-6" />
           </div>
           <div>
-            <span className="text-xs text-slate-400 uppercase font-semibold">Average Resolution Time</span>
-            <h3 className="text-2xl font-extrabold text-slate-900">24.6 Hours</h3>
+            <span className="text-xs text-sand-400 uppercase font-semibold">Average Resolution Time</span>
+            <h3 className="text-2xl font-extrabold text-sand-100">24.6 Hours</h3>
             <span className="text-[11px] text-blue-600 font-medium">Well within 48h campus SLA mandate</span>
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center font-bold">
+        <div className="bg-charcoal-900 p-5 rounded-2xl border border-charcoal-800 shadow-xl flex items-center gap-4 text-sand-100">
+          <div className="w-12 h-12 rounded-xl bg-charcoal-950 text-sand-200 border border-charcoal-700 flex items-center justify-center font-bold">
             <Layers className="w-6 h-6" />
           </div>
           <div>
-            <span className="text-xs text-slate-400 uppercase font-semibold">Active Service Departments</span>
-            <h3 className="text-2xl font-extrabold text-slate-900">{departments.length} Units</h3>
+            <span className="text-xs text-sand-400 uppercase font-semibold">Active Service Departments</span>
+            <h3 className="text-2xl font-extrabold text-sand-100">{departments.length} Units</h3>
             <span className="text-[11px] text-purple-600 font-medium">100% digital triage enabled</span>
           </div>
         </div>
@@ -157,10 +157,10 @@ export const ComplaintAnalytics = () => {
       {/* Row 1: Donut (Resolution) & Pie (Category) */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Chart 1: Resolution Statistics (Donut Chart) */}
-        <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs">
+        <div className="bg-charcoal-900 rounded-2xl border border-charcoal-800 p-6 shadow-xl text-sand-100">
           <div className="mb-4">
-            <h3 className="text-base font-bold text-slate-900">Complaint Resolution Statistics</h3>
-            <p className="text-xs text-slate-500">Distribution of resolution lifecycle states</p>
+            <h3 className="text-base font-bold text-sand-100">Complaint Resolution Statistics</h3>
+            <p className="text-xs text-sand-300">Distribution of resolution lifecycle states</p>
           </div>
 
           <div className="h-72 flex items-center justify-center">
@@ -181,12 +181,12 @@ export const ComplaintAnalytics = () => {
                 </Pie>
                 <Tooltip
                   formatter={(val, name) => [`${val} complaints`, name]}
-                  contentStyle={{ backgroundColor: '#fff', borderRadius: '12px', border: '1px solid #e2e8f0', fontSize: '12px' }}
+                  contentStyle={{ backgroundColor: '#18181b', borderRadius: '12px', border: '1px solid #3f3f46', color: '#f5f5f4', fontSize: '12px' }}
                 />
                 <Legend
                   verticalAlign="bottom"
                   height={36}
-                  formatter={(val) => <span className="text-xs text-slate-700 font-medium">{val}</span>}
+                  formatter={(val) => <span className="text-xs text-sand-200 font-medium">{val}</span>}
                 />
               </PieChart>
             </ResponsiveContainer>
@@ -194,10 +194,10 @@ export const ComplaintAnalytics = () => {
         </div>
 
         {/* Chart 2: Complaints by Category (Pie Chart) */}
-        <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs">
+        <div className="bg-charcoal-900 rounded-2xl border border-charcoal-800 p-6 shadow-xl text-sand-100">
           <div className="mb-4">
-            <h3 className="text-base font-bold text-slate-900">Complaints by Category (10 Divisions)</h3>
-            <p className="text-xs text-slate-500">Volume proportion across grievance domains</p>
+            <h3 className="text-base font-bold text-sand-100">Complaints by Category (10 Divisions)</h3>
+            <p className="text-xs text-sand-300">Volume proportion across grievance domains</p>
           </div>
 
           <div className="h-72 flex items-center justify-center">
@@ -218,7 +218,7 @@ export const ComplaintAnalytics = () => {
                 </Pie>
                 <Tooltip
                   formatter={(val, name) => [`${val} complaints`, name]}
-                  contentStyle={{ backgroundColor: '#fff', borderRadius: '12px', border: '1px solid #e2e8f0', fontSize: '12px' }}
+                  contentStyle={{ backgroundColor: '#18181b', borderRadius: '12px', border: '1px solid #3f3f46', color: '#f5f5f4', fontSize: '12px' }}
                 />
               </PieChart>
             </ResponsiveContainer>
@@ -229,26 +229,26 @@ export const ComplaintAnalytics = () => {
       {/* Row 2: Monthly Trend (Bar Chart) & Priority Breakdown (Bar Chart) */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Chart 3: Monthly Complaint Submissions (Bar Chart) */}
-        <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs">
+        <div className="bg-charcoal-900 rounded-2xl border border-charcoal-800 p-6 shadow-xl text-sand-100">
           <div className="mb-4">
-            <h3 className="text-base font-bold text-slate-900">Monthly Complaint Submissions & Output</h3>
-            <p className="text-xs text-slate-500">6-Month historical intake vs resolved output</p>
+            <h3 className="text-base font-bold text-sand-100">Monthly Complaint Submissions & Output</h3>
+            <p className="text-xs text-sand-300">6-Month historical intake vs resolved output</p>
           </div>
 
           <div className="h-72">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={monthlyData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#64748b' }} />
-                <YAxis allowDecimals={false} tick={{ fontSize: 11, fill: '#64748b' }} />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#27272a" />
+                <XAxis dataKey="month" tick={{ fontSize: 11, fill: '#a8a29e' }} />
+                <YAxis allowDecimals={false} tick={{ fontSize: 11, fill: '#a8a29e' }} />
                 <Tooltip
-                  contentStyle={{ backgroundColor: '#fff', borderRadius: '12px', border: '1px solid #e2e8f0', fontSize: '12px' }}
+                  contentStyle={{ backgroundColor: '#18181b', borderRadius: '12px', border: '1px solid #3f3f46', color: '#f5f5f4', fontSize: '12px' }}
                 />
                 <Legend
                   verticalAlign="top"
                   align="right"
                   height={32}
-                  formatter={(val) => <span className="text-xs text-slate-700 font-medium capitalize">{val}</span>}
+                  formatter={(val) => <span className="text-xs text-sand-200 font-medium capitalize">{val}</span>}
                 />
                 <Bar dataKey="submissions" fill="#3b82f6" radius={[4, 4, 0, 0]} name="Submissions" />
                 <Bar dataKey="resolved" fill="#10b981" radius={[4, 4, 0, 0]} name="Resolved" />
@@ -258,21 +258,21 @@ export const ComplaintAnalytics = () => {
         </div>
 
         {/* Chart 4: Complaint Priority Distribution */}
-        <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs">
+        <div className="bg-charcoal-900 rounded-2xl border border-charcoal-800 p-6 shadow-xl text-sand-100">
           <div className="mb-4">
-            <h3 className="text-base font-bold text-slate-900">Complaint Priority Distribution</h3>
-            <p className="text-xs text-slate-500">Caseload urgency breakdown across the institution</p>
+            <h3 className="text-base font-bold text-sand-100">Complaint Priority Distribution</h3>
+            <p className="text-xs text-sand-300">Caseload urgency breakdown across the institution</p>
           </div>
 
           <div className="h-72">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={priorityData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                <XAxis dataKey="priority" tick={{ fontSize: 11, fill: '#64748b' }} />
-                <YAxis allowDecimals={false} tick={{ fontSize: 11, fill: '#64748b' }} />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#27272a" />
+                <XAxis dataKey="priority" tick={{ fontSize: 11, fill: '#a8a29e' }} />
+                <YAxis allowDecimals={false} tick={{ fontSize: 11, fill: '#a8a29e' }} />
                 <Tooltip
                   formatter={(val) => [`${val} complaints`, 'Volume']}
-                  contentStyle={{ backgroundColor: '#fff', borderRadius: '12px', border: '1px solid #e2e8f0', fontSize: '12px' }}
+                  contentStyle={{ backgroundColor: '#18181b', borderRadius: '12px', border: '1px solid #3f3f46', color: '#f5f5f4', fontSize: '12px' }}
                 />
                 <Bar dataKey="count" radius={[6, 6, 0, 0]}>
                   {priorityData.map((entry, index) => (
@@ -286,28 +286,28 @@ export const ComplaintAnalytics = () => {
       </div>
 
       {/* Row 3: Department-wise Complaint Statistics (Bar Chart) */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs">
+      <div className="bg-charcoal-900 rounded-2xl border border-charcoal-800 p-6 shadow-xl text-sand-100">
         <div className="mb-4">
-          <h3 className="text-base font-bold text-slate-900">Department-Wise Complaint Statistics</h3>
-          <p className="text-xs text-slate-500">Workload, ongoing repairs, and resolutions across all 10 campus departments</p>
+          <h3 className="text-base font-bold text-sand-100">Department-Wise Complaint Statistics</h3>
+          <p className="text-xs text-sand-300">Workload, ongoing repairs, and resolutions across all 10 campus departments</p>
         </div>
 
         <div className="h-80">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={departmentData} margin={{ top: 10, right: 10, left: -10, bottom: 25 }}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-              <XAxis dataKey="department" tick={{ fontSize: 10, fill: '#64748b' }} angle={-25} textAnchor="end" />
-              <YAxis allowDecimals={false} tick={{ fontSize: 11, fill: '#64748b' }} />
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#27272a" />
+              <XAxis dataKey="department" tick={{ fontSize: 10, fill: '#a8a29e' }} angle={-25} textAnchor="end" />
+              <YAxis allowDecimals={false} tick={{ fontSize: 11, fill: '#a8a29e' }} />
               <Tooltip
                 formatter={(val, name, item) => [`${val} complaints`, name === 'resolved' ? 'Resolved' : 'Active Repair']}
                 labelFormatter={(name, payload) => payload?.[0]?.payload?.fullName || name}
-                contentStyle={{ backgroundColor: '#fff', borderRadius: '12px', border: '1px solid #e2e8f0', fontSize: '12px' }}
+                contentStyle={{ backgroundColor: '#18181b', borderRadius: '12px', border: '1px solid #3f3f46', color: '#f5f5f4', fontSize: '12px' }}
               />
               <Legend
                 verticalAlign="top"
                 align="right"
                 height={32}
-                formatter={(val) => <span className="text-xs text-slate-700 font-medium capitalize">{val}</span>}
+                formatter={(val) => <span className="text-xs text-sand-200 font-medium capitalize">{val}</span>}
               />
               <Bar dataKey="active" fill="#f97316" radius={[4, 4, 0, 0]} name="Active Repairs" />
               <Bar dataKey="resolved" fill="#10b981" radius={[4, 4, 0, 0]} name="Resolved" />

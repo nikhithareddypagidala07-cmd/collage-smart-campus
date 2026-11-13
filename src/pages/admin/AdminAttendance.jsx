@@ -168,12 +168,12 @@ export const AdminAttendance = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800 text-xs font-semibold mb-1">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-charcoal-900 text-electric-300 border border-electric-400/30 text-xs font-semibold mb-1">
             <GraduationCap className="w-3.5 h-3.5" />
             <span>Sanjay Ghodawat University • Academic Attendance & Compliance Center</span>
           </div>
-          <h1 className="text-2xl font-bold text-slate-900">Attendance Monitoring & Audit</h1>
-          <p className="text-xs sm:text-sm text-slate-500">
+          <h1 className="text-2xl font-bold text-sand-100">Attendance Monitoring & Audit</h1>
+          <p className="text-xs sm:text-sm text-sand-300">
             University-wide attendance compliance oversight, low-attendance interventions, and classroom Wi-Fi verification
           </p>
         </div>
@@ -181,9 +181,9 @@ export const AdminAttendance = () => {
         <div className="flex items-center gap-3">
           <button
             onClick={activeTab === 'defaulters' ? handleExportCSV : handleExportQrLogs}
-            className="px-4 py-2.5 bg-sand-100 hover:bg-sand-200 border border-sand-300 text-charcoal-900 rounded-xl text-xs font-bold shadow-xs transition flex items-center gap-2 cursor-pointer"
+            className="px-4 py-2.5 bg-charcoal-900 hover:bg-charcoal-800 border border-sand-400/40 text-sand-100 rounded-xl text-xs font-bold shadow-xs transition flex items-center gap-2 cursor-pointer"
           >
-            <Download className="w-4 h-4 text-electric-600" />
+            <Download className="w-4 h-4 text-electric-400" />
             <span>{activeTab === 'defaulters' ? 'Export Defaulters CSV' : 'Export Wi-Fi Logs CSV'}</span>
           </button>
         </div>
@@ -191,24 +191,24 @@ export const AdminAttendance = () => {
 
       {/* 4 Executive KPI Cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+        <div className="bg-charcoal-900 p-5 rounded-2xl border border-charcoal-800 shadow-xl text-sand-100">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Campus Compliance</span>
-            <div className="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center">
+            <span className="text-xs font-semibold text-sand-400 uppercase tracking-wider">Campus Compliance</span>
+            <div className="w-8 h-8 rounded-lg bg-emerald-950/80 text-emerald-400 border border-emerald-800 flex items-center justify-center">
               <CheckCircle2 className="w-4 h-4" />
             </div>
           </div>
           <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-2xl sm:text-3xl font-extrabold text-slate-900">{complianceRate}%</span>
+            <span className="text-2xl sm:text-3xl font-extrabold text-sand-100">{complianceRate}%</span>
             <span className="text-xs text-emerald-600 font-semibold">&gt; 75% Criteria</span>
           </div>
           <span className="text-[11px] text-slate-400 mt-1 block">Students exam eligible</span>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-rose-200 shadow-xs">
+        <div className="bg-charcoal-900 p-5 rounded-2xl border border-rose-900/80 shadow-xl text-sand-100">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-rose-600 uppercase tracking-wider">Defaulters (&lt; 75%)</span>
-            <div className="w-8 h-8 rounded-lg bg-rose-100 text-rose-700 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-rose-950/80 text-rose-400 border border-rose-800 flex items-center justify-center">
               <AlertTriangle className="w-4 h-4" />
             </div>
           </div>
@@ -219,43 +219,43 @@ export const AdminAttendance = () => {
           <span className="text-[11px] text-slate-400 mt-1 block">Debarment risk students</span>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+        <div className="bg-charcoal-900 p-5 rounded-2xl border border-charcoal-800 shadow-xl text-sand-100">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-blue-600 uppercase tracking-wider">QR Wi-Fi Check-ins</span>
-            <div className="w-8 h-8 rounded-lg bg-blue-100 text-blue-700 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-charcoal-950 text-electric-400 border border-charcoal-700 flex items-center justify-center">
               <Wifi className="w-4 h-4" />
             </div>
           </div>
           <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-2xl sm:text-3xl font-extrabold text-blue-700">{verifiedQrScans}</span>
+            <span className="text-2xl sm:text-3xl font-extrabold text-electric-400">{verifiedQrScans}</span>
             <span className="text-xs text-blue-600 font-semibold">Verified</span>
           </div>
           <span className="text-[11px] text-slate-400 mt-1 block">{wifiConfig.authorizedSSID}</span>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-xs">
+        <div className="bg-charcoal-900 p-5 rounded-2xl border border-charcoal-800 shadow-xl text-sand-100">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Lectures Recorded</span>
-            <div className="w-8 h-8 rounded-lg bg-purple-100 text-purple-700 flex items-center justify-center">
+            <span className="text-xs font-semibold text-sand-400 uppercase tracking-wider">Lectures Recorded</span>
+            <div className="w-8 h-8 rounded-lg bg-charcoal-950 text-sand-200 border border-charcoal-700 flex items-center justify-center">
               <Calendar className="w-4 h-4" />
             </div>
           </div>
           <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-2xl sm:text-3xl font-extrabold text-slate-900">{sessions.length}</span>
-            <span className="text-xs text-slate-500 font-semibold">Sessions</span>
+            <span className="text-2xl sm:text-3xl font-extrabold text-sand-100">{sessions.length}</span>
+            <span className="text-xs text-sand-400 font-semibold">Sessions</span>
           </div>
           <span className="text-[11px] text-slate-400 mt-1 block">Across 5 engineering branches</span>
         </div>
       </div>
 
       {/* Recharts Analytics Chart */}
-      <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-xs">
+      <div className="bg-charcoal-900 p-6 rounded-2xl border border-charcoal-800 shadow-xl text-sand-100">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h3 className="text-sm font-bold text-slate-900">Branch-Wise Average Attendance Comparison</h3>
-            <p className="text-xs text-slate-500">Benchmark comparison against Sanjay Ghodawat University 75% standard</p>
+            <h3 className="text-sm font-bold text-sand-100">Branch-Wise Average Attendance Comparison</h3>
+            <p className="text-xs text-sand-400">Benchmark comparison against Sanjay Ghodawat University 75% standard</p>
           </div>
-          <span className="text-xs font-semibold px-2.5 py-1 bg-blue-50 text-blue-700 rounded-lg border border-blue-200">
+          <span className="text-xs font-semibold px-2.5 py-1 bg-electric-950/80 text-electric-300 rounded-lg border border-electric-800">
             75% Mandatory Benchmark
           </span>
         </div>
@@ -263,16 +263,16 @@ export const AdminAttendance = () => {
         <div className="h-64">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={courseAverages} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-              <XAxis dataKey="name" tick={{ fontSize: 11, fill: '#64748b' }} />
-              <YAxis domain={[0, 100]} tick={{ fontSize: 11, fill: '#64748b' }} />
+              <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#27272a" />
+              <XAxis dataKey="name" tick={{ fontSize: 11, fill: '#a8a29e' }} />
+              <YAxis domain={[0, 100]} tick={{ fontSize: 11, fill: '#a8a29e' }} />
               <Tooltip
                 formatter={(val) => [`${val}%`, 'Attendance Average']}
-                contentStyle={{ backgroundColor: '#fff', borderRadius: '12px', border: '1px solid #e2e8f0', fontSize: '12px' }}
+                contentStyle={{ backgroundColor: '#18181b', borderRadius: '12px', border: '1px solid #3f3f46', color: '#f5f5f4', fontSize: '12px' }}
               />
               <Bar dataKey="average" radius={[6, 6, 0, 0]}>
                 {courseAverages.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.average < 75 ? '#dc2626' : '#2563eb'} />
+                  <Cell key={`cell-${index}`} fill={entry.average < 75 ? '#ef4444' : '#0066FF'} />
                 ))}
               </Bar>
             </BarChart>
@@ -281,13 +281,13 @@ export const AdminAttendance = () => {
       </div>
 
       {/* Module Navigation Tabs */}
-      <div className="flex items-center gap-2 border-b border-slate-200 pb-2">
+      <div className="flex items-center gap-2 border-b border-charcoal-800 pb-2">
         <button
           onClick={() => setActiveTab('defaulters')}
           className={`px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 cursor-pointer ${
             activeTab === 'defaulters'
               ? 'bg-rose-600 text-white shadow-sm'
-              : 'bg-white text-slate-600 hover:text-slate-900 border border-slate-200'
+              : 'bg-charcoal-950 text-sand-300 hover:text-sand-100 border border-charcoal-800'
           }`}
         >
           <AlertTriangle className="w-3.5 h-3.5" />
@@ -302,7 +302,7 @@ export const AdminAttendance = () => {
           className={`px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 cursor-pointer ${
             activeTab === 'qrAudit'
               ? 'bg-charcoal-900 text-sand-100 border border-sand-400/40 shadow-sm'
-              : 'bg-white text-charcoal-700 hover:text-charcoal-950 border border-sand-300'
+              : 'bg-charcoal-950 text-sand-300 hover:text-sand-100 border border-charcoal-800'
           }`}
         >
           <QrCode className="w-3.5 h-3.5 text-electric-500" />
@@ -315,16 +315,16 @@ export const AdminAttendance = () => {
 
       {/* TAB 1: Low Attendance Defaulters Table (< 75%) */}
       {activeTab === 'defaulters' && (
-        <div className="bg-white rounded-2xl border border-rose-200 shadow-sm overflow-hidden">
-          <div className="px-6 py-4 bg-rose-50/70 border-b border-rose-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div className="bg-charcoal-900 rounded-2xl border border-rose-900/80 shadow-xl overflow-hidden text-sand-100">
+          <div className="px-6 py-4 bg-rose-950/60 border-b border-rose-900/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <div>
               <div className="flex items-center gap-2">
                 <AlertTriangle className="w-5 h-5 text-rose-600" />
-                <h3 className="text-base font-bold text-rose-950">
+                <h3 className="text-base font-bold text-rose-200">
                   Low Attendance Defaulters List (&lt; 75% Threshold)
                 </h3>
               </div>
-              <p className="text-xs text-rose-800">
+              <p className="text-xs text-rose-300/80">
                 Students at risk of semester examination debarment requiring immediate intervention
               </p>
             </div>
@@ -341,7 +341,7 @@ export const AdminAttendance = () => {
           </div>
 
           {/* Filter Toolbar */}
-          <div className="p-4 border-b border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="p-4 border-b border-charcoal-800 bg-charcoal-950/40 flex flex-col sm:flex-row items-center justify-between gap-3">
             <div className="relative flex-1 w-full">
               <Search className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
               <input
@@ -374,7 +374,7 @@ export const AdminAttendance = () => {
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
-                <thead className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
+                <thead className="bg-charcoal-950 text-sand-300 font-semibold border-b border-charcoal-800">
                   <tr>
                     <th className="px-6 py-3.5">Roll / Student ID</th>
                     <th className="px-6 py-3.5">Student Name</th>
@@ -385,7 +385,7 @@ export const AdminAttendance = () => {
                     <th className="px-6 py-3.5 text-right">Intervention Action</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 text-slate-700">
+                <tbody className="divide-y divide-charcoal-800 text-sand-200">
                   {filteredDefaulters.map(student => {
                     const shortfall = (75 - student.overallPercentage).toFixed(1);
 
@@ -394,13 +394,13 @@ export const AdminAttendance = () => {
                         <td className="px-6 py-4 font-mono font-bold text-rose-700 whitespace-nowrap">
                           {student.studentId}
                         </td>
-                        <td className="px-6 py-4 font-bold text-slate-900">
+                        <td className="px-6 py-4 font-bold text-sand-100">
                           {student.studentName}
                         </td>
-                        <td className="px-6 py-4 text-slate-600">
+                        <td className="px-6 py-4 text-sand-300">
                           {student.course} ({student.semester})
                         </td>
-                        <td className="px-6 py-4 text-slate-600">
+                        <td className="px-6 py-4 text-sand-300">
                           <strong>{student.attendedClasses}</strong> / {student.totalClasses} classes
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap">
@@ -432,7 +432,7 @@ export const AdminAttendance = () => {
 
       {/* TAB 2: QR Code & Campus Wi-Fi Check-In Audit Logs */}
       {activeTab === 'qrAudit' && (
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden space-y-4">
+        <div className="bg-charcoal-900 rounded-2xl border border-charcoal-800 shadow-xl overflow-hidden space-y-4 text-sand-100">
           {/* Header */}
           <div className="px-6 py-4 bg-slate-900 text-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
             <div>
@@ -477,14 +477,14 @@ export const AdminAttendance = () => {
                 <Wifi className="w-4 h-4 text-blue-600" />
                 <span className="text-xs font-semibold text-blue-950">Classroom Gateway IP</span>
               </div>
-              <span className="font-mono font-bold text-blue-700">{wifiConfig.gatewayIp}</span>
+              <span className="font-mono font-bold text-electric-400">{wifiConfig.gatewayIp}</span>
             </div>
           </div>
 
           {/* Table */}
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
+              <thead className="bg-charcoal-950 text-sand-300 font-semibold border-b border-charcoal-800">
                 <tr>
                   <th className="px-6 py-3.5">Timestamp</th>
                   <th className="px-6 py-3.5">Student ID & Name</th>
@@ -495,18 +495,18 @@ export const AdminAttendance = () => {
                   <th className="px-6 py-3.5 text-right">Verification Status</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 text-slate-700">
+              <tbody className="divide-y divide-charcoal-800 text-sand-200">
                 {(qrAuditLogs || []).map(log => {
                   const isVerified = log.status === 'VERIFIED';
 
                   return (
                     <tr key={log.id} className="hover:bg-slate-50 transition">
-                      <td className="px-6 py-3.5 font-mono text-slate-500 whitespace-nowrap">
+                      <td className="px-6 py-3.5 font-mono text-sand-400 whitespace-nowrap">
                         {formatDate(log.timestamp)}
                       </td>
                       <td className="px-6 py-3.5 whitespace-nowrap">
-                        <span className="font-bold text-slate-900 block">{log.studentName}</span>
-                        <span className="font-mono text-[11px] text-slate-500">{log.studentId}</span>
+                        <span className="font-bold text-sand-100 block">{log.studentName}</span>
+                        <span className="font-mono text-[11px] text-sand-400">{log.studentId}</span>
                       </td>
                       <td className="px-6 py-3.5 text-slate-700 font-medium">
                         {log.subject}
@@ -522,10 +522,10 @@ export const AdminAttendance = () => {
                           {log.wifiSSID}
                         </span>
                       </td>
-                      <td className="px-6 py-3.5 font-mono text-slate-600">
+                      <td className="px-6 py-3.5 font-mono text-sand-300">
                         {log.clientIp}
                       </td>
-                      <td className="px-6 py-3.5 text-slate-500 text-[11px]">
+                      <td className="px-6 py-3.5 text-sand-400 text-[11px]">
                         {log.device}
                       </td>
                       <td className="px-6 py-3.5 text-right whitespace-nowrap">

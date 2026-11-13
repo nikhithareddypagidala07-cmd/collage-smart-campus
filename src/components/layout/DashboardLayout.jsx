@@ -8,7 +8,7 @@ export const DashboardLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col">
+    <div className="min-h-screen bg-charcoal-950 text-sand-100 flex flex-col">
       {/* Toast Notification Mount */}
       <ToastContainer />
 

@@ -133,54 +133,54 @@ export const LandingPage = () => {
       {/* 2. How It Works Section */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-12">
-          <h2 className="text-xs font-bold uppercase tracking-wider text-blue-600 mb-2">
+          <h2 className="text-xs font-bold uppercase tracking-wider text-electric-400 mb-2">
             Seamless Workflow
           </h2>
-          <h3 className="text-3xl font-bold text-slate-900">
+          <h3 className="text-3xl font-extrabold text-white">
             How The Resolution System Operates
           </h3>
-          <p className="mt-2 text-sm text-slate-600">
+          <p className="mt-2 text-sm text-sand-300/80">
             From complaint submission to final resolution, every step is transparent, accountable, and digitized.
           </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-xs relative">
-            <div className="w-10 h-10 rounded-xl bg-blue-100 text-blue-600 font-bold flex items-center justify-center mb-4 text-base">
+          <div className="bg-charcoal-900/90 rounded-2xl p-6 border border-charcoal-800 text-sand-100 shadow-md relative hover:border-sand-400/40 transition">
+            <div className="w-10 h-10 rounded-xl bg-charcoal-800 text-electric-400 font-bold flex items-center justify-center mb-4 text-base border border-charcoal-700 shadow-inner">
               1
             </div>
-            <h4 className="text-base font-bold text-slate-900 mb-2">Student Reports</h4>
-            <p className="text-xs text-slate-600 leading-relaxed">
+            <h4 className="text-base font-bold text-white mb-2">Student Reports</h4>
+            <p className="text-xs text-sand-300/80 leading-relaxed">
               Student chooses category, uploads photo evidence, selects priority, and receives an instant unique tracking ID.
             </p>
           </div>
 
-          <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-xs relative">
-            <div className="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 font-bold flex items-center justify-center mb-4 text-base">
+          <div className="bg-charcoal-900/90 rounded-2xl p-6 border border-charcoal-800 text-sand-100 shadow-md relative hover:border-sand-400/40 transition">
+            <div className="w-10 h-10 rounded-xl bg-charcoal-800 text-sand-200 font-bold flex items-center justify-center mb-4 text-base border border-charcoal-700 shadow-inner">
               2
             </div>
-            <h4 className="text-base font-bold text-slate-900 mb-2">Auto Routing</h4>
-            <p className="text-xs text-slate-600 leading-relaxed">
+            <h4 className="text-base font-bold text-white mb-2">Auto Routing</h4>
+            <p className="text-xs text-sand-300/80 leading-relaxed">
               The ticket is automatically assigned to the respective department head and scheduled within its SLA target hours.
             </p>
           </div>
 
-          <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-xs relative">
-            <div className="w-10 h-10 rounded-xl bg-orange-100 text-orange-600 font-bold flex items-center justify-center mb-4 text-base">
+          <div className="bg-charcoal-900/90 rounded-2xl p-6 border border-charcoal-800 text-sand-100 shadow-md relative hover:border-sand-400/40 transition">
+            <div className="w-10 h-10 rounded-xl bg-charcoal-800 text-electric-400 font-bold flex items-center justify-center mb-4 text-base border border-charcoal-700 shadow-inner">
               3
             </div>
-            <h4 className="text-base font-bold text-slate-900 mb-2">Staff Investigates</h4>
-            <p className="text-xs text-slate-600 leading-relaxed">
+            <h4 className="text-base font-bold text-white mb-2">Staff Investigates</h4>
+            <p className="text-xs text-sand-300/80 leading-relaxed">
               Maintenance engineer inspects, adds progress remarks, updates the lifecycle status, and uploads resolution sign-off.
             </p>
           </div>
 
-          <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-xs relative">
-            <div className="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 font-bold flex items-center justify-center mb-4 text-base">
+          <div className="bg-charcoal-900/90 rounded-2xl p-6 border border-charcoal-800 text-sand-100 shadow-md relative hover:border-sand-400/40 transition">
+            <div className="w-10 h-10 rounded-xl bg-charcoal-800 text-emerald-400 font-bold flex items-center justify-center mb-4 text-base border border-charcoal-700 shadow-inner">
               4
             </div>
-            <h4 className="text-base font-bold text-slate-900 mb-2">Verified & Closed</h4>
-            <p className="text-xs text-slate-600 leading-relaxed">
+            <h4 className="text-base font-bold text-white mb-2">Verified & Closed</h4>
+            <p className="text-xs text-sand-300/80 leading-relaxed">
               Student gets instant notification. If satisfied, ticket closes; if issue persists, student can reopen with one click.
             </p>
           </div>
@@ -190,13 +190,13 @@ export const LandingPage = () => {
       {/* 3. Complaint Categories Section (All 10 required categories) */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-12">
-          <h2 className="text-xs font-bold uppercase tracking-wider text-blue-600 mb-2">
+          <h2 className="text-xs font-bold uppercase tracking-wider text-electric-400 mb-2">
             Coverage Spectrum
           </h2>
-          <h3 className="text-3xl font-bold text-slate-900">
+          <h3 className="text-3xl font-extrabold text-white">
             10 Dedicated Campus Issue Categories
           </h3>
-          <p className="mt-2 text-sm text-slate-600">
+          <p className="mt-2 text-sm text-sand-300/80">
             Each category is pre-configured with strict SLA turnaround deadlines and mapped directly to campus departments.
           </p>
         </div>
@@ -205,23 +205,23 @@ export const LandingPage = () => {
           {categories.map(cat => (
             <div
               key={cat.id}
-              className="bg-white rounded-2xl p-5 border border-slate-200 hover:border-blue-400 hover:shadow-md transition-all duration-200 flex flex-col justify-between group"
+              className="bg-charcoal-900/90 rounded-2xl p-5 border border-charcoal-800 hover:border-electric-500 hover:shadow-xl transition-all duration-200 flex flex-col justify-between group text-sand-100"
             >
               <div>
-                <div className="w-11 h-11 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mb-3 group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition">
+                <div className="w-11 h-11 rounded-xl bg-charcoal-800 text-electric-400 border border-charcoal-700 flex items-center justify-center mb-3 group-hover:scale-110 group-hover:bg-electric-600 group-hover:text-white transition">
                   <CategoryIcon iconName={cat.iconName} categoryName={cat.name} className="w-5 h-5" />
                 </div>
-                <h4 className="text-sm font-bold text-slate-900 group-hover:text-blue-600 transition">
+                <h4 className="text-sm font-bold text-white group-hover:text-electric-400 transition">
                   {cat.name}
                 </h4>
-                <p className="text-[11px] text-slate-500 mt-1 line-clamp-2 leading-relaxed">
+                <p className="text-[11px] text-sand-300/75 mt-1 line-clamp-2 leading-relaxed">
                   {cat.description}
                 </p>
               </div>
 
-              <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-[11px]">
-                <span className="text-slate-400 font-medium truncate max-w-[100px]">{cat.department}</span>
-                <span className="px-1.5 py-0.5 rounded bg-blue-50 text-blue-700 font-semibold">
+              <div className="mt-4 pt-3 border-t border-charcoal-800 flex items-center justify-between text-[11px]">
+                <span className="text-sand-400 font-medium truncate max-w-[100px]">{cat.department}</span>
+                <span className="px-2 py-0.5 rounded bg-charcoal-800 text-sand-200 border border-sand-400/30 font-bold">
                   {cat.slaHours}h SLA
                 </span>
               </div>
@@ -312,64 +312,64 @@ export const LandingPage = () => {
       {/* 5. Benefits Comparison */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-12">
-          <h2 className="text-xs font-bold uppercase tracking-wider text-blue-600 mb-2">
+          <h2 className="text-xs font-bold uppercase tracking-wider text-electric-400 mb-2">
             Why Transition?
           </h2>
-          <h3 className="text-3xl font-bold text-slate-900">
+          <h3 className="text-3xl font-bold text-sand-100">
             Benefits for Students & Campus Administration
           </h3>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div className="bg-white rounded-2xl p-8 border border-slate-200 shadow-xs">
+          <div className="bg-charcoal-900 rounded-2xl p-8 border border-charcoal-800 shadow-xl text-sand-100">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded-xl bg-blue-100 text-blue-700 flex items-center justify-center font-bold">
+              <div className="w-10 h-10 rounded-xl bg-charcoal-800 text-electric-400 border border-charcoal-700 flex items-center justify-center font-bold">
                 <GraduationCap className="w-6 h-6" />
               </div>
-              <h4 className="text-xl font-bold text-slate-900">For Degree College Students</h4>
+              <h4 className="text-xl font-bold text-sand-100">For Degree College Students</h4>
             </div>
-            <ul className="space-y-4 text-xs sm:text-sm text-slate-600">
+            <ul className="space-y-4 text-xs sm:text-sm text-sand-300">
               <li className="flex items-start gap-3">
-                <CheckCircle2 className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-5 h-5 text-electric-400 flex-shrink-0 mt-0.5" />
                 <span>Zero need to locate physical department staff or stand in paper queues.</span>
               </li>
               <li className="flex items-start gap-3">
-                <CheckCircle2 className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-5 h-5 text-electric-400 flex-shrink-0 mt-0.5" />
                 <span>24/7 digital complaint lodging from anywhere inside or outside campus.</span>
               </li>
               <li className="flex items-start gap-3">
-                <CheckCircle2 className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-5 h-5 text-electric-400 flex-shrink-0 mt-0.5" />
                 <span>Live in-app notifications as soon as a technician updates remarks.</span>
               </li>
               <li className="flex items-start gap-3">
-                <CheckCircle2 className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-5 h-5 text-electric-400 flex-shrink-0 mt-0.5" />
                 <span>Guaranteed audit trail so issues cannot be swept under the rug.</span>
               </li>
             </ul>
           </div>
 
-          <div className="bg-white rounded-2xl p-8 border border-slate-200 shadow-xs">
+          <div className="bg-charcoal-900 rounded-2xl p-8 border border-charcoal-800 shadow-xl text-sand-100">
             <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center font-bold">
+              <div className="w-10 h-10 rounded-xl bg-charcoal-800 text-sand-200 border border-charcoal-700 flex items-center justify-center font-bold">
                 <Shield className="w-6 h-6" />
               </div>
-              <h4 className="text-xl font-bold text-slate-900">For College Administration & HoDs</h4>
+              <h4 className="text-xl font-bold text-sand-100">For College Administration & HoDs</h4>
             </div>
-            <ul className="space-y-4 text-xs sm:text-sm text-slate-600">
+            <ul className="space-y-4 text-xs sm:text-sm text-sand-300">
               <li className="flex items-start gap-3">
-                <CheckCircle2 className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-5 h-5 text-electric-400 flex-shrink-0 mt-0.5" />
                 <span>Elimination of lost paper letters, duplicate complaints, and unassigned tasks.</span>
               </li>
               <li className="flex items-start gap-3">
-                <CheckCircle2 className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-5 h-5 text-electric-400 flex-shrink-0 mt-0.5" />
                 <span>Transparent staff workload tracking and SLA turnaround benchmarks.</span>
               </li>
               <li className="flex items-start gap-3">
-                <CheckCircle2 className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-5 h-5 text-electric-400 flex-shrink-0 mt-0.5" />
                 <span>Objective data for NAAC / UGC accreditation and infrastructure budgeting.</span>
               </li>
               <li className="flex items-start gap-3">
-                <CheckCircle2 className="w-5 h-5 text-emerald-500 flex-shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-5 h-5 text-electric-400 flex-shrink-0 mt-0.5" />
                 <span>Automatic escalation alerts that prevent student dissatisfaction and campus strikes.</span>
               </li>
             </ul>

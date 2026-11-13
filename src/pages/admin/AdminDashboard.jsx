@@ -148,15 +148,15 @@ export const AdminDashboard = () => {
 
       {/* Overdue & Escalation Priority Alert Strip */}
       {urgentQueue.length > 0 && (
-        <div className="bg-rose-50 border border-rose-200 rounded-2xl p-5 shadow-xs">
+        <div className="bg-rose-950/50 border border-rose-800 rounded-2xl p-5 shadow-xs">
           <div className="flex items-center justify-between gap-2 mb-3">
-            <div className="flex items-center gap-2 text-rose-900 font-bold text-sm">
-              <AlertOctagon className="w-4 h-4 text-rose-600" />
+            <div className="flex items-center gap-2 text-rose-300 font-bold text-sm">
+              <AlertOctagon className="w-4 h-4 text-rose-400" />
               <span>High Priority Attention Needed ({urgentQueue.length} Complaints)</span>
             </div>
             <Link
               to="/admin/escalations"
-              className="text-xs font-semibold text-rose-700 hover:text-rose-900 flex items-center gap-1"
+              className="text-xs font-semibold text-rose-300 hover:text-rose-200 flex items-center gap-1"
             >
               <span>Escalation Center</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -167,23 +167,23 @@ export const AdminDashboard = () => {
             {urgentQueue.slice(0, 3).map(item => (
               <div
                 key={item.id}
-                className="bg-white p-3.5 rounded-xl border border-rose-200 shadow-2xs flex flex-col justify-between"
+                className="bg-charcoal-950 p-3.5 rounded-xl border border-rose-900/80 shadow-2xs flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-center justify-between gap-1 mb-1">
-                    <span className="font-mono text-xs font-bold text-rose-700">{item.trackingId}</span>
+                    <span className="font-mono text-xs font-bold text-rose-400">{item.trackingId}</span>
                     <PriorityBadge priority={item.priority} size="sm" />
                   </div>
-                  <h4 className="text-xs font-bold text-slate-900 truncate mb-1">{item.title}</h4>
-                  <p className="text-[11px] text-slate-500 truncate">{item.department} • {item.location}</p>
+                  <h4 className="text-xs font-bold text-sand-100 truncate mb-1">{item.title}</h4>
+                  <p className="text-[11px] text-sand-400 truncate">{item.department} • {item.location}</p>
                 </div>
-                <div className="mt-3 pt-2 border-t border-slate-100 flex items-center justify-between">
-                  <span className="text-[10px] text-rose-600 font-bold">
+                <div className="mt-3 pt-2 border-t border-charcoal-800 flex items-center justify-between">
+                  <span className="text-[10px] text-rose-400 font-bold">
                     {isOverdue(item) ? 'SLA EXPIRED' : item.status}
                   </span>
                   <Link
                     to={`/admin/complaints?search=${item.trackingId}`}
-                    className="text-xs text-blue-600 hover:underline font-semibold"
+                    className="text-xs text-electric-400 hover:underline font-semibold"
                   >
                     Manage →
                   </Link>
@@ -197,13 +197,13 @@ export const AdminDashboard = () => {
       {/* Snapshot Visual Charts (Recharts) */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Resolution Donut Chart */}
-        <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs">
+        <div className="bg-charcoal-900 rounded-2xl border border-charcoal-800 p-6 shadow-xl text-sand-100">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="text-base font-bold text-slate-900">Resolution Status Overview</h3>
-              <p className="text-xs text-slate-500">Live breakdown of all campus grievances</p>
+              <h3 className="text-base font-bold text-sand-100">Resolution Status Overview</h3>
+              <p className="text-xs text-sand-300">Live breakdown of all campus grievances</p>
             </div>
-            <span className="text-xs font-bold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-full">
+            <span className="text-xs font-bold text-emerald-300 bg-emerald-950/80 border border-emerald-800 px-2.5 py-1 rounded-full">
               {Math.round((resolved / total) * 100)}% Resolved
             </span>
           </div>
@@ -226,12 +226,12 @@ export const AdminDashboard = () => {
                 </Pie>
                 <Tooltip
                   formatter={(val, name) => [`${val} complaints`, name]}
-                  contentStyle={{ backgroundColor: '#fff', borderRadius: '12px', border: '1px solid #e2e8f0', fontSize: '12px' }}
+                  contentStyle={{ backgroundColor: '#18181b', borderRadius: '12px', border: '1px solid #3f3f46', color: '#f5f5f4', fontSize: '12px' }}
                 />
                 <Legend
                   verticalAlign="bottom"
                   height={36}
-                  formatter={(val) => <span className="text-xs text-slate-700 font-medium">{val}</span>}
+                  formatter={(val) => <span className="text-xs text-sand-200 font-medium">{val}</span>}
                 />
               </PieChart>
             </ResponsiveContainer>
@@ -239,13 +239,13 @@ export const AdminDashboard = () => {
         </div>
 
         {/* Top Categories Distribution */}
-        <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs">
+        <div className="bg-charcoal-900 rounded-2xl border border-charcoal-800 p-6 shadow-xl text-sand-100">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3 className="text-base font-bold text-slate-900">Top Issue Categories</h3>
-              <p className="text-xs text-slate-500">Highest volume infrastructure domains</p>
+              <h3 className="text-base font-bold text-sand-100">Top Issue Categories</h3>
+              <p className="text-xs text-sand-300">Highest volume infrastructure domains</p>
             </div>
-            <Link to="/admin/analytics" className="text-xs text-blue-600 hover:text-blue-800 font-semibold">
+            <Link to="/admin/analytics" className="text-xs text-electric-400 hover:text-electric-300 font-semibold">
               View All 10 →
             </Link>
           </div>
@@ -253,14 +253,14 @@ export const AdminDashboard = () => {
           <div className="h-64">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={categoryData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                <XAxis dataKey="name" tick={{ fontSize: 11, fill: '#64748b' }} />
-                <YAxis allowDecimals={false} tick={{ fontSize: 11, fill: '#64748b' }} />
+                <XAxis dataKey="name" tick={{ fontSize: 11, fill: '#a8a29e' }} />
+                <YAxis allowDecimals={false} tick={{ fontSize: 11, fill: '#a8a29e' }} />
                 <Tooltip
                   formatter={(val) => [`${val} complaints`, 'Total']}
                   labelFormatter={(name) => `Category: ${name}`}
-                  contentStyle={{ backgroundColor: '#fff', borderRadius: '12px', border: '1px solid #e2e8f0', fontSize: '12px' }}
+                  contentStyle={{ backgroundColor: '#18181b', borderRadius: '12px', border: '1px solid #3f3f46', color: '#f5f5f4', fontSize: '12px' }}
                 />
-                <Bar dataKey="count" fill="#2563eb" radius={[6, 6, 0, 0]} />
+                <Bar dataKey="count" fill="#0066FF" radius={[6, 6, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -268,20 +268,20 @@ export const AdminDashboard = () => {
       </div>
 
       {/* Quick Links & Department Workload Roster */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-        <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+      <div className="bg-charcoal-900 rounded-2xl border border-charcoal-800 shadow-xl overflow-hidden text-sand-100">
+        <div className="px-6 py-4 border-b border-charcoal-800 flex items-center justify-between">
           <div>
-            <h3 className="text-base font-bold text-slate-900">Department Workloads & Oversight</h3>
-            <p className="text-xs text-slate-500">Status across all 10 registered degree college divisions</p>
+            <h3 className="text-base font-bold text-sand-100">Department Workloads & Oversight</h3>
+            <p className="text-xs text-sand-300">Status across all 10 registered degree college divisions</p>
           </div>
-          <Link to="/admin/departments" className="text-xs font-semibold text-blue-600 hover:text-blue-800">
+          <Link to="/admin/departments" className="text-xs font-semibold text-electric-400 hover:text-electric-300">
             Manage Departments →
           </Link>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
+            <thead className="bg-charcoal-950 text-sand-300 font-semibold border-b border-charcoal-800">
               <tr>
                 <th className="px-6 py-3.5">Department Name</th>
                 <th className="px-6 py-3.5">Supervising Officer</th>
@@ -291,33 +291,33 @@ export const AdminDashboard = () => {
                 <th className="px-6 py-3.5 text-right">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-100 text-slate-700">
+            <tbody className="divide-y divide-charcoal-800 text-sand-200">
               {departments.slice(0, 5).map(dept => {
                 const deptAll = complaints.filter(c => c.department === dept.name);
                 const deptActive = deptAll.filter(c => c.status !== 'Resolved' && c.status !== 'Rejected').length;
                 const deptResolved = deptAll.filter(c => c.status === 'Resolved').length;
 
                 return (
-                  <tr key={dept.id} className="hover:bg-slate-50/80 transition">
-                    <td className="px-6 py-4 font-bold text-slate-900">
+                  <tr key={dept.id} className="hover:bg-charcoal-800/40 transition">
+                    <td className="px-6 py-4 font-bold text-sand-100">
                       {dept.name}
                     </td>
-                    <td className="px-6 py-4 text-slate-600">
+                    <td className="px-6 py-4 text-sand-300">
                       {dept.head}
                     </td>
-                    <td className="px-6 py-4 font-semibold text-orange-600">
+                    <td className="px-6 py-4 font-semibold text-amber-400">
                       {deptActive}
                     </td>
-                    <td className="px-6 py-4 font-semibold text-emerald-600">
+                    <td className="px-6 py-4 font-semibold text-emerald-400">
                       {deptResolved}
                     </td>
-                    <td className="px-6 py-4 font-bold text-slate-800">
+                    <td className="px-6 py-4 font-bold text-sand-200">
                       {deptAll.length}
                     </td>
                     <td className="px-6 py-4 text-right">
                       <Link
                         to={`/admin/complaints?dept=${encodeURIComponent(dept.name)}`}
-                        className="text-xs font-semibold text-blue-600 hover:text-blue-800"
+                        className="text-xs font-semibold text-electric-400 hover:text-electric-300"
                       >
                         Inspect Queue
                       </Link>

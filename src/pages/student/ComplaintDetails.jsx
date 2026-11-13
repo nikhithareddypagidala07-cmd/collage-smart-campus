@@ -46,10 +46,10 @@ export const ComplaintDetails = () => {
 
   if (!complaint) {
     return (
-      <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center max-w-lg mx-auto shadow-xs">
+      <div className="bg-charcoal-900 rounded-2xl border border-charcoal-800 p-12 text-center max-w-lg mx-auto shadow-xs">
         <AlertTriangle className="w-12 h-12 text-amber-500 mx-auto mb-3" />
-        <h2 className="text-lg font-bold text-slate-900 mb-1">Complaint Not Found</h2>
-        <p className="text-xs text-slate-500 mb-6">
+        <h2 className="text-lg font-bold text-sand-100 mb-1">Complaint Not Found</h2>
+        <p className="text-xs text-sand-400 mb-6">
           The requested tracking reference does not exist or may have been deleted.
         </p>
         <Link
@@ -92,7 +92,7 @@ export const ComplaintDetails = () => {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <Link
           to="/student/complaints"
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 transition"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-sand-300 hover:text-sand-100 transition"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back to All Complaints</span>
@@ -100,11 +100,11 @@ export const ComplaintDetails = () => {
 
         <div className="flex items-center gap-2">
           {/* Tracking ID Badge with Copy Button */}
-          <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 border border-slate-200 rounded-xl text-xs font-mono font-bold text-slate-800">
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-100 border border-charcoal-800 rounded-xl text-xs font-mono font-bold text-sand-100">
             <span>{complaint.trackingId}</span>
             <button
               onClick={handleCopyTrackingId}
-              className="text-slate-500 hover:text-blue-600 p-0.5 rounded transition"
+              className="text-sand-400 hover:text-electric-400 p-0.5 rounded transition"
               title="Copy Tracking ID"
             >
               {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
@@ -127,7 +127,7 @@ export const ComplaintDetails = () => {
       {isResolved && (
         <div className="bg-gradient-to-r from-emerald-600 to-teal-700 text-white rounded-2xl p-6 shadow-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-start gap-4">
-            <div className="w-12 h-12 rounded-xl bg-white/20 text-white flex items-center justify-center flex-shrink-0">
+            <div className="w-12 h-12 rounded-xl bg-charcoal-900/20 text-white flex items-center justify-center flex-shrink-0">
               <CheckCircle2 className="w-7 h-7" />
             </div>
             <div>
@@ -143,7 +143,7 @@ export const ComplaintDetails = () => {
 
           <button
             onClick={() => setIsReopenModalOpen(true)}
-            className="px-4 py-2.5 bg-white text-emerald-900 hover:bg-emerald-50 rounded-xl text-xs font-bold transition shadow-xs flex items-center gap-2 whitespace-nowrap self-stretch sm:self-auto justify-center"
+            className="px-4 py-2.5 bg-charcoal-900 text-emerald-900 hover:bg-emerald-50 rounded-xl text-xs font-bold transition shadow-xs flex items-center gap-2 whitespace-nowrap self-stretch sm:self-auto justify-center"
           >
             <RotateCcw className="w-4 h-4 text-emerald-700" />
             <span>Reopen If Problem Persists</span>
@@ -168,30 +168,30 @@ export const ComplaintDetails = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column: Complaint Details Card */}
         <div className="lg:col-span-2 space-y-6">
-          <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-xs space-y-6">
+          <div className="bg-charcoal-900 rounded-2xl border border-charcoal-800 p-6 sm:p-8 shadow-xs space-y-6">
             {/* Title & Badges */}
             <div>
               <div className="flex flex-wrap items-center gap-2 mb-3">
                 <StatusBadge status={complaint.status} size="lg" />
                 <PriorityBadge priority={complaint.priority} size="md" />
                 {complaint.isConfidential && (
-                  <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-slate-100 text-slate-700 rounded-full text-xs font-medium border border-slate-200">
+                  <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-slate-100 text-sand-200 rounded-full text-xs font-medium border border-charcoal-800">
                     <Lock className="w-3 h-3" />
                     <span>Confidential</span>
                   </span>
                 )}
               </div>
-              <h1 className="text-xl sm:text-2xl font-bold text-slate-900">
+              <h1 className="text-xl sm:text-2xl font-bold text-sand-100">
                 {complaint.title}
               </h1>
             </div>
 
             {/* Description */}
             <div className="space-y-2">
-              <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-sand-400">
                 Description
               </h4>
-              <p className="text-xs sm:text-sm text-slate-700 leading-relaxed whitespace-pre-line bg-slate-50 p-4 rounded-xl border border-slate-100">
+              <p className="text-xs sm:text-sm text-sand-200 leading-relaxed whitespace-pre-line bg-charcoal-950 p-4 rounded-xl border border-charcoal-800">
                 {complaint.description}
               </p>
             </div>
@@ -199,10 +199,10 @@ export const ComplaintDetails = () => {
             {/* Supporting Image Preview */}
             {complaint.evidenceImage && (
               <div className="space-y-2">
-                <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                <h4 className="text-xs font-semibold uppercase tracking-wider text-sand-400">
                   Supporting Image Evidence
                 </h4>
-                <div className="relative group rounded-xl overflow-hidden border border-slate-200 max-w-md bg-slate-100">
+                <div className="relative group rounded-xl overflow-hidden border border-charcoal-800 max-w-md bg-slate-100">
                   <img
                     src={complaint.evidenceImage}
                     alt="Supporting Evidence"
@@ -220,9 +220,9 @@ export const ComplaintDetails = () => {
             )}
 
             {/* Latest Staff Remarks */}
-            <div className="p-4 bg-blue-50/60 border border-blue-200 rounded-xl space-y-1">
+            <div className="p-4 bg-charcoal-950/60 border border-blue-200 rounded-xl space-y-1">
               <div className="flex items-center gap-2 text-xs font-bold text-blue-900">
-                <MessageSquare className="w-4 h-4 text-blue-600" />
+                <MessageSquare className="w-4 h-4 text-electric-400" />
                 <span>Latest Department Progress Remark:</span>
               </div>
               <p className="text-xs text-blue-800 leading-relaxed pl-6">
@@ -232,72 +232,72 @@ export const ComplaintDetails = () => {
           </div>
 
           {/* Interactive Stepper & Audit Trail */}
-          <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-xs">
+          <div className="bg-charcoal-900 rounded-2xl border border-charcoal-800 p-6 sm:p-8 shadow-xs">
             <Timeline history={complaint.history} currentStatus={complaint.status} />
           </div>
         </div>
 
         {/* Right Column: Metadata & Department Sidebar */}
         <div className="space-y-6">
-          <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+          <div className="bg-charcoal-900 rounded-2xl border border-charcoal-800 p-6 shadow-xs space-y-4">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-sand-400">
               Department & Assignment
             </h3>
 
             <div className="space-y-3 text-xs">
               <div className="flex items-start gap-3">
-                <Building className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
+                <Building className="w-4 h-4 text-electric-400 flex-shrink-0 mt-0.5" />
                 <div>
-                  <span className="text-slate-400 block text-[11px]">Assigned Department</span>
-                  <span className="font-semibold text-slate-800">{complaint.department}</span>
+                  <span className="text-sand-400 block text-[11px]">Assigned Department</span>
+                  <span className="font-semibold text-sand-100">{complaint.department}</span>
                 </div>
               </div>
 
               <div className="flex items-start gap-3">
-                <User className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
+                <User className="w-4 h-4 text-electric-400 flex-shrink-0 mt-0.5" />
                 <div>
-                  <span className="text-slate-400 block text-[11px]">Assigned Staff / Officer</span>
-                  <span className="font-semibold text-slate-800">{complaint.assignedStaffName || 'Pending Assignment'}</span>
+                  <span className="text-sand-400 block text-[11px]">Assigned Staff / Officer</span>
+                  <span className="font-semibold text-sand-100">{complaint.assignedStaffName || 'Pending Assignment'}</span>
                 </div>
               </div>
 
               <div className="flex items-start gap-3">
-                <CategoryIcon categoryName={complaint.category} className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
+                <CategoryIcon categoryName={complaint.category} className="w-4 h-4 text-electric-400 flex-shrink-0 mt-0.5" />
                 <div>
-                  <span className="text-slate-400 block text-[11px]">Category</span>
-                  <span className="font-semibold text-slate-800">{complaint.category}</span>
+                  <span className="text-sand-400 block text-[11px]">Category</span>
+                  <span className="font-semibold text-sand-100">{complaint.category}</span>
                 </div>
               </div>
 
               <div className="flex items-start gap-3">
-                <MapPin className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
+                <MapPin className="w-4 h-4 text-electric-400 flex-shrink-0 mt-0.5" />
                 <div>
-                  <span className="text-slate-400 block text-[11px]">Reported Location</span>
-                  <span className="font-semibold text-slate-800">{complaint.location}</span>
+                  <span className="text-sand-400 block text-[11px]">Reported Location</span>
+                  <span className="font-semibold text-sand-100">{complaint.location}</span>
                 </div>
               </div>
             </div>
           </div>
 
-          <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+          <div className="bg-charcoal-900 rounded-2xl border border-charcoal-800 p-6 shadow-xs space-y-4">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-sand-400">
               SLA & Timestamps
             </h3>
 
             <div className="space-y-3 text-xs">
               <div className="flex items-start gap-3">
-                <Calendar className="w-4 h-4 text-slate-400 flex-shrink-0 mt-0.5" />
+                <Calendar className="w-4 h-4 text-sand-400 flex-shrink-0 mt-0.5" />
                 <div>
-                  <span className="text-slate-400 block text-[11px]">Submitted On</span>
-                  <span className="text-slate-800 font-medium">{formatDate(complaint.submissionDate)}</span>
+                  <span className="text-sand-400 block text-[11px]">Submitted On</span>
+                  <span className="text-sand-100 font-medium">{formatDate(complaint.submissionDate)}</span>
                 </div>
               </div>
 
               <div className="flex items-start gap-3">
-                <Clock className="w-4 h-4 text-slate-400 flex-shrink-0 mt-0.5" />
+                <Clock className="w-4 h-4 text-sand-400 flex-shrink-0 mt-0.5" />
                 <div>
-                  <span className="text-slate-400 block text-[11px]">Target Resolution Deadline</span>
-                  <span className={`font-medium ${isComplaintOverdue ? 'text-rose-600 font-bold' : 'text-slate-800'}`}>
+                  <span className="text-sand-400 block text-[11px]">Target Resolution Deadline</span>
+                  <span className={`font-medium ${isComplaintOverdue ? 'text-rose-600 font-bold' : 'text-sand-100'}`}>
                     {formatDate(complaint.targetResolutionDate)}
                   </span>
                 </div>
@@ -307,7 +307,7 @@ export const ComplaintDetails = () => {
                 <div className="flex items-start gap-3">
                   <CheckCircle2 className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
                   <div>
-                    <span className="text-slate-400 block text-[11px]">Actual Resolved Date</span>
+                    <span className="text-sand-400 block text-[11px]">Actual Resolved Date</span>
                     <span className="text-emerald-700 font-bold">{formatDate(complaint.resolvedDate)}</span>
                   </div>
                 </div>
@@ -341,7 +341,7 @@ export const ComplaintDetails = () => {
             alt="Evidence Detailed View"
             className="w-full max-h-[70vh] object-contain rounded-xl bg-slate-900"
           />
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-sand-400">
             Uploaded by {complaint.isConfidential ? 'Anonymous Student' : complaint.studentName} on {formatDate(complaint.submissionDate)}
           </p>
         </div>
@@ -355,11 +355,11 @@ export const ComplaintDetails = () => {
         maxWidth="max-w-md"
       >
         <form onSubmit={handleReopenSubmit} className="space-y-4">
-          <p className="text-xs text-slate-600 leading-relaxed">
+          <p className="text-xs text-sand-300 leading-relaxed">
             Please explain why this complaint is being reopened. What issue persists or requires further maintenance?
           </p>
           <div>
-            <label className="block text-xs font-semibold text-slate-700 uppercase mb-1">
+            <label className="block text-xs font-semibold text-sand-200 uppercase mb-1">
               Persistence Reason <span className="text-rose-500">*</span>
             </label>
             <textarea
@@ -368,7 +368,7 @@ export const ComplaintDetails = () => {
               value={reopenReason}
               onChange={e => setReopenReason(e.target.value)}
               placeholder="e.g. The fan sparked again when turned to speed 3. Problem was not permanently fixed."
-              className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
+              className="w-full p-3 bg-charcoal-950 border border-charcoal-800 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-amber-500"
             ></textarea>
           </div>
 
@@ -376,7 +376,7 @@ export const ComplaintDetails = () => {
             <button
               type="button"
               onClick={() => setIsReopenModalOpen(false)}
-              className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition"
+              className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-sand-200 rounded-xl text-xs font-semibold transition"
             >
               Cancel
             </button>

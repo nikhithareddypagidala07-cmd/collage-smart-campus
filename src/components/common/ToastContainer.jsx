@@ -11,17 +11,17 @@ export const ToastContainer = () => {
     <div className="fixed bottom-5 right-5 z-50 flex flex-col gap-2.5 max-w-md w-full pointer-events-none px-4 sm:px-0">
       {toasts.map(toast => {
         let icon = <CheckCircle2 className="w-5 h-5 text-emerald-500 flex-shrink-0" />;
-        let borderClass = 'border-emerald-200 bg-white';
+        let borderClass = 'border-emerald-200 bg-charcoal-900';
 
         if (toast.type === 'error') {
           icon = <AlertCircle className="w-5 h-5 text-rose-500 flex-shrink-0" />;
-          borderClass = 'border-rose-200 bg-white';
+          borderClass = 'border-rose-200 bg-charcoal-900';
         } else if (toast.type === 'warning') {
           icon = <AlertTriangle className="w-5 h-5 text-amber-500 flex-shrink-0" />;
-          borderClass = 'border-amber-200 bg-white';
+          borderClass = 'border-amber-200 bg-charcoal-900';
         } else if (toast.type === 'info') {
           icon = <Info className="w-5 h-5 text-blue-500 flex-shrink-0" />;
-          borderClass = 'border-blue-200 bg-white';
+          borderClass = 'border-blue-200 bg-charcoal-900';
         }
 
         return (
@@ -35,7 +35,7 @@ export const ToastContainer = () => {
             </div>
             <button
               onClick={() => removeToast(toast.id)}
-              className="text-slate-400 hover:text-slate-600 p-0.5 rounded transition"
+              className="text-slate-400 hover:text-sand-300 p-0.5 rounded transition"
               aria-label="Close notification"
             >
               <X className="w-4 h-4" />

@@ -125,13 +125,13 @@ export const StaffDashboard = () => {
 
       {/* Overdue & Urgent Action Alert Callout */}
       {attentionNeeded.length > 0 && (
-        <div className="bg-rose-50 border border-rose-200 rounded-2xl p-5 shadow-xs">
+        <div className="bg-rose-950/50 border border-rose-800 rounded-2xl p-5 shadow-xs">
           <div className="flex items-center justify-between gap-2 mb-3">
-            <div className="flex items-center gap-2 text-rose-900 font-bold text-sm">
-              <AlertTriangle className="w-4 h-4 text-rose-600" />
+            <div className="flex items-center gap-2 text-rose-300 font-bold text-sm">
+              <AlertTriangle className="w-4 h-4 text-rose-400" />
               <span>Urgent Attention Required ({attentionNeeded.length} Critical Issues)</span>
             </div>
-            <span className="text-[11px] text-rose-700 font-medium hidden sm:inline">
+            <span className="text-[11px] text-rose-300/80 font-medium hidden sm:inline">
               Action within SLA prevents executive escalation to Dean
             </span>
           </div>
@@ -140,11 +140,11 @@ export const StaffDashboard = () => {
             {attentionNeeded.slice(0, 4).map(item => (
               <div
                 key={item.id}
-                className="bg-white p-3.5 rounded-xl border border-rose-200 shadow-2xs flex items-center justify-between gap-3"
+                className="bg-charcoal-950 p-3.5 rounded-xl border border-rose-900/80 shadow-2xs flex items-center justify-between gap-3"
               >
                 <div className="min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="font-mono text-xs font-bold text-rose-700">{item.trackingId}</span>
+                    <span className="font-mono text-xs font-bold text-rose-400">{item.trackingId}</span>
                     <PriorityBadge priority={item.priority} size="sm" />
                     {isOverdue(item) && (
                       <span className="px-1.5 py-0.5 bg-rose-600 text-white rounded text-[10px] font-bold">
@@ -152,8 +152,8 @@ export const StaffDashboard = () => {
                       </span>
                     )}
                   </div>
-                  <p className="text-xs font-semibold text-slate-900 truncate">{item.title}</p>
-                  <p className="text-[11px] text-slate-500 truncate">{item.location}</p>
+                  <p className="text-xs font-semibold text-sand-100 truncate">{item.title}</p>
+                  <p className="text-[11px] text-sand-400 truncate">{item.location}</p>
                 </div>
 
                 <Link
@@ -169,15 +169,15 @@ export const StaffDashboard = () => {
       )}
 
       {/* Search & Quick Filter Toolbar */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-3">
+      <div className="bg-charcoal-900 rounded-2xl border border-charcoal-800 p-4 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-3 text-sand-100">
         <div className="relative flex-1 w-full">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+          <Search className="w-4 h-4 text-sand-400 absolute left-3 top-3" />
           <input
             type="text"
             value={searchTrackingId}
             onChange={e => setSearchTrackingId(e.target.value)}
             placeholder="Search tracking ID, issue title, or student name..."
-            className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full pl-9 pr-3 py-2 bg-charcoal-950 border border-charcoal-700 rounded-xl text-xs sm:text-sm text-sand-100 placeholder-charcoal-500 focus:outline-none focus:ring-2 focus:ring-electric-400 focus:border-electric-400"
           />
         </div>
 
@@ -188,8 +188,8 @@ export const StaffDashboard = () => {
               onClick={() => setStatusFilter(st)}
               className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition ${
                 statusFilter === st
-                  ? 'bg-blue-600 text-white font-semibold shadow-xs'
-                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                  ? 'bg-electric-600 text-white font-semibold shadow-xs'
+                  : 'bg-charcoal-950 text-sand-400 hover:bg-charcoal-800 border border-charcoal-700'
               }`}
             >
               {st}
@@ -199,33 +199,33 @@ export const StaffDashboard = () => {
       </div>
 
       {/* Assigned Complaints Table */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-        <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+      <div className="bg-charcoal-900 rounded-2xl border border-charcoal-800 shadow-xl overflow-hidden text-sand-100">
+        <div className="px-6 py-4 border-b border-charcoal-800 flex items-center justify-between">
           <div>
-            <h3 className="text-base font-bold text-slate-900">
+            <h3 className="text-base font-bold text-sand-100">
               Department Complaints Queue ({filtered.length})
             </h3>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-sand-300">
               Directly assigned to {currentUser?.department}
             </p>
           </div>
 
           <Link
             to="/staff/assigned"
-            className="text-xs font-semibold text-blue-600 hover:text-blue-800"
+            className="text-xs font-semibold text-electric-400 hover:text-electric-300"
           >
             Detailed View & Filters →
           </Link>
         </div>
 
         {filtered.length === 0 ? (
-          <div className="p-12 text-center text-slate-400 text-xs">
+          <div className="p-12 text-center text-sand-400 text-xs">
             No complaints found matching this filter criteria.
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
+              <thead className="bg-charcoal-950 text-sand-300 font-semibold border-b border-charcoal-800">
                 <tr>
                   <th className="px-6 py-3.5">Tracking ID</th>
                   <th className="px-6 py-3.5">Title & Location</th>
@@ -237,53 +237,53 @@ export const StaffDashboard = () => {
                   <th className="px-6 py-3.5 text-right">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 text-slate-700">
+              <tbody className="divide-y divide-charcoal-800 text-sand-200">
                 {filtered.map(item => {
                   const overdue = isOverdue(item);
                   return (
-                    <tr key={item.id} className="hover:bg-slate-50/80 transition">
-                      <td className="px-6 py-4 font-mono font-bold text-blue-700 whitespace-nowrap">
+                    <tr key={item.id} className="hover:bg-charcoal-800/40 transition">
+                      <td className="px-6 py-4 font-mono font-bold text-electric-400 whitespace-nowrap">
                         {item.trackingId}
                       </td>
                       <td className="px-6 py-4 max-w-xs">
-                        <div className="font-semibold text-slate-900 truncate">
+                        <div className="font-semibold text-sand-100 truncate">
                           {item.title}
                         </div>
-                        <div className="text-[11px] text-slate-500 truncate mt-0.5">
+                        <div className="text-[11px] text-sand-400 truncate mt-0.5">
                           {item.location}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="font-medium text-slate-800">
+                        <div className="font-medium text-sand-200">
                           {item.isConfidential ? 'Anonymous Student' : item.studentName}
                         </div>
-                        <div className="text-[10px] text-slate-400 font-mono">
+                        <div className="text-[10px] text-sand-400 font-mono">
                           {item.isConfidential ? 'Confidential' : item.studentId}
                         </div>
                       </td>
                       <td className="px-6 py-4">
                         <PriorityBadge priority={item.priority} size="sm" />
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-slate-700">
+                      <td className="px-6 py-4 whitespace-nowrap text-sand-300">
                         {item.assignedStaffName || (
-                          <span className="text-amber-600 font-medium">Unassigned</span>
+                          <span className="text-amber-400 font-medium">Unassigned</span>
                         )}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
                         <StatusBadge status={item.status} size="sm" />
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`text-[11px] ${overdue ? 'text-rose-600 font-bold' : 'text-slate-500'}`}>
+                        <span className={`text-[11px] ${overdue ? 'text-rose-400 font-bold' : 'text-sand-400'}`}>
                           {overdue ? 'EXPIRED' : timeAgo(item.targetResolutionDate)}
                         </span>
                       </td>
                       <td className="px-6 py-4 text-right whitespace-nowrap">
                         <Link
                           to={`/staff/complaints/${item.id}`}
-                          className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 px-3 py-1 rounded-lg transition"
+                          className="inline-flex items-center gap-1 text-xs font-semibold text-sand-100 bg-charcoal-800 hover:bg-charcoal-700 border border-charcoal-700 hover:border-electric-400/50 px-3 py-1 rounded-lg transition"
                         >
                           <span>Manage</span>
-                          <ArrowRight className="w-3 h-3" />
+                          <ArrowRight className="w-3 h-3 text-electric-400" />
                         </Link>
                       </td>
                     </tr>

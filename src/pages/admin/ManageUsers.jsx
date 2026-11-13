@@ -120,15 +120,15 @@ export const ManageUsers = () => {
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Campus User Management</h1>
-          <p className="text-xs sm:text-sm text-slate-500">
+          <h1 className="text-2xl font-bold text-sand-100">Campus User Management</h1>
+          <p className="text-xs sm:text-sm text-sand-400">
             Audit student, departmental staff, and administrative rosters across the university
           </p>
         </div>
 
         <button
           onClick={() => setIsAddModalOpen(true)}
-          className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold flex items-center gap-2 transition shadow-xs"
+          className="px-4 py-2.5 bg-electric-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold flex items-center gap-2 transition shadow-xs"
         >
           <UserPlus className="w-4 h-4" />
           <span>Add Mock User Account</span>
@@ -136,14 +136,14 @@ export const ManageUsers = () => {
       </div>
 
       {/* Tabs & Search */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div className="bg-charcoal-900 rounded-2xl border border-charcoal-800 p-4 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex items-center gap-2 w-full sm:w-auto">
           <button
             onClick={() => setActiveTab('students')}
             className={`px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 transition ${
               activeTab === 'students'
-                ? 'bg-blue-600 text-white shadow-xs'
-                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                ? 'bg-electric-600 text-white shadow-xs'
+                : 'bg-slate-100 text-sand-300 hover:bg-slate-200'
             }`}
           >
             <GraduationCap className="w-4 h-4" />
@@ -155,7 +155,7 @@ export const ManageUsers = () => {
             className={`px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 transition ${
               activeTab === 'staff'
                 ? 'bg-purple-600 text-white shadow-xs'
-                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                : 'bg-slate-100 text-sand-300 hover:bg-slate-200'
             }`}
           >
             <Briefcase className="w-4 h-4" />
@@ -167,7 +167,7 @@ export const ManageUsers = () => {
             className={`px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 transition ${
               activeTab === 'admin'
                 ? 'bg-navy-900 text-white shadow-xs'
-                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                : 'bg-slate-100 text-sand-300 hover:bg-slate-200'
             }`}
           >
             <Shield className="w-4 h-4" />
@@ -186,23 +186,23 @@ export const ManageUsers = () => {
             className={`px-3 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition border shadow-2xs ${
               isMasked
                 ? 'bg-amber-50 text-amber-800 border-amber-300 hover:bg-amber-100'
-                : 'bg-slate-100 text-slate-700 border-slate-300 hover:bg-slate-200'
+                : 'bg-slate-100 text-sand-200 border-slate-300 hover:bg-slate-200'
             }`}
             title="Toggle Privacy Masking for sensitive student contact details"
           >
-            {isMasked ? <EyeOff className="w-3.5 h-3.5 text-amber-600" /> : <Eye className="w-3.5 h-3.5 text-slate-600" />}
+            {isMasked ? <EyeOff className="w-3.5 h-3.5 text-amber-600" /> : <Eye className="w-3.5 h-3.5 text-sand-300" />}
             <span className="hidden sm:inline">Privacy Masking:</span>
             <span className="font-mono font-bold">{isMasked ? 'ON (***** )' : 'OFF'}</span>
           </button>
 
           <div className="relative w-full sm:w-64">
-            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+            <Search className="w-4 h-4 text-sand-400 absolute left-3 top-3" />
             <input
               type="text"
               value={search}
               onChange={e => setSearch(e.target.value)}
               placeholder="Search roster..."
-              className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full pl-9 pr-3 py-2 bg-charcoal-950 border border-charcoal-800 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
         </div>
@@ -210,9 +210,9 @@ export const ManageUsers = () => {
 
       {/* Privacy Notice Banner */}
       {isMasked && (
-        <div className="px-4 py-2.5 bg-blue-50/70 border border-blue-200 rounded-xl flex items-center justify-between text-xs text-blue-900">
+        <div className="px-4 py-2.5 bg-charcoal-950/70 border border-blue-200 rounded-xl flex items-center justify-between text-xs text-blue-900">
           <div className="flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 text-blue-600 flex-shrink-0" />
+            <ShieldCheck className="w-4 h-4 text-electric-400 flex-shrink-0" />
             <span>
               <strong>PII Privacy Protection Active:</strong> Student contact phone numbers & emails are masked with asterisks (<code>*****</code>). Click the toggle above to reveal.
             </span>
@@ -222,10 +222,10 @@ export const ManageUsers = () => {
 
       {/* Students Table */}
       {activeTab === 'students' && (
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+        <div className="bg-charcoal-900 rounded-2xl border border-charcoal-800 shadow-xs overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
+              <thead className="bg-charcoal-950 text-sand-300 font-semibold border-b border-charcoal-800">
                 <tr>
                   <th className="px-6 py-3.5">Student</th>
                   <th className="px-6 py-3.5">Student ID</th>
@@ -237,11 +237,11 @@ export const ManageUsers = () => {
                   <th className="px-6 py-3.5 text-right">Switch User</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 text-slate-700">
+              <tbody className="divide-y divide-charcoal-800 text-sand-200">
                 {filteredStudents.map(student => {
                   const studentCmps = complaints.filter(c => c.studentId === student.studentId).length;
                   return (
-                    <tr key={student.id} className="hover:bg-slate-50/80 transition">
+                    <tr key={student.id} className="hover:bg-charcoal-950/80 transition">
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
                           <img
@@ -250,30 +250,30 @@ export const ManageUsers = () => {
                             className="w-8 h-8 rounded-full object-cover ring-1 ring-slate-200"
                           />
                           <div>
-                            <span className="font-bold text-slate-900 block">{student.name}</span>
-                            <span className="text-[10px] text-slate-400 font-mono">@{student.username}</span>
+                            <span className="font-bold text-sand-100 block">{student.name}</span>
+                            <span className="text-[10px] text-sand-400 font-mono">@{student.username}</span>
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4 font-mono font-bold text-blue-700">
+                      <td className="px-6 py-4 font-mono font-bold text-electric-300">
                         {student.studentId}
                       </td>
                       <td className="px-6 py-4">
-                        <div className="font-medium text-slate-800">{student.course}</div>
-                        <div className="text-[11px] text-slate-400">{student.semester}</div>
+                        <div className="font-medium text-sand-100">{student.course}</div>
+                        <div className="text-[11px] text-sand-400">{student.semester}</div>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="text-slate-800 font-medium">{student.hostelBlock}</div>
-                        <div className="text-[11px] text-slate-400">Room: {student.roomNo}</div>
+                        <div className="text-sand-100 font-medium">{student.hostelBlock}</div>
+                        <div className="text-[11px] text-sand-400">Room: {student.roomNo}</div>
                       </td>
-                      <td className="px-6 py-4 font-mono text-slate-700 font-medium whitespace-nowrap">
+                      <td className="px-6 py-4 font-mono text-sand-200 font-medium whitespace-nowrap">
                         {isMasked ? maskPhoneNumber(student.phone) : student.phone}
                       </td>
-                      <td className="px-6 py-4 font-mono text-slate-600 whitespace-nowrap">
+                      <td className="px-6 py-4 font-mono text-sand-300 whitespace-nowrap">
                         {isMasked ? maskEmail(student.email) : student.email}
                       </td>
                       <td className="px-6 py-4">
-                        <span className="px-2 py-0.5 rounded-full bg-slate-100 font-bold text-slate-700">
+                        <span className="px-2 py-0.5 rounded-full bg-slate-100 font-bold text-sand-200">
                           {studentCmps}
                         </span>
                       </td>
@@ -283,7 +283,7 @@ export const ManageUsers = () => {
                             quickLogin('student', student.id);
                             showToast(`Switched active session to ${student.name}`, 'info');
                           }}
-                          className="px-2.5 py-1 text-xs font-semibold text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-lg transition"
+                          className="px-2.5 py-1 text-xs font-semibold text-electric-300 bg-charcoal-950 hover:bg-blue-100 rounded-lg transition"
                           title="Simulate login as this student"
                         >
                           Switch
@@ -300,10 +300,10 @@ export const ManageUsers = () => {
 
       {/* Staff Table */}
       {activeTab === 'staff' && (
-        <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+        <div className="bg-charcoal-900 rounded-2xl border border-charcoal-800 shadow-xs overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
+              <thead className="bg-charcoal-950 text-sand-300 font-semibold border-b border-charcoal-800">
                 <tr>
                   <th className="px-6 py-3.5">Staff Officer</th>
                   <th className="px-6 py-3.5">Employee ID</th>
@@ -315,11 +315,11 @@ export const ManageUsers = () => {
                   <th className="px-6 py-3.5 text-right">Switch User</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 text-slate-700">
+              <tbody className="divide-y divide-charcoal-800 text-sand-200">
                 {filteredStaff.map(staff => {
                   const staffTasks = complaints.filter(c => c.assignedStaffId === staff.id).length;
                   return (
-                    <tr key={staff.id} className="hover:bg-slate-50/80 transition">
+                    <tr key={staff.id} className="hover:bg-charcoal-950/80 transition">
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
                           <img
@@ -328,24 +328,24 @@ export const ManageUsers = () => {
                             className="w-8 h-8 rounded-full object-cover ring-1 ring-slate-200"
                           />
                           <div>
-                            <span className="font-bold text-slate-900 block">{staff.name}</span>
-                            <span className="text-[10px] text-slate-400 font-mono">@{staff.username}</span>
+                            <span className="font-bold text-sand-100 block">{staff.name}</span>
+                            <span className="text-[10px] text-sand-400 font-mono">@{staff.username}</span>
                           </div>
                         </div>
                       </td>
                       <td className="px-6 py-4 font-mono font-bold text-purple-700">
                         {staff.staffId}
                       </td>
-                      <td className="px-6 py-4 font-semibold text-slate-800">
+                      <td className="px-6 py-4 font-semibold text-sand-100">
                         {staff.department}
                       </td>
-                      <td className="px-6 py-4 text-slate-600">
+                      <td className="px-6 py-4 text-sand-300">
                         {staff.designation}
                       </td>
-                      <td className="px-6 py-4 font-mono text-slate-700 font-medium whitespace-nowrap">
+                      <td className="px-6 py-4 font-mono text-sand-200 font-medium whitespace-nowrap">
                         {isMasked ? maskPhoneNumber(staff.phone) : staff.phone}
                       </td>
-                      <td className="px-6 py-4 font-mono text-slate-600 whitespace-nowrap">
+                      <td className="px-6 py-4 font-mono text-sand-300 whitespace-nowrap">
                         {isMasked ? maskEmail(staff.email) : staff.email}
                       </td>
                       <td className="px-6 py-4">
@@ -375,7 +375,7 @@ export const ManageUsers = () => {
 
       {/* Admin Tab View */}
       {activeTab === 'admin' && (
-        <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-xs max-w-xl">
+        <div className="bg-charcoal-900 rounded-2xl border border-charcoal-800 p-6 sm:p-8 shadow-xs max-w-xl">
           <div className="flex items-center gap-4 mb-6">
             <img
               src={adminObj.avatar}
@@ -386,27 +386,27 @@ export const ManageUsers = () => {
               <span className="px-2.5 py-0.5 bg-rose-100 text-rose-800 rounded-full text-xs font-bold uppercase tracking-wider">
                 Chief Administrator
               </span>
-              <h3 className="text-lg font-bold text-slate-900 mt-1">{adminObj.name}</h3>
-              <p className="text-xs text-slate-500">{adminObj.designation}</p>
+              <h3 className="text-lg font-bold text-sand-100 mt-1">{adminObj.name}</h3>
+              <p className="text-xs text-sand-400">{adminObj.designation}</p>
             </div>
           </div>
 
-          <div className="space-y-3 text-xs border-t border-slate-100 pt-4">
+          <div className="space-y-3 text-xs border-t border-charcoal-800 pt-4">
             <div className="flex justify-between py-1 border-b border-slate-50">
-              <span className="text-slate-400">Admin Code:</span>
-              <span className="font-mono font-bold text-slate-800">{adminObj.adminId}</span>
+              <span className="text-sand-400">Admin Code:</span>
+              <span className="font-mono font-bold text-sand-100">{adminObj.adminId}</span>
             </div>
             <div className="flex justify-between py-1 border-b border-slate-50">
-              <span className="text-slate-400">Username:</span>
-              <span className="font-mono font-bold text-slate-800">{adminObj.username}</span>
+              <span className="text-sand-400">Username:</span>
+              <span className="font-mono font-bold text-sand-100">{adminObj.username}</span>
             </div>
             <div className="flex justify-between py-1 border-b border-slate-50">
-              <span className="text-slate-400">Email:</span>
-              <span className="font-mono text-slate-800">{adminObj.email}</span>
+              <span className="text-sand-400">Email:</span>
+              <span className="font-mono text-sand-100">{adminObj.email}</span>
             </div>
             <div className="flex justify-between py-1">
-              <span className="text-slate-400">Emergency Phone:</span>
-              <span className="font-mono text-slate-800">{adminObj.phone}</span>
+              <span className="text-sand-400">Emergency Phone:</span>
+              <span className="font-mono text-sand-100">{adminObj.phone}</span>
             </div>
           </div>
         </div>
@@ -421,7 +421,7 @@ export const ManageUsers = () => {
       >
         <form onSubmit={handleAddUserSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-semibold text-slate-700 uppercase mb-1">
+            <label className="block text-xs font-semibold text-sand-200 uppercase mb-1">
               User Role <span className="text-rose-500">*</span>
             </label>
             <div className="grid grid-cols-2 gap-2">
@@ -430,8 +430,8 @@ export const ManageUsers = () => {
                 onClick={() => setNewUserData({ ...newUserData, role: 'student' })}
                 className={`py-2 text-xs font-semibold rounded-xl border transition ${
                   newUserData.role === 'student'
-                    ? 'border-blue-600 bg-blue-50 text-blue-700'
-                    : 'border-slate-200 bg-slate-50 text-slate-700'
+                    ? 'border-blue-600 bg-charcoal-950 text-electric-300'
+                    : 'border-charcoal-800 bg-charcoal-950 text-sand-200'
                 }`}
               >
                 Student Account
@@ -442,7 +442,7 @@ export const ManageUsers = () => {
                 className={`py-2 text-xs font-semibold rounded-xl border transition ${
                   newUserData.role === 'staff'
                     ? 'border-purple-600 bg-purple-50 text-purple-700'
-                    : 'border-slate-200 bg-slate-50 text-slate-700'
+                    : 'border-charcoal-800 bg-charcoal-950 text-sand-200'
                 }`}
               >
                 Staff Account
@@ -451,7 +451,7 @@ export const ManageUsers = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 uppercase mb-1">
+            <label className="block text-xs font-semibold text-sand-200 uppercase mb-1">
               Full Name <span className="text-rose-500">*</span>
             </label>
             <input
@@ -460,12 +460,12 @@ export const ManageUsers = () => {
               value={newUserData.name}
               onChange={e => setNewUserData({ ...newUserData, name: e.target.value })}
               placeholder="e.g. Vikramaditya Rathore"
-              className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full p-2.5 bg-charcoal-950 border border-charcoal-800 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 uppercase mb-1">
+            <label className="block text-xs font-semibold text-sand-200 uppercase mb-1">
               Username (Login) <span className="text-rose-500">*</span>
             </label>
             <input
@@ -474,14 +474,14 @@ export const ManageUsers = () => {
               value={newUserData.username}
               onChange={e => setNewUserData({ ...newUserData, username: e.target.value })}
               placeholder="e.g. student11 or staff06"
-              className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full p-2.5 bg-charcoal-950 border border-charcoal-800 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
           {newUserData.role === 'student' ? (
             <>
               <div>
-                <label className="block text-xs font-semibold text-slate-700 uppercase mb-1">
+                <label className="block text-xs font-semibold text-sand-200 uppercase mb-1">
                   Academic Degree Course
                 </label>
                 <input
@@ -489,13 +489,13 @@ export const ManageUsers = () => {
                   value={newUserData.course}
                   onChange={e => setNewUserData({ ...newUserData, course: e.target.value })}
                   placeholder="e.g. B.Tech Computer Science"
-                  className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full p-2.5 bg-charcoal-950 border border-charcoal-800 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 uppercase mb-1">
+                  <label className="block text-xs font-semibold text-sand-200 uppercase mb-1">
                     Hostel Block
                   </label>
                   <input
@@ -503,11 +503,11 @@ export const ManageUsers = () => {
                     value={newUserData.hostelBlock}
                     onChange={e => setNewUserData({ ...newUserData, hostelBlock: e.target.value })}
                     placeholder="Block-A"
-                    className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs"
+                    className="w-full p-2.5 bg-charcoal-950 border border-charcoal-800 rounded-xl text-xs"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-700 uppercase mb-1">
+                  <label className="block text-xs font-semibold text-sand-200 uppercase mb-1">
                     Room No
                   </label>
                   <input
@@ -515,7 +515,7 @@ export const ManageUsers = () => {
                     value={newUserData.roomNo}
                     onChange={e => setNewUserData({ ...newUserData, roomNo: e.target.value })}
                     placeholder="204"
-                    className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs"
+                    className="w-full p-2.5 bg-charcoal-950 border border-charcoal-800 rounded-xl text-xs"
                   />
                 </div>
               </div>
@@ -523,7 +523,7 @@ export const ManageUsers = () => {
           ) : (
             <>
               <div>
-                <label className="block text-xs font-semibold text-slate-700 uppercase mb-1">
+                <label className="block text-xs font-semibold text-sand-200 uppercase mb-1">
                   Assigned Department
                 </label>
                 <input
@@ -531,12 +531,12 @@ export const ManageUsers = () => {
                   value={newUserData.department}
                   onChange={e => setNewUserData({ ...newUserData, department: e.target.value })}
                   placeholder="e.g. Electrical Maintenance"
-                  className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full p-2.5 bg-charcoal-950 border border-charcoal-800 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-slate-700 uppercase mb-1">
+                <label className="block text-xs font-semibold text-sand-200 uppercase mb-1">
                   Designation
                 </label>
                 <input
@@ -544,7 +544,7 @@ export const ManageUsers = () => {
                   value={newUserData.designation}
                   onChange={e => setNewUserData({ ...newUserData, designation: e.target.value })}
                   placeholder="e.g. Electrical Supervisor"
-                  className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full p-2.5 bg-charcoal-950 border border-charcoal-800 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
             </>
@@ -554,13 +554,13 @@ export const ManageUsers = () => {
             <button
               type="button"
               onClick={() => setIsAddModalOpen(false)}
-              className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition"
+              className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-sand-200 rounded-xl text-xs font-semibold transition"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold transition"
+              className="px-5 py-2 bg-electric-600 hover:bg-blue-700 text-white rounded-xl text-xs font-semibold transition"
             >
               Create Account
             </button>

@@ -56,9 +56,9 @@ export const StaffComplaintDetails = () => {
 
   if (!complaint) {
     return (
-      <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center max-w-lg mx-auto shadow-xs">
+      <div className="bg-charcoal-900 rounded-2xl border border-charcoal-800 p-12 text-center max-w-lg mx-auto shadow-xs">
         <AlertTriangle className="w-12 h-12 text-amber-500 mx-auto mb-3" />
-        <h2 className="text-lg font-bold text-slate-900 mb-1">Complaint Not Found</h2>
+        <h2 className="text-lg font-bold text-sand-100 mb-1">Complaint Not Found</h2>
         <Link
           to="/staff/assigned"
           className="px-4 py-2 bg-blue-600 text-white rounded-xl text-xs font-semibold hover:bg-blue-700 mt-4 inline-block"
@@ -133,14 +133,14 @@ export const StaffComplaintDetails = () => {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <Link
           to="/staff/assigned"
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 transition"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-sand-300 hover:text-sand-100 transition"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back to Assigned Complaints</span>
         </Link>
 
         <div className="flex items-center gap-2">
-          <div className="px-3 py-1.5 bg-slate-100 border border-slate-200 rounded-xl text-xs font-mono font-bold text-slate-800">
+          <div className="px-3 py-1.5 bg-slate-100 border border-charcoal-800 rounded-xl text-xs font-mono font-bold text-sand-100">
             {complaint.trackingId}
           </div>
         </div>
@@ -163,29 +163,29 @@ export const StaffComplaintDetails = () => {
         {/* Left 2 Cols: Details & Timeline */}
         <div className="lg:col-span-2 space-y-6">
           {/* Main Info Card */}
-          <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-xs space-y-6">
+          <div className="bg-charcoal-900 rounded-2xl border border-charcoal-800 p-6 sm:p-8 shadow-xs space-y-6">
             <div>
               <div className="flex flex-wrap items-center gap-2 mb-3">
                 <StatusBadge status={complaint.status} size="lg" />
                 <PriorityBadge priority={complaint.priority} size="md" />
                 {complaint.isConfidential && (
-                  <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-slate-100 text-slate-700 rounded-full text-xs font-medium border border-slate-200">
+                  <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-slate-100 text-sand-200 rounded-full text-xs font-medium border border-charcoal-800">
                     <Lock className="w-3 h-3" />
                     <span>Confidential Student</span>
                   </span>
                 )}
               </div>
-              <h1 className="text-xl sm:text-2xl font-bold text-slate-900">
+              <h1 className="text-xl sm:text-2xl font-bold text-sand-100">
                 {complaint.title}
               </h1>
             </div>
 
             {/* Description */}
             <div className="space-y-2">
-              <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+              <h4 className="text-xs font-semibold uppercase tracking-wider text-sand-400">
                 Student Grievance Description
               </h4>
-              <p className="text-xs sm:text-sm text-slate-700 leading-relaxed whitespace-pre-line bg-slate-50 p-4 rounded-xl border border-slate-100">
+              <p className="text-xs sm:text-sm text-sand-200 leading-relaxed whitespace-pre-line bg-charcoal-950 p-4 rounded-xl border border-charcoal-800">
                 {complaint.description}
               </p>
             </div>
@@ -193,10 +193,10 @@ export const StaffComplaintDetails = () => {
             {/* Evidence Image */}
             {complaint.evidenceImage && (
               <div className="space-y-2">
-                <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-500">
+                <h4 className="text-xs font-semibold uppercase tracking-wider text-sand-400">
                   Supporting Photo Evidence
                 </h4>
-                <div className="relative group rounded-xl overflow-hidden border border-slate-200 max-w-md bg-slate-100">
+                <div className="relative group rounded-xl overflow-hidden border border-charcoal-800 max-w-md bg-slate-100">
                   <img
                     src={complaint.evidenceImage}
                     alt="Supporting Evidence"
@@ -215,7 +215,7 @@ export const StaffComplaintDetails = () => {
           </div>
 
           {/* Interactive Stepper & Audit Trail */}
-          <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-xs">
+          <div className="bg-charcoal-900 rounded-2xl border border-charcoal-800 p-6 sm:p-8 shadow-xs">
             <Timeline history={complaint.history} currentStatus={complaint.status} />
           </div>
         </div>
@@ -223,22 +223,22 @@ export const StaffComplaintDetails = () => {
         {/* Right Col: Staff Control Panel */}
         <div className="space-y-6">
           {/* Action Form: Update Status, Remarks, Assign */}
-          <div className="bg-white rounded-2xl border border-blue-200 shadow-md p-6 space-y-5">
-            <div className="flex items-center gap-2 pb-3 border-b border-slate-100">
-              <Cog className="w-5 h-5 text-blue-600" />
-              <h3 className="text-base font-bold text-slate-900">Department Action Panel</h3>
+          <div className="bg-charcoal-900 rounded-2xl border border-blue-200 shadow-md p-6 space-y-5">
+            <div className="flex items-center gap-2 pb-3 border-b border-charcoal-800">
+              <Cog className="w-5 h-5 text-electric-400" />
+              <h3 className="text-base font-bold text-sand-100">Department Action Panel</h3>
             </div>
 
             <form onSubmit={handleUpdateStatusAndRemarks} className="space-y-4">
               {/* Change Status Dropdown */}
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1.5">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-sand-200 mb-1.5">
                   Update Lifecycle Status
                 </label>
                 <select
                   value={selectedStatus}
                   onChange={e => setSelectedStatus(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 bg-charcoal-950 border border-charcoal-800 rounded-xl text-xs sm:text-sm font-semibold focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="Submitted">Submitted (Pending Triage)</option>
                   <option value="Under Review">Under Review</option>
@@ -251,14 +251,14 @@ export const StaffComplaintDetails = () => {
               {/* Assign Technician */}
               <div>
                 <div className="flex items-center justify-between mb-1.5">
-                  <label className="text-xs font-semibold uppercase tracking-wider text-slate-700">
+                  <label className="text-xs font-semibold uppercase tracking-wider text-sand-200">
                     Assigned Technician
                   </label>
                   {complaint.assignedStaffId !== currentUser?.id && (
                     <button
                       type="button"
                       onClick={handleQuickAssignSelf}
-                      className="text-[11px] font-semibold text-blue-600 hover:text-blue-800"
+                      className="text-[11px] font-semibold text-electric-400 hover:text-blue-800"
                     >
                       Assign to Me
                     </button>
@@ -267,7 +267,7 @@ export const StaffComplaintDetails = () => {
                 <select
                   value={selectedStaffId}
                   onChange={e => setSelectedStaffId(e.target.value)}
-                  className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full px-3 py-2 bg-charcoal-950 border border-charcoal-800 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">Unassigned</option>
                   {users.staff.map(s => (
@@ -280,7 +280,7 @@ export const StaffComplaintDetails = () => {
 
               {/* Progress Remarks / Resolution Notes */}
               <div>
-                <label className="block text-xs font-semibold uppercase tracking-wider text-slate-700 mb-1.5">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-sand-200 mb-1.5">
                   Progress Remarks / Resolution Notes <span className="text-rose-500">*</span>
                 </label>
                 <textarea
@@ -295,9 +295,9 @@ export const StaffComplaintDetails = () => {
                       ? 'Specify mandatory institutional reason for rejection...'
                       : 'Provide on-site inspection findings or work update for the student...'
                   }
-                  className="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="w-full p-3 bg-charcoal-950 border border-charcoal-800 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 ></textarea>
-                <span className="text-[10px] text-slate-400 mt-0.5 block">
+                <span className="text-[10px] text-sand-400 mt-0.5 block">
                   Remarks will be saved to the permanent audit trail and notified to the student.
                 </span>
               </div>
@@ -314,46 +314,46 @@ export const StaffComplaintDetails = () => {
           </div>
 
           {/* Student & Location Metadata */}
-          <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+          <div className="bg-charcoal-900 rounded-2xl border border-charcoal-800 p-6 shadow-xs space-y-4">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-sand-400">
               Student & Location Details
             </h3>
 
             <div className="space-y-3 text-xs">
               <div className="flex items-start gap-3">
-                <User className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
+                <User className="w-4 h-4 text-electric-400 flex-shrink-0 mt-0.5" />
                 <div>
-                  <span className="text-slate-400 block text-[11px]">Submitted By</span>
-                  <span className="font-semibold text-slate-800">
+                  <span className="text-sand-400 block text-[11px]">Submitted By</span>
+                  <span className="font-semibold text-sand-100">
                     {complaint.isConfidential ? 'Anonymous Student (Confidential)' : complaint.studentName}
                   </span>
                   {!complaint.isConfidential && (
-                    <span className="text-slate-500 block text-[11px] font-mono">{complaint.studentId}</span>
+                    <span className="text-sand-400 block text-[11px] font-mono">{complaint.studentId}</span>
                   )}
                 </div>
               </div>
 
               <div className="flex items-start gap-3">
-                <MapPin className="w-4 h-4 text-blue-600 flex-shrink-0 mt-0.5" />
+                <MapPin className="w-4 h-4 text-electric-400 flex-shrink-0 mt-0.5" />
                 <div>
-                  <span className="text-slate-400 block text-[11px]">Incident Location</span>
-                  <span className="font-semibold text-slate-800">{complaint.location}</span>
+                  <span className="text-sand-400 block text-[11px]">Incident Location</span>
+                  <span className="font-semibold text-sand-100">{complaint.location}</span>
                 </div>
               </div>
 
               <div className="flex items-start gap-3">
-                <Calendar className="w-4 h-4 text-slate-400 flex-shrink-0 mt-0.5" />
+                <Calendar className="w-4 h-4 text-sand-400 flex-shrink-0 mt-0.5" />
                 <div>
-                  <span className="text-slate-400 block text-[11px]">Registered Date</span>
-                  <span className="text-slate-800 font-medium">{formatDate(complaint.submissionDate)}</span>
+                  <span className="text-sand-400 block text-[11px]">Registered Date</span>
+                  <span className="text-sand-100 font-medium">{formatDate(complaint.submissionDate)}</span>
                 </div>
               </div>
 
               <div className="flex items-start gap-3">
-                <Clock className="w-4 h-4 text-slate-400 flex-shrink-0 mt-0.5" />
+                <Clock className="w-4 h-4 text-sand-400 flex-shrink-0 mt-0.5" />
                 <div>
-                  <span className="text-slate-400 block text-[11px]">Target SLA Resolution</span>
-                  <span className={`font-semibold ${overdue ? 'text-rose-600' : 'text-slate-800'}`}>
+                  <span className="text-sand-400 block text-[11px]">Target SLA Resolution</span>
+                  <span className={`font-semibold ${overdue ? 'text-rose-600' : 'text-sand-100'}`}>
                     {formatDate(complaint.targetResolutionDate)}
                   </span>
                 </div>
@@ -376,7 +376,7 @@ export const StaffComplaintDetails = () => {
             alt="Evidence Detailed View"
             className="w-full max-h-[70vh] object-contain rounded-xl bg-slate-900"
           />
-          <p className="text-xs text-slate-500">
+          <p className="text-xs text-sand-400">
             Uploaded by {complaint.isConfidential ? 'Anonymous Student' : complaint.studentName} on {formatDate(complaint.submissionDate)}
           </p>
         </div>

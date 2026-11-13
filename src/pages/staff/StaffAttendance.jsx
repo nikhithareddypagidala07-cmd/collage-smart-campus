@@ -120,12 +120,12 @@ export const StaffAttendance = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800 text-xs font-semibold mb-1">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-charcoal-900 text-electric-300 border border-electric-400/30 text-xs font-semibold mb-1">
             <GraduationCap className="w-3.5 h-3.5" />
             <span>Sanjay Ghodawat University • Faculty Attendance Desk</span>
           </div>
-          <h1 className="text-2xl font-bold text-slate-900">Lecture Attendance Marker</h1>
-          <p className="text-xs sm:text-sm text-slate-500">
+          <h1 className="text-2xl font-bold text-sand-100">Lecture Attendance Marker</h1>
+          <p className="text-xs sm:text-sm text-sand-300">
             Select course, subject, and date to record and submit student attendance
           </p>
         </div>
@@ -145,69 +145,69 @@ export const StaffAttendance = () => {
       </div>
 
       {/* Control Bar: Class, Subject, Date Selection */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4">
-        <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+      <div className="bg-charcoal-900 rounded-2xl border border-charcoal-800 p-6 shadow-xl space-y-4 text-sand-100">
+        <h3 className="text-xs font-bold uppercase tracking-wider text-sand-400">
           Session Configuration
         </h3>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
-            <label className="block text-xs font-semibold text-slate-700 uppercase mb-1">
+            <label className="block text-xs font-semibold text-sand-300 uppercase mb-1">
               Select Class / Program
             </label>
             <select
               value={selectedCourse}
               onChange={handleCourseChange}
-              className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full p-2.5 bg-charcoal-950 border border-charcoal-700 rounded-xl text-xs sm:text-sm font-medium text-sand-100 focus:outline-none focus:ring-2 focus:ring-electric-400"
             >
               {courses.map(c => (
-                <option key={c.id} value={c.name}>{c.name} ({c.semester})</option>
+                <option key={c.id} value={c.name} className="bg-charcoal-950 text-sand-100">{c.name} ({c.semester})</option>
               ))}
             </select>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 uppercase mb-1">
+            <label className="block text-xs font-semibold text-sand-300 uppercase mb-1">
               Subject / Course Code
             </label>
             <select
               value={selectedSubject}
               onChange={e => setSelectedSubject(e.target.value)}
-              className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full p-2.5 bg-charcoal-950 border border-charcoal-700 rounded-xl text-xs sm:text-sm font-medium text-sand-100 focus:outline-none focus:ring-2 focus:ring-electric-400"
             >
               {(subjectsMap[selectedCourse] || []).map(s => (
-                <option key={s.code} value={s.name}>{s.name}</option>
+                <option key={s.code} value={s.name} className="bg-charcoal-950 text-sand-100">{s.name}</option>
               ))}
             </select>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 uppercase mb-1">
+            <label className="block text-xs font-semibold text-sand-300 uppercase mb-1">
               Lecture Date
             </label>
             <input
               type="date"
               value={selectedDate}
               onChange={e => setSelectedDate(e.target.value)}
-              className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono"
+              className="w-full p-2.5 bg-charcoal-950 border border-charcoal-700 rounded-xl text-xs sm:text-sm font-medium text-sand-100 focus:outline-none focus:ring-2 focus:ring-electric-400 font-mono"
             />
           </div>
         </div>
 
         {/* Real-time Tally Strip & Batch Actions */}
-        <div className="pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div className="pt-4 border-t border-charcoal-800 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div className="flex items-center gap-4 text-xs font-semibold">
-            <span className="text-slate-600">Total: <strong>{totalStudents}</strong></span>
-            <span className="text-emerald-600">Present: <strong>{presentCount}</strong></span>
-            <span className="text-rose-600">Absent: <strong>{absentCount}</strong></span>
-            <span className="text-amber-600">On Leave: <strong>{onLeaveCount}</strong></span>
+            <span className="text-sand-300">Total: <strong className="text-sand-100">{totalStudents}</strong></span>
+            <span className="text-emerald-400">Present: <strong>{presentCount}</strong></span>
+            <span className="text-rose-400">Absent: <strong>{absentCount}</strong></span>
+            <span className="text-amber-400">On Leave: <strong>{onLeaveCount}</strong></span>
           </div>
 
           <div className="flex items-center gap-2">
             <button
               type="button"
               onClick={() => handleMarkAll('Present')}
-              className="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 rounded-lg text-xs font-semibold flex items-center gap-1 transition"
+              className="px-3 py-1.5 bg-emerald-950/80 hover:bg-emerald-900 border border-emerald-800 text-emerald-300 rounded-lg text-xs font-semibold flex items-center gap-1 transition"
             >
               <CheckCheck className="w-3.5 h-3.5" />
               <span>Mark All Present</span>
@@ -215,7 +215,7 @@ export const StaffAttendance = () => {
             <button
               type="button"
               onClick={() => handleMarkAll('Absent')}
-              className="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 rounded-lg text-xs font-semibold flex items-center gap-1 transition"
+              className="px-3 py-1.5 bg-rose-950/80 hover:bg-rose-900 border border-rose-800 text-rose-300 rounded-lg text-xs font-semibold flex items-center gap-1 transition"
             >
               <XCircle className="w-3.5 h-3.5" />
               <span>Mark All Absent</span>
@@ -225,25 +225,25 @@ export const StaffAttendance = () => {
       </div>
 
       {/* Student Roster Marking Table */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
-        <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+      <div className="bg-charcoal-900 rounded-2xl border border-charcoal-800 shadow-xl overflow-hidden text-sand-100">
+        <div className="px-6 py-4 border-b border-charcoal-800 flex items-center justify-between">
           <div>
-            <h3 className="text-base font-bold text-slate-900">Enrolled Student Roster</h3>
-            <p className="text-xs text-slate-500">Mark attendance status for each student in the batch</p>
+            <h3 className="text-base font-bold text-sand-100">Enrolled Student Roster</h3>
+            <p className="text-xs text-sand-300">Mark attendance status for each student in the batch</p>
           </div>
-          <span className="text-xs font-mono font-bold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-lg">
+          <span className="text-xs font-mono font-bold text-electric-400 bg-charcoal-950 border border-charcoal-700 px-2.5 py-1 rounded-lg">
             {selectedCourse}
           </span>
         </div>
 
         {enrolledStudents.length === 0 ? (
-          <div className="p-12 text-center text-slate-400 text-xs">
+          <div className="p-12 text-center text-sand-400 text-xs">
             No students registered in this course. Please select another program.
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
+              <thead className="bg-charcoal-950 text-sand-300 font-semibold border-b border-charcoal-800">
                 <tr>
                   <th className="px-6 py-3.5">Roll / Student ID</th>
                   <th className="px-6 py-3.5">Student Name</th>
@@ -251,13 +251,13 @@ export const StaffAttendance = () => {
                   <th className="px-6 py-3.5 text-center">Status Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 text-slate-700">
+              <tbody className="divide-y divide-charcoal-800 text-sand-200">
                 {enrolledStudents.map(student => {
                   const currentStatus = attendanceMap[student.studentId] || 'Present';
 
                   return (
-                    <tr key={student.id} className="hover:bg-slate-50/80 transition">
-                      <td className="px-6 py-4 font-mono font-bold text-blue-700">
+                    <tr key={student.id} className="hover:bg-charcoal-800/40 transition">
+                      <td className="px-6 py-4 font-mono font-bold text-electric-400">
                         {student.studentId}
                       </td>
                       <td className="px-6 py-4">
@@ -265,12 +265,12 @@ export const StaffAttendance = () => {
                           <img
                             src={student.avatar}
                             alt={student.name}
-                            className="w-7 h-7 rounded-full object-cover ring-1 ring-slate-200"
+                            className="w-7 h-7 rounded-full object-cover ring-1 ring-charcoal-700"
                           />
-                          <span className="font-bold text-slate-900">{student.name}</span>
+                          <span className="font-bold text-sand-100">{student.name}</span>
                         </div>
                       </td>
-                      <td className="px-6 py-4 text-slate-500">
+                      <td className="px-6 py-4 text-sand-400">
                         {student.semester} • {student.hostelBlock}
                       </td>
                       <td className="px-6 py-4">
@@ -282,7 +282,7 @@ export const StaffAttendance = () => {
                             className={`px-3 py-1.5 rounded-xl font-semibold text-xs flex items-center gap-1 transition ${
                               currentStatus === 'Present'
                                 ? 'bg-emerald-600 text-white shadow-xs'
-                                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                                : 'bg-charcoal-950 text-sand-400 hover:bg-charcoal-800 border border-charcoal-700'
                             }`}
                           >
                             <CheckCircle2 className="w-3.5 h-3.5" />
@@ -296,7 +296,7 @@ export const StaffAttendance = () => {
                             className={`px-3 py-1.5 rounded-xl font-semibold text-xs flex items-center gap-1 transition ${
                               currentStatus === 'Absent'
                                 ? 'bg-rose-600 text-white shadow-xs'
-                                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                                : 'bg-charcoal-950 text-sand-400 hover:bg-charcoal-800 border border-charcoal-700'
                             }`}
                           >
                             <XCircle className="w-3.5 h-3.5" />
@@ -310,7 +310,7 @@ export const StaffAttendance = () => {
                             className={`px-3 py-1.5 rounded-xl font-semibold text-xs flex items-center gap-1 transition ${
                               currentStatus === 'On Leave'
                                 ? 'bg-amber-500 text-white shadow-xs'
-                                : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                                : 'bg-charcoal-950 text-sand-400 hover:bg-charcoal-800 border border-charcoal-700'
                             }`}
                           >
                             <Clock className="w-3.5 h-3.5" />
@@ -326,7 +326,7 @@ export const StaffAttendance = () => {
           </div>
         )}
 
-        <div className="p-4 bg-slate-50 border-t border-slate-200 flex justify-end">
+        <div className="p-4 bg-charcoal-950 border-t border-charcoal-800 flex justify-end">
           <button
             onClick={handleSubmit}
             disabled={isSubmitting || enrolledStudents.length === 0}
@@ -339,24 +339,24 @@ export const StaffAttendance = () => {
       </div>
 
       {/* Recent Lecture History Recorded by Faculty */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-6 shadow-xs space-y-4">
+      <div className="bg-charcoal-900 rounded-2xl border border-charcoal-800 p-6 shadow-xl space-y-4 text-sand-100">
         <div className="flex items-center gap-2">
-          <History className="w-4 h-4 text-slate-400" />
-          <h3 className="text-base font-bold text-slate-900">Recent Attendance Sessions Log</h3>
+          <History className="w-4 h-4 text-sand-400" />
+          <h3 className="text-base font-bold text-sand-100">Recent Attendance Sessions Log</h3>
         </div>
 
-        <div className="divide-y divide-slate-100 text-xs">
+        <div className="divide-y divide-charcoal-800 text-xs">
           {sessions.slice(0, 4).map(sess => (
             <div key={sess.id} className="py-3 flex items-center justify-between gap-3">
               <div>
-                <p className="font-bold text-slate-900">{sess.subject}</p>
-                <p className="text-slate-500 text-[11px]">
+                <p className="font-bold text-sand-100">{sess.subject}</p>
+                <p className="text-sand-400 text-[11px]">
                   {sess.course} • Marked by {sess.markedBy} • {sess.records.length} students recorded
                 </p>
               </div>
               <div className="text-right">
-                <span className="font-mono text-slate-700 font-semibold">{sess.date}</span>
-                <span className="block text-[10px] text-emerald-600 font-bold">Saved to LocalStorage</span>
+                <span className="font-mono text-sand-200 font-semibold">{sess.date}</span>
+                <span className="block text-[10px] text-electric-400 font-bold">Saved to LocalStorage</span>
               </div>
             </div>
           ))}

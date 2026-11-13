@@ -144,8 +144,8 @@ export const AllComplaints = () => {
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Campus-Wide Complaints Central Register</h1>
-          <p className="text-xs sm:text-sm text-slate-500">
+          <h1 className="text-2xl font-bold text-sand-100">Campus-Wide Complaints Central Register</h1>
+          <p className="text-xs sm:text-sm text-sand-300">
             Audit, reassign, and escalate all {complaints.length} grievances across college divisions
           </p>
         </div>
@@ -160,84 +160,84 @@ export const AllComplaints = () => {
       </div>
 
       {/* Filter Toolbar */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-xs space-y-3">
+      <div className="bg-charcoal-900 rounded-2xl border border-charcoal-800 p-4 shadow-xl space-y-3 text-sand-100">
         <div className="relative">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-3" />
+          <Search className="w-4 h-4 text-sand-400 absolute left-3 top-3" />
           <input
             type="text"
             value={search}
             onChange={e => setSearch(e.target.value)}
             placeholder="Search by Tracking ID, Title, Student Name, Location, or Keyword..."
-            className="w-full pl-9 pr-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full pl-9 pr-3 py-2 bg-charcoal-950 border border-charcoal-700 rounded-xl text-xs sm:text-sm text-sand-100 placeholder-charcoal-500 focus:outline-none focus:ring-2 focus:ring-electric-400 focus:border-electric-400"
           />
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 pt-2 border-t border-slate-100 text-xs">
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 pt-2 border-t border-charcoal-800 text-xs">
           <div>
-            <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">
+            <label className="text-[10px] font-bold uppercase tracking-wider text-sand-400 block mb-1">
               Status Filter
             </label>
             <select
               value={selectedStatus}
               onChange={e => setSelectedStatus(e.target.value)}
-              className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs"
+              className="w-full px-2.5 py-1.5 bg-charcoal-950 border border-charcoal-700 rounded-lg text-xs text-sand-100 focus:ring-1 focus:ring-electric-400"
             >
-              <option value="All">All Statuses</option>
-              <option value="Submitted">Submitted</option>
-              <option value="Under Review">Under Review</option>
-              <option value="In Progress">In Progress</option>
-              <option value="Resolved">Resolved</option>
-              <option value="Rejected">Rejected</option>
-              <option value="Escalated">Escalated</option>
-              <option value="Reopened">Reopened</option>
+              <option value="All" className="bg-charcoal-950 text-sand-100">All Statuses</option>
+              <option value="Submitted" className="bg-charcoal-950 text-sand-100">Submitted</option>
+              <option value="Under Review" className="bg-charcoal-950 text-sand-100">Under Review</option>
+              <option value="In Progress" className="bg-charcoal-950 text-sand-100">In Progress</option>
+              <option value="Resolved" className="bg-charcoal-950 text-sand-100">Resolved</option>
+              <option value="Rejected" className="bg-charcoal-950 text-sand-100">Rejected</option>
+              <option value="Escalated" className="bg-charcoal-950 text-sand-100">Escalated</option>
+              <option value="Reopened" className="bg-charcoal-950 text-sand-100">Reopened</option>
             </select>
           </div>
 
           <div>
-            <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">
+            <label className="text-[10px] font-bold uppercase tracking-wider text-sand-400 block mb-1">
               Priority Filter
             </label>
             <select
               value={selectedPriority}
               onChange={e => setSelectedPriority(e.target.value)}
-              className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs"
+              className="w-full px-2.5 py-1.5 bg-charcoal-950 border border-charcoal-700 rounded-lg text-xs text-sand-100 focus:ring-1 focus:ring-electric-400"
             >
-              <option value="All">All Priorities</option>
-              <option value="Urgent">Urgent</option>
-              <option value="High">High</option>
-              <option value="Medium">Medium</option>
-              <option value="Low">Low</option>
+              <option value="All" className="bg-charcoal-950 text-sand-100">All Priorities</option>
+              <option value="Urgent" className="bg-charcoal-950 text-sand-100">Urgent</option>
+              <option value="High" className="bg-charcoal-950 text-sand-100">High</option>
+              <option value="Medium" className="bg-charcoal-950 text-sand-100">Medium</option>
+              <option value="Low" className="bg-charcoal-950 text-sand-100">Low</option>
             </select>
           </div>
 
           <div>
-            <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">
+            <label className="text-[10px] font-bold uppercase tracking-wider text-sand-400 block mb-1">
               Category
             </label>
             <select
               value={selectedCategory}
               onChange={e => setSelectedCategory(e.target.value)}
-              className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs"
+              className="w-full px-2.5 py-1.5 bg-charcoal-950 border border-charcoal-700 rounded-lg text-xs text-sand-100 focus:ring-1 focus:ring-electric-400"
             >
-              <option value="All">All 10 Categories</option>
+              <option value="All" className="bg-charcoal-950 text-sand-100">All 10 Categories</option>
               {categories.map(cat => (
-                <option key={cat.id} value={cat.name}>{cat.name}</option>
+                <option key={cat.id} value={cat.name} className="bg-charcoal-950 text-sand-100">{cat.name}</option>
               ))}
             </select>
           </div>
 
           <div>
-            <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">
+            <label className="text-[10px] font-bold uppercase tracking-wider text-sand-400 block mb-1">
               Department
             </label>
             <select
               value={selectedDept}
               onChange={e => setSelectedDept(e.target.value)}
-              className="w-full px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs"
+              className="w-full px-2.5 py-1.5 bg-charcoal-950 border border-charcoal-700 rounded-lg text-xs text-sand-100 focus:ring-1 focus:ring-electric-400"
             >
-              <option value="All">All Departments</option>
+              <option value="All" className="bg-charcoal-950 text-sand-100">All Departments</option>
               {departments.map(dept => (
-                <option key={dept.id} value={dept.name}>{dept.name}</option>
+                <option key={dept.id} value={dept.name} className="bg-charcoal-950 text-sand-100">{dept.name}</option>
               ))}
             </select>
           </div>
@@ -245,9 +245,9 @@ export const AllComplaints = () => {
           <div className="flex items-end">
             <button
               onClick={resetFilters}
-              className="w-full px-3 py-1.5 text-xs text-slate-600 hover:text-slate-900 hover:bg-slate-100 border border-slate-200 rounded-lg flex items-center justify-center gap-1.5 transition"
+              className="w-full px-3 py-1.5 text-xs text-sand-300 hover:text-sand-100 bg-charcoal-950 hover:bg-charcoal-800 border border-charcoal-700 rounded-lg flex items-center justify-center gap-1.5 transition"
             >
-              <RotateCcw className="w-3.5 h-3.5 text-slate-400" />
+              <RotateCcw className="w-3.5 h-3.5 text-sand-400" />
               <span>Reset Filters</span>
             </button>
           </div>
@@ -255,15 +255,15 @@ export const AllComplaints = () => {
       </div>
 
       {/* Main Table */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+      <div className="bg-charcoal-900 rounded-2xl border border-charcoal-800 shadow-xl overflow-hidden text-sand-100">
         {filtered.length === 0 ? (
-          <div className="p-12 text-center text-slate-400 text-xs">
+          <div className="p-12 text-center text-sand-400 text-xs">
             No complaints found matching this criteria.
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
+              <thead className="bg-charcoal-950 text-sand-300 font-semibold border-b border-charcoal-800">
                 <tr>
                   <th className="px-6 py-3.5">Tracking ID</th>
                   <th className="px-6 py-3.5">Complaint Title</th>
@@ -275,19 +275,19 @@ export const AllComplaints = () => {
                   <th className="px-6 py-3.5 text-right">Admin Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 text-slate-700">
+              <tbody className="divide-y divide-charcoal-800 text-sand-200">
                 {filtered.map(item => {
                   const overdue = isOverdue(item);
                   return (
-                    <tr key={item.id} className="hover:bg-slate-50/80 transition">
-                      <td className="px-6 py-4 font-mono font-bold text-blue-700 whitespace-nowrap">
+                    <tr key={item.id} className="hover:bg-charcoal-800/40 transition">
+                      <td className="px-6 py-4 font-mono font-bold text-electric-400 whitespace-nowrap">
                         {item.trackingId}
                       </td>
                       <td className="px-6 py-4 max-w-xs">
-                        <div className="font-semibold text-slate-900 truncate">
+                        <div className="font-semibold text-sand-100 truncate">
                           {item.title}
                         </div>
-                        <div className="text-[11px] text-slate-500 truncate mt-0.5">
+                        <div className="text-[11px] text-sand-400 truncate mt-0.5">
                           {item.location}
                         </div>
                       </td>
@@ -314,7 +314,7 @@ export const AllComplaints = () => {
                           </span>
                         )}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-slate-700">
+                      <td className="px-6 py-4 whitespace-nowrap text-sand-300">
                         {item.assignedStaffName || (
                           <span className="text-amber-600 font-medium">Unassigned</span>
                         )}
@@ -365,23 +365,23 @@ export const AllComplaints = () => {
       >
         <form onSubmit={handleConfirmAssignment} className="space-y-4">
           <div>
-            <p className="text-xs font-semibold text-slate-900 mb-1">
+            <p className="text-xs font-semibold text-sand-100 mb-1">
               Issue: {targetComplaint?.title}
             </p>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-sand-400">
               Department: {targetComplaint?.department}
             </p>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 uppercase mb-1">
+            <label className="block text-xs font-semibold text-sand-300 uppercase mb-1">
               Select Staff Member / Officer <span className="text-rose-500">*</span>
             </label>
             <select
               value={newStaffId}
               onChange={e => setNewStaffId(e.target.value)}
               required
-              className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full p-2.5 bg-charcoal-950 border border-charcoal-700 rounded-xl text-xs sm:text-sm text-sand-100 placeholder-charcoal-500 focus:outline-none focus:ring-2 focus:ring-electric-400"
             >
               <option value="">Choose Staff Member</option>
               {users.staff.map(s => (
@@ -393,7 +393,7 @@ export const AllComplaints = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 uppercase mb-1">
+            <label className="block text-xs font-semibold text-sand-300 uppercase mb-1">
               Assignment Directive Remarks
             </label>
             <textarea
@@ -401,7 +401,7 @@ export const AllComplaints = () => {
               value={assignRemarks}
               onChange={e => setAssignRemarks(e.target.value)}
               placeholder="e.g. Please conduct priority inspection and submit fix by 4 PM..."
-              className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full p-2.5 bg-charcoal-950 border border-charcoal-700 rounded-xl text-xs text-sand-100 placeholder-charcoal-500 focus:outline-none focus:ring-2 focus:ring-electric-400"
             ></textarea>
           </div>
 
@@ -409,7 +409,7 @@ export const AllComplaints = () => {
             <button
               type="button"
               onClick={() => setIsAssignModalOpen(false)}
-              className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition"
+              className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-sand-300 rounded-xl text-xs font-semibold transition"
             >
               Cancel
             </button>
@@ -431,13 +431,13 @@ export const AllComplaints = () => {
         maxWidth="max-w-md"
       >
         <form onSubmit={handleConfirmEscalation} className="space-y-4">
-          <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-800">
+          <div className="p-3 bg-rose-950/80 border border-rose-800 rounded-xl text-xs text-rose-200">
             <AlertTriangle className="w-4 h-4 text-rose-600 inline mr-1.5" />
             Escalating will mark this complaint as <strong>Urgent Escalation</strong>, notify all senior officers, and highlight it on executive dashboards.
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 uppercase mb-1">
+            <label className="block text-xs font-semibold text-sand-300 uppercase mb-1">
               Escalation Justification <span className="text-rose-500">*</span>
             </label>
             <textarea
@@ -446,7 +446,7 @@ export const AllComplaints = () => {
               value={escalateReason}
               onChange={e => setEscalateReason(e.target.value)}
               placeholder="Explain justification for high-level escalation..."
-              className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-rose-500"
+              className="w-full p-2.5 bg-charcoal-950 border border-charcoal-700 rounded-xl text-xs sm:text-sm text-sand-100 placeholder-charcoal-500 focus:outline-none focus:ring-2 focus:ring-rose-500"
             ></textarea>
           </div>
 
@@ -454,7 +454,7 @@ export const AllComplaints = () => {
             <button
               type="button"
               onClick={() => setIsEscalateModalOpen(false)}
-              className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition"
+              className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-sand-300 rounded-xl text-xs font-semibold transition"
             >
               Cancel
             </button>

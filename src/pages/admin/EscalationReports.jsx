@@ -93,42 +93,42 @@ export const EscalationReports = () => {
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Escalation Center & SLA Compliance Audit</h1>
-        <p className="text-xs sm:text-sm text-slate-500">
+        <h1 className="text-2xl font-bold text-sand-100">Escalation Center & SLA Compliance Audit</h1>
+        <p className="text-xs sm:text-sm text-sand-400">
           Executive monitoring of breached SLAs, persistent student grievances, and urgent campus incidents
         </p>
       </div>
 
       {/* 3 Metric Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-white p-5 rounded-2xl border border-rose-200 shadow-xs flex items-center gap-4">
+        <div className="bg-charcoal-900 p-5 rounded-2xl border border-rose-200 shadow-xs flex items-center gap-4">
           <div className="w-12 h-12 rounded-xl bg-rose-50 text-rose-700 flex items-center justify-center font-bold">
             <AlertOctagon className="w-6 h-6" />
           </div>
           <div>
-            <span className="text-xs text-slate-400 uppercase font-semibold">Active Escalations</span>
+            <span className="text-xs text-sand-400 uppercase font-semibold">Active Escalations</span>
             <h3 className="text-2xl font-extrabold text-rose-700">{escalatedList.length}</h3>
             <span className="text-[11px] text-rose-600 font-medium">Under direct dean observation</span>
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-amber-200 shadow-xs flex items-center gap-4">
+        <div className="bg-charcoal-900 p-5 rounded-2xl border border-amber-200 shadow-xs flex items-center gap-4">
           <div className="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center font-bold">
             <Clock className="w-6 h-6" />
           </div>
           <div>
-            <span className="text-xs text-slate-400 uppercase font-semibold">Overdue Breaches</span>
+            <span className="text-xs text-sand-400 uppercase font-semibold">Overdue Breaches</span>
             <h3 className="text-2xl font-extrabold text-amber-700">{overdueList.length}</h3>
             <span className="text-[11px] text-amber-600 font-medium">Passed category turnaround SLA</span>
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-2xl border border-emerald-200 shadow-xs flex items-center gap-4">
+        <div className="bg-charcoal-900 p-5 rounded-2xl border border-emerald-200 shadow-xs flex items-center gap-4">
           <div className="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center font-bold">
             <ShieldCheck className="w-6 h-6" />
           </div>
           <div>
-            <span className="text-xs text-slate-400 uppercase font-semibold">SLA Compliance Rate</span>
+            <span className="text-xs text-sand-400 uppercase font-semibold">SLA Compliance Rate</span>
             <h3 className="text-2xl font-extrabold text-emerald-700">92.4%</h3>
             <span className="text-[11px] text-emerald-600 font-medium">Compliant with UGC norms</span>
           </div>
@@ -136,13 +136,13 @@ export const EscalationReports = () => {
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-2 border-b border-slate-200">
+      <div className="flex items-center gap-2 border-b border-charcoal-800">
         <button
           onClick={() => setActiveTab('all-risk')}
           className={`pb-2.5 px-3 text-xs font-semibold transition border-b-2 ${
             activeTab === 'all-risk'
-              ? 'border-blue-600 text-blue-600'
-              : 'border-transparent text-slate-500 hover:text-slate-800'
+              ? 'border-blue-600 text-electric-400'
+              : 'border-transparent text-sand-400 hover:text-sand-100'
           }`}
         >
           All High-Risk / Critical ({combinedAtRisk.length})
@@ -152,7 +152,7 @@ export const EscalationReports = () => {
           className={`pb-2.5 px-3 text-xs font-semibold transition border-b-2 ${
             activeTab === 'escalated'
               ? 'border-rose-600 text-rose-600'
-              : 'border-transparent text-slate-500 hover:text-slate-800'
+              : 'border-transparent text-sand-400 hover:text-sand-100'
           }`}
         >
           Formally Escalated ({escalatedList.length})
@@ -162,7 +162,7 @@ export const EscalationReports = () => {
           className={`pb-2.5 px-3 text-xs font-semibold transition border-b-2 ${
             activeTab === 'overdue'
               ? 'border-amber-600 text-amber-600'
-              : 'border-transparent text-slate-500 hover:text-slate-800'
+              : 'border-transparent text-sand-400 hover:text-sand-100'
           }`}
         >
           Overdue SLA ({overdueList.length})
@@ -170,17 +170,17 @@ export const EscalationReports = () => {
       </div>
 
       {/* Escalation Table */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden">
+      <div className="bg-charcoal-900 rounded-2xl border border-charcoal-800 shadow-xs overflow-hidden">
         {displayedList.length === 0 ? (
-          <div className="p-12 text-center text-slate-400 text-xs">
+          <div className="p-12 text-center text-sand-400 text-xs">
             <CheckCircle2 className="w-10 h-10 text-emerald-500 mx-auto mb-2" />
-            <p className="font-semibold text-slate-800 text-sm">No Active Escalations</p>
-            <p className="text-slate-500 mt-0.5">All complaints are within acceptable SLA parameters.</p>
+            <p className="font-semibold text-sand-100 text-sm">No Active Escalations</p>
+            <p className="text-sand-400 mt-0.5">All complaints are within acceptable SLA parameters.</p>
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
+              <thead className="bg-charcoal-950 text-sand-300 font-semibold border-b border-charcoal-800">
                 <tr>
                   <th className="px-6 py-3.5">Tracking ID</th>
                   <th className="px-6 py-3.5">Title & Location</th>
@@ -192,23 +192,23 @@ export const EscalationReports = () => {
                   <th className="px-6 py-3.5 text-right">Intervention</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-100 text-slate-700">
+              <tbody className="divide-y divide-charcoal-800 text-sand-200">
                 {displayedList.map(item => {
                   const overdue = isOverdue(item);
                   return (
-                    <tr key={item.id} className="hover:bg-slate-50/80 transition">
+                    <tr key={item.id} className="hover:bg-charcoal-950/80 transition">
                       <td className="px-6 py-4 font-mono font-bold text-rose-700 whitespace-nowrap">
                         {item.trackingId}
                       </td>
                       <td className="px-6 py-4 max-w-xs">
-                        <div className="font-semibold text-slate-900 truncate">
+                        <div className="font-semibold text-sand-100 truncate">
                           {item.title}
                         </div>
-                        <div className="text-[11px] text-slate-500 truncate mt-0.5">
+                        <div className="text-[11px] text-sand-400 truncate mt-0.5">
                           {item.location}
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap font-medium text-slate-800">
+                      <td className="px-6 py-4 whitespace-nowrap font-medium text-sand-100">
                         {item.department}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -221,7 +221,7 @@ export const EscalationReports = () => {
                         <StatusBadge status={item.status} size="sm" />
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <span className={`text-[11px] ${overdue ? 'text-rose-600 font-bold' : 'text-slate-500'}`}>
+                        <span className={`text-[11px] ${overdue ? 'text-rose-600 font-bold' : 'text-sand-400'}`}>
                           {overdue ? 'BREACHED' : timeAgo(item.targetResolutionDate)}
                         </span>
                       </td>
@@ -250,13 +250,13 @@ export const EscalationReports = () => {
         maxWidth="max-w-md"
       >
         <form onSubmit={handleConfirmIntervention} className="space-y-4">
-          <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl text-xs space-y-1">
-            <p className="font-bold text-slate-900">{selectedComplaint?.title}</p>
-            <p className="text-slate-500">Dept: {selectedComplaint?.department} • Priority: {selectedComplaint?.priority}</p>
+          <div className="p-3 bg-charcoal-950 border border-charcoal-800 rounded-xl text-xs space-y-1">
+            <p className="font-bold text-sand-100">{selectedComplaint?.title}</p>
+            <p className="text-sand-400">Dept: {selectedComplaint?.department} • Priority: {selectedComplaint?.priority}</p>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 uppercase mb-1">
+            <label className="block text-xs font-semibold text-sand-200 uppercase mb-1">
               Executive Directive Remarks <span className="text-rose-500">*</span>
             </label>
             <textarea
@@ -265,18 +265,18 @@ export const EscalationReports = () => {
               value={interventionNote}
               onChange={e => setInterventionNote(e.target.value)}
               placeholder="Specify instructions or emergency procurement approval..."
-              className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-rose-500"
+              className="w-full p-2.5 bg-charcoal-950 border border-charcoal-800 rounded-xl text-xs focus:outline-none focus:ring-2 focus:ring-rose-500"
             ></textarea>
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 uppercase mb-1">
+            <label className="block text-xs font-semibold text-sand-200 uppercase mb-1">
               Reassign to Specific Officer
             </label>
             <select
               value={reassignedStaff}
               onChange={e => setReassignedStaff(e.target.value)}
-              className="w-full p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs"
+              className="w-full p-2.5 bg-charcoal-950 border border-charcoal-800 rounded-xl text-xs"
             >
               <option value="">Leave Current Assignment ({selectedComplaint?.assignedStaffName})</option>
               {users.staff.map(s => (
@@ -302,7 +302,7 @@ export const EscalationReports = () => {
             <button
               type="button"
               onClick={() => setIsActionModalOpen(false)}
-              className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition"
+              className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-sand-200 rounded-xl text-xs font-semibold transition"
             >
               Cancel
             </button>

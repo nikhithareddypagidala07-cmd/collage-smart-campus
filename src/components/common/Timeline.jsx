@@ -32,8 +32,8 @@ export const Timeline = ({ history = [], currentStatus = 'Submitted' }) => {
   return (
     <div className="space-y-6">
       {/* Visual Stepper Bar */}
-      <div className="bg-slate-50 border border-slate-200 rounded-xl p-5">
-        <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-4">
+      <div className="bg-slate-50 border border-charcoal-800 rounded-xl p-5">
+        <h4 className="text-xs font-semibold uppercase tracking-wider text-sand-400 mb-4">
           Lifecycle Progression
         </h4>
 
@@ -59,7 +59,7 @@ export const Timeline = ({ history = [], currentStatus = 'Submitted' }) => {
                           ? 'bg-blue-600 text-white ring-4 ring-blue-100 shadow-md scale-105'
                           : isPassed
                           ? 'bg-emerald-600 text-white'
-                          : 'bg-white border-2 border-slate-300 text-slate-400'
+                          : 'bg-charcoal-900 border-2 border-slate-300 text-slate-400'
                       }`}
                     >
                       {isPassed ? (
@@ -96,8 +96,8 @@ export const Timeline = ({ history = [], currentStatus = 'Submitted' }) => {
 
             {/* Special status callouts */}
             {(isEscalated || isReopened) && (
-              <div className="mt-4 pt-3 border-t border-slate-200 flex items-center justify-between text-xs">
-                <span className="text-slate-500">Current Lifecycle State:</span>
+              <div className="mt-4 pt-3 border-t border-charcoal-800 flex items-center justify-between text-xs">
+                <span className="text-sand-400">Current Lifecycle State:</span>
                 <StatusBadge status={currentStatus} size="sm" />
               </div>
             )}
@@ -107,7 +107,7 @@ export const Timeline = ({ history = [], currentStatus = 'Submitted' }) => {
 
       {/* Detailed Activity Trail */}
       <div>
-        <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-500 mb-3 flex items-center gap-1.5">
+        <h4 className="text-xs font-semibold uppercase tracking-wider text-sand-400 mb-3 flex items-center gap-1.5">
           <Clock className="w-3.5 h-3.5 text-slate-400" />
           Audit Trail & Resolution History
         </h4>
@@ -118,7 +118,7 @@ export const Timeline = ({ history = [], currentStatus = 'Submitted' }) => {
               {/* Dot */}
               <div className="absolute -left-6 top-1 w-3.5 h-3.5 rounded-full bg-blue-600 border-2 border-white ring-2 ring-slate-100 shadow-sm" />
 
-              <div className="bg-white border border-slate-200 rounded-lg p-3.5 shadow-xs transition hover:border-slate-300">
+              <div className="bg-charcoal-900 border border-charcoal-800 rounded-lg p-3.5 shadow-xs transition hover:border-slate-300">
                 <div className="flex flex-wrap items-center justify-between gap-2 mb-1.5">
                   <div className="flex items-center gap-2">
                     <StatusBadge status={item.status} size="sm" />
@@ -126,11 +126,11 @@ export const Timeline = ({ history = [], currentStatus = 'Submitted' }) => {
                       {item.performer}
                     </span>
                   </div>
-                  <span className="text-xs text-slate-500 font-mono">
+                  <span className="text-xs text-sand-400 font-mono">
                     {formatDate(item.timestamp)}
                   </span>
                 </div>
-                <p className="text-xs text-slate-600 leading-relaxed pl-1">
+                <p className="text-xs text-sand-300 leading-relaxed pl-1">
                   {item.remarks || 'No detailed remarks recorded.'}
                 </p>
               </div>
