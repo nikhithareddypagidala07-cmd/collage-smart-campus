@@ -6,6 +6,12 @@ import {
   INITIAL_NOTIFICATIONS
 } from '../data/mockData';
 import { generateTrackingId } from '../utils/helpers';
+import { isFirebaseConfigured } from '../firebase';
+import {
+  subscribeToComplaints,
+  addComplaintToFirestore,
+  updateComplaintInFirestore
+} from '../services/firestoreService';
 
 const ComplaintContext = createContext();
 
@@ -74,6 +80,31 @@ export const ComplaintProvider = ({ children }) => {
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY_COMPLAINTS, JSON.stringify(complaints));
   }, [complaints]);
+
+  // Real-time Cloud Firestore synchronization
+  useEffect(() => {
+    if (!isFirebaseConfigured) return;
+
+    const unsubscribe = subscribeToComplaints((firestoreComplaints) => {
+      if (firestoreComplaints && firestoreComplaints.length > 0) {
+        setComplaints(prev => {
+          const map = new Map(firestoreComplaints.map(item => [item.id || item.trackingId, item]));
+          const merged = [...firestoreComplaints];
+          prev.forEach(item => {
+            const key = item.id || item.trackingId;
+            if (!map.has(key)) {
+              merged.push(item);
+            }
+          });
+          return merged;
+        });
+      }
+    });
+
+    return () => {
+      if (typeof unsubscribe === 'function') unsubscribe();
+    };
+  }, []);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY_CATEGORIES, JSON.stringify(categories));
@@ -181,6 +212,14 @@ export const ComplaintProvider = ({ children }) => {
     });
 
     showToast(`Complaint submitted successfully! Tracking ID: ${trackingId}`, 'success');
+
+    // Cloud Firestore Persistence
+    if (isFirebaseConfigured) {
+      addComplaintToFirestore(newComplaint).catch(err => {
+        console.warn('Firestore [complaints] add notice:', err.message);
+      });
+    }
+
     return newComplaint;
   };
 
@@ -224,6 +263,13 @@ export const ComplaintProvider = ({ children }) => {
       });
 
       showToast(`Complaint ${updatedComplaint.trackingId} updated to ${newStatus}`, 'info');
+
+      // Sync to Firestore
+      if (isFirebaseConfigured) {
+        updateComplaintInFirestore(complaintId, updatedComplaint).catch(err => {
+          console.warn('Firestore [complaints] update notice:', err.message);
+        });
+      }
     }
 
     return updatedComplaint;
@@ -284,6 +330,13 @@ export const ComplaintProvider = ({ children }) => {
       });
 
       showToast(`Complaint assigned to ${staffObj.name}`, 'success');
+
+      // Sync to Firestore
+      if (isFirebaseConfigured) {
+        updateComplaintInFirestore(complaintId, target).catch(err => {
+          console.warn('Firestore [complaints] assign sync notice:', err.message);
+        });
+      }
     }
   };
 

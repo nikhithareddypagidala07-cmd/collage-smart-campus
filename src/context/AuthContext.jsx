@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { INITIAL_STUDENTS, INITIAL_STAFF, INITIAL_ADMIN } from '../data/mockData';
+import { isFirebaseConfigured } from '../firebase';
+import { syncUserProfileToFirestore } from '../services/firestoreService';
 
 const AuthContext = createContext();
 
@@ -43,6 +45,9 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     if (currentUser) {
       localStorage.setItem(STORAGE_KEY_AUTH, JSON.stringify(currentUser));
+      if (isFirebaseConfigured) {
+        syncUserProfileToFirestore(currentUser);
+      }
     } else {
       localStorage.removeItem(STORAGE_KEY_AUTH);
     }
@@ -141,7 +146,8 @@ export const AuthProvider = ({ children }) => {
         logout,
         updateProfile,
         addMockUser,
-        isAuthenticated: !!currentUser
+        isAuthenticated: !!currentUser,
+        isFirebaseConfigured
       }}
     >
       {children}

@@ -8,6 +8,12 @@ import {
   INITIAL_ACTIVE_QR_SESSION,
   INITIAL_QR_AUDIT_LOGS
 } from '../data/attendanceMockData';
+import { isFirebaseConfigured } from '../firebase';
+import {
+  subscribeToAttendanceSessions,
+  saveAttendanceSessionToFirestore,
+  recordAttendanceCheckinToFirestore
+} from '../services/firestoreService';
 
 const AttendanceContext = createContext();
 
@@ -75,6 +81,30 @@ export const AttendanceProvider = ({ children }) => {
     localStorage.setItem(STORAGE_KEY_SESSIONS, JSON.stringify(sessions));
   }, [sessions]);
 
+  // Real-time Cloud Firestore synchronization for attendance sessions
+  useEffect(() => {
+    if (!isFirebaseConfigured) return;
+
+    const unsubscribe = subscribeToAttendanceSessions((firestoreSessions) => {
+      if (firestoreSessions && firestoreSessions.length > 0) {
+        setSessions(prev => {
+          const map = new Map(firestoreSessions.map(s => [s.id, s]));
+          const merged = [...firestoreSessions];
+          prev.forEach(item => {
+            if (!map.has(item.id)) {
+              merged.push(item);
+            }
+          });
+          return merged;
+        });
+      }
+    });
+
+    return () => {
+      if (typeof unsubscribe === 'function') unsubscribe();
+    };
+  }, []);
+
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY_METRICS, JSON.stringify(studentMetrics));
   }, [studentMetrics]);
@@ -127,6 +157,13 @@ export const AttendanceProvider = ({ children }) => {
 
       return updated;
     });
+
+    // Cloud Firestore Persistence
+    if (isFirebaseConfigured) {
+      saveAttendanceSessionToFirestore(newSession).catch(err => {
+        console.warn('Firestore [attendance_sessions] save notice:', err.message);
+      });
+    }
 
     return newSession;
   };
@@ -253,6 +290,13 @@ export const AttendanceProvider = ({ children }) => {
     };
 
     setQrAuditLogs(prev => [successLog, ...prev]);
+
+    // Cloud Firestore Persistence
+    if (isFirebaseConfigured) {
+      recordAttendanceCheckinToFirestore(successLog).catch(err => {
+        console.warn('Firestore [student_attendance] checkin notice:', err.message);
+      });
+    }
 
     return {
       success: true,

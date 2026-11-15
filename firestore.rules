@@ -1,0 +1,127 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function hasRole(role) {
+      return isAuthenticated() && (
+        request.auth.token.role == role || 
+        getUserData().role == role
+      );
+    }
+
+    function isAdmin() {
+      return hasRole('admin');
+    }
+
+    function isStaff() {
+      return hasRole('staff') || isAdmin();
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // --- Users Collection ---
+    // Stores student, staff, and admin profile data
+    match /users/{userId} {
+      allow read: if isAuthenticated();
+      allow create: if isAuthenticated() && (isOwner(userId) || isAdmin());
+      allow update: if isAuthenticated() && (isOwner(userId) || isAdmin());
+      allow delete: if isAdmin();
+    }
+
+    // --- Complaints Collection ---
+    // Stores campus resolution complaints & issues
+    match /complaints/{complaintId} {
+      // Students can read their own or public complaints; staff and admin can read all
+      allow read: if isAuthenticated() && (
+        isAdmin() ||
+        isStaff() ||
+        resource.data.studentId == request.auth.uid ||
+        resource.data.studentEmail == request.auth.token.email ||
+        resource.data.isPublic == true
+      );
+
+      // Authenticated users (students) can create complaints
+      allow create: if isAuthenticated() && (
+        request.resource.data.studentId == request.auth.uid ||
+        request.resource.data.studentEmail == request.auth.token.email ||
+        isAdmin()
+      );
+
+      // Staff can update status, remarks, assignment; students can upvote or add comments
+      allow update: if isAuthenticated() && (
+        isAdmin() ||
+        isStaff() ||
+        (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['upvotes', 'upvotedBy', 'feedback', 'comments']))
+      );
+
+      // Only admins can delete complaints
+      allow delete: if isAdmin();
+    }
+
+    // --- Attendance Sessions Collection ---
+    // Active / past lecture attendance sessions
+    match /attendance_sessions/{sessionId} {
+      allow read: if isAuthenticated();
+      allow create, update: if isStaff() || isAdmin();
+      allow delete: if isAdmin();
+    }
+
+    // --- Student Attendance Metrics & Records ---
+    match /student_attendance/{recordId} {
+      // Students can read their own records; staff & admin can read all
+      allow read: if isAuthenticated() && (
+        isAdmin() ||
+        isStaff() ||
+        resource.data.studentId == request.auth.uid ||
+        resource.data.studentEmail == request.auth.token.email
+      );
+
+      // Students can check in for valid active sessions; staff/admin can mark attendance
+      allow create, update: if isAuthenticated() && (
+        isAdmin() ||
+        isStaff() ||
+        request.resource.data.studentId == request.auth.uid ||
+        request.resource.data.studentEmail == request.auth.token.email
+      );
+
+      allow delete: if isAdmin();
+    }
+
+    // --- Master Categories & Departments ---
+    match /categories/{categoryId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    match /departments/{deptId} {
+      allow read: if isAuthenticated();
+      allow write: if isAdmin();
+    }
+
+    // --- Notifications Collection ---
+    match /notifications/{notificationId} {
+      allow read: if isAuthenticated() && (
+        resource.data.recipientId == request.auth.uid ||
+        resource.data.recipientRole == getUserData().role ||
+        isAdmin()
+      );
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated() && (
+        resource.data.recipientId == request.auth.uid ||
+        isAdmin()
+      );
+      allow delete: if isAdmin();
+    }
+  }
+}
