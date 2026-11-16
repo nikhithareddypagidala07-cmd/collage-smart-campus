@@ -10,19 +10,28 @@ service cloud.firestore {
       return request.auth != null;
     }
 
-    // Role verification strictly relies on server-minted Firebase Custom Claims.
-    // Client-editable Firestore documents are completely untrusted for authorization.
+    // Role verification strictly relies on server-minted Custom Claims
+    // or verified, protected Firestore user documents.
+    // Client-side self-elevation is strictly impossible.
     function isAdmin() {
       return isAuthenticated() && (
-        request.auth.token.role == 'admin' ||
-        request.auth.token.admin == true
+        request.auth.token.get('role', '') == 'admin' ||
+        request.auth.token.get('admin', false) == true ||
+        (
+          exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+          get(/databases/$(database)/documents/users/$(request.auth.uid)).data.get('role', '') == 'admin'
+        )
       );
     }
 
     function isStaff() {
       return isAuthenticated() && (
-        request.auth.token.role == 'staff' ||
-        isAdmin()
+        request.auth.token.get('role', '') == 'staff' ||
+        isAdmin() ||
+        (
+          exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+          get(/databases/$(database)/documents/users/$(request.auth.uid)).data.get('role', '') == 'staff'
+        )
       );
     }
 
@@ -32,9 +41,14 @@ service cloud.firestore {
 
     // Staff permission scoped strictly to their assigned department or explicit assignment
     function isStaffForComplaint() {
+      let dept = request.auth.token.get('department', '');
+      let staffDept = (dept != '') ? dept : (
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) ?
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.get('department', '') : ''
+      );
       return isStaff() && (
         isAdmin() ||
-        (request.auth.token.get('department', '') != '' && request.auth.token.get('department', '') == resource.data.get('department', '')) ||
+        (staffDept != '' && staffDept == resource.data.get('department', '')) ||
         (resource.data.get('assignedStaffUid', '') != '' && resource.data.get('assignedStaffUid', '') == request.auth.uid) ||
         (resource.data.get('assignedStaffId', '') != '' && resource.data.get('assignedStaffId', '') == request.auth.uid) ||
         (resource.data.get('assignedStaffId', '') != '' && resource.data.get('assignedStaffId', '') == request.auth.token.get('staffId', ''))
@@ -85,7 +99,7 @@ service cloud.firestore {
       );
 
       // Self-registration: Regular users can only create role='student'
-      // Custom claim creation/promotion is strictly reserved for Admin SDK
+      // Staff and Admin accounts can ONLY be created by Administrators
       allow create: if isAuthenticated() && (
         isAdmin() ||
         (
@@ -197,7 +211,7 @@ service cloud.firestore {
             // Downvote (Undo): Caller UID was present, is now removed, size -1, upvotes -1
             (
               resource.data.get('upvotedBy', []).hasAny([request.auth.uid]) &&
-              !request.resource.data.get('upvotedBy', []).hasAny([request.auth.uid]) &&
+              !request.resource.data.upvotedBy.hasAny([request.auth.uid]) &&
               resource.data.get('upvotedBy', []).hasAll(request.resource.data.get('upvotedBy', [])) &&
               request.resource.data.get('upvotedBy', []).size() == resource.data.get('upvotedBy', []).size() - 1 &&
               request.resource.data.get('upvotes', 0) == resource.data.get('upvotes', 0) - 1
@@ -217,7 +231,6 @@ service cloud.firestore {
 
       // SECURITY ENFORCEMENT: Students CANNOT write to attendance sessions from client.
       // Sessions are created and managed strictly by faculty/staff and admin.
-      // Check-ins must be executed via trusted Cloud Function or faculty device.
       allow create, update, delete: if isStaff() || isAdmin();
     }
 

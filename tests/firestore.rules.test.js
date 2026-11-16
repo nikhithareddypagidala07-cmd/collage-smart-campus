@@ -147,4 +147,93 @@ describe.skipIf(!isEmulatorActive)('CampusCare Firestore Security Rules (Emulato
       })
     );
   });
+
+  it('allows a student to submit a complaint with their verified studentUid', async () => {
+    const studentDb = testEnv.authenticatedContext('student-1', {
+      email: 'student@example.com',
+    }).firestore();
+
+    await assertSucceeds(
+      setDoc(doc(studentDb, 'complaints', 'student-valid-cmp'), {
+        studentUid: 'student-1',
+        status: 'Submitted',
+        studentEmail: 'student@example.com',
+        title: 'Water filter broken',
+        category: 'Water Supply',
+        department: 'Water & Plumbing Dept',
+      })
+    );
+  });
+
+  it('blocks a student from forging a complaint with another user’s studentUid', async () => {
+    const studentDb = testEnv.authenticatedContext('student-1', {
+      email: 'student@example.com',
+    }).firestore();
+
+    await assertFails(
+      setDoc(doc(studentDb, 'complaints', 'forged-student-cmp'), {
+        studentUid: 'victim-student-99',
+        status: 'Submitted',
+        studentEmail: 'student@example.com',
+      })
+    );
+  });
+
+  it('blocks a student from creating a complaint with status already set to Resolved', async () => {
+    const studentDb = testEnv.authenticatedContext('student-1', {
+      email: 'student@example.com',
+    }).firestore();
+
+    await assertFails(
+      setDoc(doc(studentDb, 'complaints', 'bypass-status-cmp'), {
+        studentUid: 'student-1',
+        status: 'Resolved',
+        studentEmail: 'student@example.com',
+      })
+    );
+  });
+
+  it('allows staff to read complaints assigned to their department', async () => {
+    await testEnv.withSecurityRulesDisabled(async (context) => {
+      await setDoc(doc(context.firestore(), 'complaints', 'electrical-cmp'), {
+        studentUid: 'student-1',
+        status: 'Submitted',
+        studentEmail: 'student@example.com',
+        department: 'Electrical Maintenance',
+        isConfidential: false,
+      });
+    });
+
+    const staffDb = testEnv.authenticatedContext('staff-elec-1', {
+      email: 'suresh@smartcampus.edu',
+      role: 'staff',
+      department: 'Electrical Maintenance',
+    }).firestore();
+
+    await assertSucceeds(
+      getDoc(doc(staffDb, 'complaints', 'electrical-cmp'))
+    );
+  });
+
+  it('blocks staff from reading confidential complaints from another department', async () => {
+    await testEnv.withSecurityRulesDisabled(async (context) => {
+      await setDoc(doc(context.firestore(), 'complaints', 'hostel-confidential'), {
+        studentUid: 'student-1',
+        status: 'Submitted',
+        studentEmail: 'student@example.com',
+        department: 'Hostel Administration',
+        isConfidential: true,
+      });
+    });
+
+    const staffDb = testEnv.authenticatedContext('staff-elec-1', {
+      email: 'suresh@smartcampus.edu',
+      role: 'staff',
+      department: 'Electrical Maintenance',
+    }).firestore();
+
+    await assertFails(
+      getDoc(doc(staffDb, 'complaints', 'hostel-confidential'))
+    );
+  });
 });
