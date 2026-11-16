@@ -20,16 +20,46 @@ import { db, isFirebaseConfigured } from '../firebase';
 
 // ================= USER PROFILES =================
 
-export const syncUserProfileToFirestore = async (user) => {
-  if (!isFirebaseConfigured || !db || !user?.id) return;
+export const createUserProfileInFirestore = async (userProfile) => {
+  if (!isFirebaseConfigured || !db || !userProfile?.uid) return null;
   try {
-    const userRef = doc(db, 'users', String(user.id));
+    const userRef = doc(db, 'users', String(userProfile.uid));
+    const sanitized = {
+      uid: userProfile.uid,
+      id: userProfile.uid,
+      name: userProfile.name || '',
+      email: userProfile.email || '',
+      role: 'student', // strictly enforced by security rules
+      studentId: userProfile.studentId || '',
+      course: userProfile.course || 'B.Tech Computer Science',
+      semester: userProfile.semester || '1st Semester',
+      hostelBlock: userProfile.hostelBlock || 'Day Scholar',
+      roomNo: userProfile.roomNo || 'N/A',
+      phone: userProfile.phone || '',
+      createdAt: userProfile.createdAt || new Date().toISOString(),
+      lastLoginAt: new Date().toISOString()
+    };
+    await setDoc(userRef, sanitized, { merge: true });
+    return sanitized;
+  } catch (error) {
+    console.error('Firestore [users] create error:', error);
+    throw error;
+  }
+};
+
+export const syncUserProfileToFirestore = async (user) => {
+  if (!isFirebaseConfigured || !db || (!user?.uid && !user?.id)) return;
+  try {
+    const docId = String(user.uid || user.id);
+    const userRef = doc(db, 'users', docId);
+    // Sanitize: do not sync passwords or transient demo state to Firestore
+    const { password, isDemoMode, ...safeData } = user;
     await setDoc(userRef, {
-      ...user,
+      ...safeData,
       lastLoginAt: new Date().toISOString()
     }, { merge: true });
   } catch (error) {
-    console.error('Firestore [users] sync error:', error);
+    console.warn('Firestore [users] sync notice:', error.message);
   }
 };
 
@@ -42,7 +72,7 @@ export const fetchUserProfileFromFirestore = async (userId) => {
       return snapshot.data();
     }
   } catch (error) {
-    console.error('Firestore [users] fetch error:', error);
+    console.warn('Firestore [users] fetch notice:', error.message);
   }
   return null;
 };
