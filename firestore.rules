@@ -34,42 +34,53 @@ service cloud.firestore {
     function isStaffForComplaint() {
       return isStaff() && (
         isAdmin() ||
-        (request.auth.token.get('department', '') == resource.data.get('department', '')) ||
-        (resource.data.get('assignedStaffUid', '') == request.auth.uid) ||
-        (resource.data.get('assignedStaffId', '') == request.auth.uid) ||
-        (resource.data.get('assignedStaffId', '') == request.auth.token.get('staffId', ''))
+        (request.auth.token.get('department', '') != '' && request.auth.token.get('department', '') == resource.data.get('department', '')) ||
+        (resource.data.get('assignedStaffUid', '') != '' && resource.data.get('assignedStaffUid', '') == request.auth.uid) ||
+        (resource.data.get('assignedStaffId', '') != '' && resource.data.get('assignedStaffId', '') == request.auth.uid) ||
+        (resource.data.get('assignedStaffId', '') != '' && resource.data.get('assignedStaffId', '') == request.auth.token.get('staffId', ''))
       );
+    }
+
+    // Validates that student-submitted feedback has correct structure and caller UID
+    function isValidStudentFeedback() {
+      let f = request.resource.data.feedback;
+      return f.keys().hasOnly(['rating', 'comment', 'submittedAt', 'submittedByUid']) &&
+             f.get('submittedByUid', request.auth.uid) == request.auth.uid &&
+             (f.get('rating', 5) is int && f.get('rating', 5) >= 1 && f.get('rating', 5) <= 5);
     }
 
     // Validates that student notifications are strictly legitimate and cannot spoof arbitrary recipients
     function isLegitimateStudentNotification() {
       let d = request.resource.data;
       // Case 1: Student generating a self-notification
-      let isSelfNotification = (d.userId == request.auth.uid && d.userRole == 'student');
-      // Case 2: Student alerting Admin regarding their own existing complaint
+      let isSelfNotification = (
+        (d.get('recipientUid', '') == request.auth.uid || d.get('userId', '') == request.auth.uid) &&
+        d.get('senderUid', '') == request.auth.uid &&
+        d.get('userRole', '') == 'student'
+      );
+      // Case 2: Student alerting Admin regarding their own verified existing complaint
       let isAdminAlert = (
-        d.userRole == 'admin' &&
-        d.userId in ['admin', 'adm-01'] &&
+        d.get('userRole', '') == 'admin' &&
+        (d.get('recipientUid', '') in ['admin', 'adm-01'] || d.get('userId', '') in ['admin', 'adm-01']) &&
+        d.get('senderUid', '') == request.auth.uid &&
         'complaintId' in d &&
         exists(/databases/$(database)/documents/complaints/$(d.complaintId)) &&
-        (
-          get(/databases/$(database)/documents/complaints/$(d.complaintId)).data.get('studentUid', '') == request.auth.uid ||
-          get(/databases/$(database)/documents/complaints/$(d.complaintId)).data.get('studentId', '') == request.auth.uid
-        )
+        get(/databases/$(database)/documents/complaints/$(d.complaintId)).data.get('studentUid', '') == request.auth.uid
       );
       return (isSelfNotification || isAdminAlert) &&
-             d.keys().hasOnly(['id', 'userId', 'userRole', 'title', 'message', 'complaintId', 'trackingId', 'timestamp', 'isRead']) &&
-             d.isRead == false;
+             d.keys().hasOnly(['id', 'userId', 'recipientUid', 'senderUid', 'userRole', 'title', 'message', 'complaintId', 'trackingId', 'timestamp', 'isRead']) &&
+             d.get('isRead', true) == false;
     }
 
     // ===============================================================
     // 2. USERS COLLECTION (Profile Management)
     // ===============================================================
     match /users/{userId} {
-      // Students can read their own profile; Staff/Admin can read all; Staff directory is public
+      // Students can read their own profile; Admin can read all; Staff can read students; Staff directory is public
       allow read: if isAuthenticated() && (
         isOwner(userId) ||
-        isStaff() ||
+        isAdmin() ||
+        (isStaff() && resource.data.get('role', '') == 'student') ||
         resource.data.get('role', '') == 'staff'
       );
 
@@ -81,7 +92,7 @@ service cloud.firestore {
           isOwner(userId) &&
           request.resource.data.get('role', 'student') == 'student' &&
           request.resource.data.email == request.auth.token.email &&
-          !request.resource.data.keys().hasAny(['staffId', 'adminId', 'isAdmin', 'isStaff'])
+          !request.resource.data.keys().hasAny(['staffId', 'adminId', 'isAdmin', 'isStaff', 'roleChange'])
         )
       );
 
@@ -105,28 +116,30 @@ service cloud.firestore {
     // 3. COMPLAINTS COLLECTION
     // ===============================================================
     match /complaints/{complaintId} {
-      // Read: Public/non-confidential complaints are viewable across campus.
-      // Confidential complaints are restricted to the verified owner UID, assigned staff, and admin.
+      // READ PERMISSIONS:
+      // - Admins can read all complaints.
+      // - The complaint creator (studentUid == request.auth.uid) can read their own complaints.
+      // - Staff can ONLY read complaints if they belong to the complaint's department or are assigned to it.
+      // - Confidential complaints are strictly restricted to Admin, the creator student, and assigned department staff.
+      // - Public complaints (isPublic == true AND isConfidential == false) are viewable across campus.
       allow read: if isAuthenticated() && (
         isAdmin() ||
-        isStaff() ||
-        resource.data.get('studentUid', '') == request.auth.uid ||
-        resource.data.get('studentId', '') == request.auth.uid ||
-        resource.data.get('isConfidential', false) == false ||
-        resource.data.get('isPublic', false) == true
+        (resource.data.get('studentUid', '') == request.auth.uid) ||
+        isStaffForComplaint() ||
+        (resource.data.get('isPublic', false) == true && resource.data.get('isConfidential', false) == false)
       );
 
-      // Create: Student identity is verified strictly using authenticated Firebase UID (request.auth.uid)
+      // CREATE: Student identity is verified strictly using authenticated Firebase UID (studentUid == request.auth.uid)
       allow create: if isAuthenticated() && (
         isAdmin() ||
         (
-          (request.resource.data.get('studentUid', '') == request.auth.uid || request.resource.data.get('studentId', '') == request.auth.uid) &&
+          request.resource.data.get('studentUid', '') == request.auth.uid &&
           request.resource.data.status == 'Submitted' &&
           request.resource.data.studentEmail == request.auth.token.email
         )
       );
 
-      // Updates: Partitioned strictly by role and department assignment
+      // UPDATES: Partitioned strictly by role, department assignment, and immutable history
       allow update: if isAuthenticated() && (
         // A. Admin has complete workflow authority
         isAdmin() ||
@@ -135,52 +148,59 @@ service cloud.firestore {
         (
           isStaffForComplaint() &&
           request.resource.data.diff(resource.data).affectedKeys().hasOnly([
-            'status', 'remarks', 'resolvedDate', 'assignedStaffId', 'assignedStaffName', 'history', 'updatedAt'
+            'status', 'remarks', 'resolvedDate', 'assignedStaffId', 'assignedStaffName', 'assignedStaffUid', 'history', 'updatedAt'
           ]) &&
-          request.resource.data.status in ['Under Review', 'In Progress', 'Resolved', 'Rejected']
+          request.resource.data.status in ['Under Review', 'In Progress', 'Resolved', 'Rejected'] &&
+          request.resource.data.get('history', []).hasAll(resource.data.get('history', [])) &&
+          request.resource.data.get('history', []).size() == resource.data.get('history', []).size() + 1
         ) ||
 
-        // C. Complaint Owner (Student) - Case 1: Submitting feedback on resolved complaint
+        // C. Complaint Owner (Student) - Case 1: Submitting validated feedback on resolved complaint
         (
-          (resource.data.get('studentUid', '') == request.auth.uid || resource.data.get('studentId', '') == request.auth.uid) &&
-          resource.data.status == 'Resolved' &&
-          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['feedback', 'comments', 'updatedAt'])
+          resource.data.get('studentUid', '') == request.auth.uid &&
+          resource.data.get('status', '') == 'Resolved' &&
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['feedback', 'updatedAt']) &&
+          isValidStudentFeedback()
         ) ||
 
-        // C. Complaint Owner (Student) - Case 2: Reopening a resolved complaint
+        // C. Complaint Owner (Student) - Case 2: Reopening a resolved complaint (History is strictly append-only)
         (
-          (resource.data.get('studentUid', '') == request.auth.uid || resource.data.get('studentId', '') == request.auth.uid) &&
-          resource.data.status == 'Resolved' &&
+          resource.data.get('studentUid', '') == request.auth.uid &&
+          resource.data.get('status', '') == 'Resolved' &&
           request.resource.data.status == 'Reopened' &&
           request.resource.data.diff(resource.data).affectedKeys().hasOnly([
             'status', 'remarks', 'resolvedDate', 'history', 'updatedAt'
           ]) &&
           !request.resource.data.diff(resource.data).affectedKeys().hasAny([
             'studentUid', 'studentId', 'studentEmail', 'trackingId', 'category', 'department', 
-            'title', 'description', 'priority', 'submissionDate', 'assignedStaffId', 'assignedStaffName', 'evidenceImage'
-          ])
+            'title', 'description', 'priority', 'submissionDate', 'assignedStaffId', 'assignedStaffName', 'assignedStaffUid', 'evidenceImage'
+          ]) &&
+          // Integrity: Student cannot modify or delete any past history entry, only append exactly one new entry
+          request.resource.data.get('history', []).hasAll(resource.data.get('history', [])) &&
+          request.resource.data.get('history', []).size() == resource.data.get('history', []).size() + 1
         ) ||
 
         // D. Public Upvoting/Downvoting: Changes ONLY the authenticated user's own vote
         (
-          (resource.data.get('isPublic', false) == true || resource.data.get('isConfidential', false) == false) &&
+          resource.data.get('isPublic', false) == true &&
+          resource.data.get('isConfidential', false) == false &&
           request.resource.data.diff(resource.data).affectedKeys().hasOnly(['upvotes', 'upvotedBy', 'updatedAt']) &&
           (
             // Upvote: Caller UID was not present, is now added, size +1, upvotes +1
             (
-              !resource.data.upvotedBy.hasAny([request.auth.uid]) &&
-              request.resource.data.upvotedBy.hasAny([request.auth.uid]) &&
-              request.resource.data.upvotedBy.hasAll(resource.data.upvotedBy) &&
-              request.resource.data.upvotedBy.size() == resource.data.upvotedBy.size() + 1 &&
-              request.resource.data.upvotes == resource.data.upvotes + 1
+              !resource.data.get('upvotedBy', []).hasAny([request.auth.uid]) &&
+              request.resource.data.get('upvotedBy', []).hasAny([request.auth.uid]) &&
+              request.resource.data.get('upvotedBy', []).hasAll(resource.data.get('upvotedBy', [])) &&
+              request.resource.data.get('upvotedBy', []).size() == resource.data.get('upvotedBy', []).size() + 1 &&
+              request.resource.data.get('upvotes', 0) == resource.data.get('upvotes', 0) + 1
             ) ||
             // Downvote (Undo): Caller UID was present, is now removed, size -1, upvotes -1
             (
-              resource.data.upvotedBy.hasAny([request.auth.uid]) &&
-              !request.resource.data.upvotedBy.hasAny([request.auth.uid]) &&
-              resource.data.upvotedBy.hasAll(request.resource.data.upvotedBy) &&
-              request.resource.data.upvotedBy.size() == resource.data.upvotedBy.size() - 1 &&
-              request.resource.data.upvotes == resource.data.upvotes - 1
+              resource.data.get('upvotedBy', []).hasAny([request.auth.uid]) &&
+              !request.resource.data.get('upvotedBy', []).hasAny([request.auth.uid]) &&
+              resource.data.get('upvotedBy', []).hasAll(request.resource.data.get('upvotedBy', [])) &&
+              request.resource.data.get('upvotedBy', []).size() == resource.data.get('upvotedBy', []).size() - 1 &&
+              request.resource.data.get('upvotes', 0) == resource.data.get('upvotes', 0) - 1
             )
           )
         )
@@ -209,8 +229,7 @@ service cloud.firestore {
       allow read: if isAuthenticated() && (
         isAdmin() ||
         isStaff() ||
-        resource.data.get('studentUid', '') == request.auth.uid ||
-        resource.data.get('studentId', '') == request.auth.uid
+        resource.data.get('studentUid', '') == request.auth.uid
       );
 
       // SECURITY ENFORCEMENT: Students CANNOT create or modify attendance records directly from client.
@@ -237,11 +256,10 @@ service cloud.firestore {
     // 7. NOTIFICATIONS COLLECTION
     // ===============================================================
     match /notifications/{notificationId} {
-      // Read: Limited to intended recipient or admin
+      // Read: Limited to intended recipient or admin. Staff cannot read other staff notifications.
       allow read: if isAuthenticated() && (
-        resource.data.get('userId', '') == request.auth.uid ||
         resource.data.get('recipientUid', '') == request.auth.uid ||
-        (isStaff() && resource.data.get('userRole', '') == 'staff') ||
+        resource.data.get('userId', '') == request.auth.uid ||
         isAdmin()
       );
 
@@ -252,12 +270,13 @@ service cloud.firestore {
         isLegitimateStudentNotification()
       );
 
-      // Update: Recipients can ONLY toggle 'isRead'
+      // Update: Recipients can ONLY toggle 'isRead' to true/false
       allow update: if isAuthenticated() && (
         isAdmin() ||
         (
-          (resource.data.get('userId', '') == request.auth.uid || resource.data.get('recipientUid', '') == request.auth.uid) &&
-          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['isRead', 'updatedAt'])
+          (resource.data.get('recipientUid', '') == request.auth.uid || resource.data.get('userId', '') == request.auth.uid) &&
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['isRead', 'updatedAt']) &&
+          request.resource.data.isRead is bool
         )
       );
 

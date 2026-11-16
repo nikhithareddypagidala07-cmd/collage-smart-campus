@@ -132,10 +132,12 @@ export const ComplaintProvider = ({ children }) => {
   };
 
   // Add Notification Helper
-  const createNotification = ({ userId, userRole, title, message, complaintId, trackingId }) => {
+  const createNotification = ({ userId, recipientUid, senderUid, userRole, title, message, complaintId, trackingId }) => {
     const newNotif = {
       id: `notif-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
       userId,
+      recipientUid: recipientUid || userId,
+      senderUid: senderUid || 'system',
       userRole,
       title,
       message,
@@ -195,6 +197,8 @@ export const ComplaintProvider = ({ children }) => {
     // Notify student
     createNotification({
       userId: studentUser.studentId,
+      recipientUid: studentUser.uid || studentUser.id,
+      senderUid: studentUser.uid || studentUser.id,
       userRole: 'student',
       title: 'Complaint Registered',
       message: `Your complaint "${newComplaint.title}" has been registered successfully with ID ${trackingId}.`,
@@ -205,6 +209,8 @@ export const ComplaintProvider = ({ children }) => {
     // Notify Admin
     createNotification({
       userId: 'adm-01',
+      recipientUid: 'admin',
+      senderUid: studentUser.uid || studentUser.id,
       userRole: 'admin',
       title: 'New Student Complaint',
       message: `New ${newComplaint.priority} complaint submitted: "${newComplaint.title}" under ${newComplaint.category}.`,
