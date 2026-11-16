@@ -166,6 +166,7 @@ export const ComplaintProvider = ({ children }) => {
       description: formData.description,
       priority: formData.priority || 'Medium',
       status: 'Submitted',
+      studentUid: studentUser.uid || studentUser.id,
       studentId: studentUser.studentId,
       studentName: studentUser.name,
       studentEmail: studentUser.email,

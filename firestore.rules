@@ -3,89 +3,62 @@ service cloud.firestore {
   match /databases/{database}/documents {
 
     // ===============================================================
-    // HELPER FUNCTIONS & ROLE VERIFICATION
+    // 1. TRUSTED AUTHENTICATION & ROLE VERIFICATION
     // ===============================================================
 
     function isAuthenticated() {
       return request.auth != null;
     }
 
-    function userDocExists() {
-      return isAuthenticated() && exists(/databases/$(database)/documents/users/$(request.auth.uid));
-    }
-
-    function getUserData() {
-      return userDocExists() ? get(/databases/$(database)/documents/users/$(request.auth.uid)).data : {};
-    }
-
-    // Server-signed token custom claims are the primary trusted authority.
-    // Client-editable Firestore fields are NOT trusted for privilege escalation.
-    function hasClaimRole(role) {
+    // STRICT: Admin and Staff permissions rely EXCLUSIVELY on trusted server-minted Custom Claims.
+    // Editable Firestore document roles are NEVER trusted for authorization.
+    function isAdmin() {
       return isAuthenticated() && (
-        request.auth.token.role == role || 
-        (role == 'admin' && (request.auth.token.admin == true || request.auth.token.email in ['admin@smartcampus.edu', 'dean.welfare@smartcampus.edu']))
+        request.auth.token.role == 'admin' ||
+        request.auth.token.admin == true
       );
     }
 
-    function isAdmin() {
-      return hasClaimRole('admin') || 
-             (isAuthenticated() && userDocExists() && getUserData().get('role', '') == 'admin');
-    }
-
     function isStaff() {
-      return hasClaimRole('staff') || 
-             (isAuthenticated() && userDocExists() && getUserData().get('role', '') in ['staff', 'admin']) || 
-             isAdmin();
+      return isAuthenticated() && (
+        request.auth.token.role == 'staff' ||
+        isAdmin()
+      );
     }
 
     function isOwner(userId) {
       return isAuthenticated() && request.auth.uid == userId;
     }
 
-    // Resolves verified student identifier from trusted user document or auth UID
-    function getVerifiedStudentId() {
-      return userDocExists() && ('studentId' in getUserData()) ? getUserData().studentId : request.auth.uid;
-    }
-
-    // Verifies client-supplied student identity against trusted auth state and database records
-    function isVerifiedStudent(studentId, studentEmail) {
-      return isAuthenticated() && (
-        request.auth.uid == studentId ||
-        request.auth.token.email == studentEmail ||
-        (userDocExists() && getUserData().studentId == studentId && getUserData().email == request.auth.token.email) ||
-        (userDocExists() && getUserData().studentId == studentId && request.auth.uid == getUserData().id)
-      );
-    }
-
     // ===============================================================
-    // 1. USERS COLLECTION (Profile & Role Escalation Defense)
+    // 2. USERS COLLECTION (Profile Management)
     // ===============================================================
     match /users/{userId} {
-      // Students can view their own profile and staff profiles; Staff & Admin can view all
+      // Users can read their own profile; Staff and Admin have read access; Staff profiles are visible to all
       allow read: if isAuthenticated() && (
         isOwner(userId) ||
         isStaff() ||
-        resource.data.role == 'staff'
+        resource.data.get('role', '') == 'staff'
       );
 
-      // Creation: Regular users registering MUST be assigned role='student'.
-      // Only trusted administrators can create staff or admin accounts.
+      // Self-registration: Regular users can only create role='student'
+      // Custom claim creation/promotion is strictly reserved for Admin SDK / Admin
       allow create: if isAuthenticated() && (
         isAdmin() ||
         (
           isOwner(userId) &&
-          request.resource.data.role == 'student' &&
+          request.resource.data.get('role', 'student') == 'student' &&
           request.resource.data.email == request.auth.token.email &&
           !request.resource.data.keys().hasAny(['staffId', 'adminId', 'isAdmin', 'isStaff'])
         )
       );
 
-      // Update: Users CANNOT alter sensitive fields (role, studentId, staffId, adminId, email)
+      // Updates: Users cannot alter sensitive fields (role, studentId, staffId, adminId, email)
       allow update: if isAuthenticated() && (
         isAdmin() ||
         (
           isOwner(userId) &&
-          request.resource.data.role == resource.data.role &&
+          request.resource.data.get('role', '') == resource.data.get('role', '') &&
           request.resource.data.email == resource.data.email &&
           !request.resource.data.diff(resource.data).affectedKeys().hasAny([
             'role', 'studentId', 'staffId', 'adminId', 'email'
@@ -97,35 +70,36 @@ service cloud.firestore {
     }
 
     // ===============================================================
-    // 2. COMPLAINTS COLLECTION
+    // 3. COMPLAINTS COLLECTION
     // ===============================================================
     match /complaints/{complaintId} {
-      // Read: Compatible with campus public feed query (subscribeToComplaints).
-      // Confidential complaints are restricted to owner, assigned staff, and admin.
+      // Read: Public/non-confidential complaints are viewable across campus.
+      // Confidential complaints are restricted to the verified owner UID, assigned staff, and admin.
       allow read: if isAuthenticated() && (
         isAdmin() ||
         isStaff() ||
-        isVerifiedStudent(resource.data.studentId, resource.data.studentEmail) ||
+        resource.data.get('studentUid', '') == request.auth.uid ||
+        resource.data.get('studentId', '') == request.auth.uid ||
         resource.data.get('isConfidential', false) == false ||
         resource.data.get('isPublic', false) == true
       );
 
-      // Create: Filed by verified student with initial status 'Submitted'
+      // Create: Student identity is verified directly using authenticated Firebase UID (request.auth.uid)
       allow create: if isAuthenticated() && (
         isAdmin() ||
         (
-          isVerifiedStudent(request.resource.data.studentId, request.resource.data.studentEmail) &&
+          (request.resource.data.get('studentUid', '') == request.auth.uid || request.resource.data.get('studentId', '') == request.auth.uid) &&
           request.resource.data.status == 'Submitted' &&
           request.resource.data.studentEmail == request.auth.token.email
         )
       );
 
-      // Updates: Granularly partitioned by action type
+      // Updates: Partitioned strictly by role and action type
       allow update: if isAuthenticated() && (
-        // A. Admin has complete workflow update authority
+        // A. Admin has complete workflow authority
         isAdmin() ||
 
-        // B. Department Staff: Can update workflow status, remarks, assignment, and history
+        // B. Department Staff: Can update workflow resolution fields only
         (
           isStaff() &&
           request.resource.data.diff(resource.data).affectedKeys().hasOnly([
@@ -136,41 +110,41 @@ service cloud.firestore {
 
         // C. Complaint Owner (Student) - Case 1: Submitting feedback
         (
-          isVerifiedStudent(resource.data.studentId, resource.data.studentEmail) &&
+          (resource.data.get('studentUid', '') == request.auth.uid || resource.data.get('studentId', '') == request.auth.uid) &&
           request.resource.data.diff(resource.data).affectedKeys().hasOnly(['feedback', 'comments', 'updatedAt'])
         ) ||
 
         // C. Complaint Owner (Student) - Case 2: Reopening a resolved complaint
         (
-          isVerifiedStudent(resource.data.studentId, resource.data.studentEmail) &&
+          (resource.data.get('studentUid', '') == request.auth.uid || resource.data.get('studentId', '') == request.auth.uid) &&
           resource.data.status == 'Resolved' &&
           request.resource.data.status == 'Reopened' &&
           request.resource.data.diff(resource.data).affectedKeys().hasOnly([
             'status', 'remarks', 'resolvedDate', 'history', 'updatedAt'
           ]) &&
           !request.resource.data.diff(resource.data).affectedKeys().hasAny([
-            'studentId', 'studentEmail', 'trackingId', 'category', 'department', 
+            'studentUid', 'studentId', 'studentEmail', 'trackingId', 'category', 'department', 
             'title', 'description', 'priority', 'submissionDate', 'assignedStaffId'
           ])
         ) ||
 
-        // D. Public Upvoting: Strictly enforces that ONLY the caller's own vote is added or removed
+        // D. Public Upvoting/Downvoting: Changes ONLY the authenticated user's own vote
         (
           (resource.data.get('isPublic', false) == true || resource.data.get('isConfidential', false) == false) &&
           request.resource.data.diff(resource.data).affectedKeys().hasOnly(['upvotes', 'upvotedBy', 'updatedAt']) &&
           (
-            // Vote Up: Caller wasn't in list, is in new list, size increments by 1, count increments by 1
+            // Upvote: Caller UID was not present, is now added, size +1, upvotes +1
             (
-              !resource.data.upvotedBy.hasAny([request.auth.uid, getVerifiedStudentId()]) &&
-              request.resource.data.upvotedBy.hasAny([request.auth.uid, getVerifiedStudentId()]) &&
+              !resource.data.upvotedBy.hasAny([request.auth.uid]) &&
+              request.resource.data.upvotedBy.hasAny([request.auth.uid]) &&
               request.resource.data.upvotedBy.hasAll(resource.data.upvotedBy) &&
               request.resource.data.upvotedBy.size() == resource.data.upvotedBy.size() + 1 &&
               request.resource.data.upvotes == resource.data.upvotes + 1
             ) ||
-            // Vote Down: Caller was in list, not in new list, size decrements by 1, count decrements by 1
+            // Downvote (Undo): Caller UID was present, is now removed, size -1, upvotes -1
             (
-              resource.data.upvotedBy.hasAny([request.auth.uid, getVerifiedStudentId()]) &&
-              !request.resource.data.upvotedBy.hasAny([request.auth.uid, getVerifiedStudentId()]) &&
+              resource.data.upvotedBy.hasAny([request.auth.uid]) &&
+              !request.resource.data.upvotedBy.hasAny([request.auth.uid]) &&
               resource.data.upvotedBy.hasAll(request.resource.data.upvotedBy) &&
               request.resource.data.upvotedBy.size() == resource.data.upvotedBy.size() - 1 &&
               request.resource.data.upvotes == resource.data.upvotes - 1
@@ -183,7 +157,7 @@ service cloud.firestore {
     }
 
     // ===============================================================
-    // 3. ATTENDANCE SESSIONS
+    // 4. ATTENDANCE SESSIONS
     // ===============================================================
     match /attendance_sessions/{sessionId} {
       allow read: if isAuthenticated();
@@ -192,15 +166,15 @@ service cloud.firestore {
       allow create: if isStaff() || isAdmin();
 
       // Update: Staff/Admin control session.
-      // Students can ONLY check in: list increases by 1, caller was not in list, caller is in list
+      // Students can ONLY append their own authenticated UID during active session
       allow update: if isAuthenticated() && (
         isStaff() ||
         isAdmin() ||
         (
           resource.data.status == 'ACTIVE' &&
           request.resource.data.diff(resource.data).affectedKeys().hasOnly(['checkedInStudents', 'updatedAt']) &&
-          !resource.data.checkedInStudents.hasAny([request.auth.uid, getVerifiedStudentId()]) &&
-          request.resource.data.checkedInStudents.hasAny([request.auth.uid, getVerifiedStudentId()]) &&
+          !resource.data.checkedInStudents.hasAny([request.auth.uid]) &&
+          request.resource.data.checkedInStudents.hasAny([request.auth.uid]) &&
           request.resource.data.checkedInStudents.hasAll(resource.data.checkedInStudents) &&
           request.resource.data.checkedInStudents.size() == resource.data.checkedInStudents.size() + 1
         )
@@ -210,45 +184,27 @@ service cloud.firestore {
     }
 
     // ===============================================================
-    // 4. STUDENT ATTENDANCE RECORDS (Anti-Forgery & Audit Logs)
+    // 5. STUDENT ATTENDANCE RECORDS (Anti-Forgery Hardening)
     // ===============================================================
     match /student_attendance/{recordId} {
+      // Students can only view their own attendance records; Staff/Admin can view all
       allow read: if isAuthenticated() && (
         isAdmin() ||
         isStaff() ||
-        isVerifiedStudent(resource.data.studentId, resource.data.studentEmail)
+        resource.data.get('studentUid', '') == request.auth.uid ||
+        resource.data.get('studentId', '') == request.auth.uid
       );
 
-      // Create: Validated student check-in.
-      // Requires: caller's verified identity, status in ['VERIFIED', 'Present'], and active session reference
-      allow create: if isAuthenticated() && (
-        isAdmin() ||
-        isStaff() ||
-        (
-          isVerifiedStudent(request.resource.data.studentId, request.resource.data.studentEmail) &&
-          request.resource.data.status in ['VERIFIED', 'Present'] &&
-          (
-            !('sessionId' in request.resource.data) ||
-            (
-              exists(/databases/$(database)/documents/attendance_sessions/$(request.resource.data.sessionId)) &&
-              get(/databases/$(database)/documents/attendance_sessions/$(request.resource.data.sessionId)).data.status == 'ACTIVE'
-            )
-          ) &&
-          request.resource.data.keys().hasOnly([
-            'id', 'sessionId', 'studentId', 'studentName', 'subject', 'timestamp', 
-            'wifiSSID', 'clientIp', 'status', 'device', 'recordedAt'
-          ])
-        )
-      );
-
-      // Students are STRICTLY PROHIBITED from modifying attendance records once created
+      // SECURITY ENFORCEMENT: Students CANNOT create or modify attendance records directly from client.
+      // Official attendance records must be generated via trusted Cloud Functions (Admin SDK)
+      // or recorded directly by authorized faculty/staff/admin.
+      allow create: if isStaff() || isAdmin();
       allow update: if isStaff() || isAdmin();
-
       allow delete: if isAdmin();
     }
 
     // ===============================================================
-    // 5. MASTER DATA (Categories & Departments)
+    // 6. MASTER DATA (Categories & Departments)
     // ===============================================================
     match /categories/{categoryId} {
       allow read: if isAuthenticated();
@@ -261,36 +217,34 @@ service cloud.firestore {
     }
 
     // ===============================================================
-    // 6. NOTIFICATIONS COLLECTION
+    // 7. NOTIFICATIONS COLLECTION
     // ===============================================================
     match /notifications/{notificationId} {
+      // Read: Limited to intended recipient or admin
       allow read: if isAuthenticated() && (
-        resource.data.recipientId == request.auth.uid ||
-        (userDocExists() && resource.data.recipientId == getUserData().studentId) ||
-        (userDocExists() && resource.data.recipientRole == getUserData().role) ||
+        resource.data.get('userId', '') == request.auth.uid ||
+        resource.data.get('recipientUid', '') == request.auth.uid ||
+        (isStaff() && resource.data.get('userRole', '') == 'staff') ||
         isAdmin()
       );
 
-      // Students can ONLY send notifications to 'admin' or to their own verified ID
+      // Creation: Staff/Admin can notify; Students can ONLY notify 'admin' or themselves
       allow create: if isAuthenticated() && (
         isAdmin() ||
         isStaff() ||
         (
-          (request.resource.data.userRole == 'admin' || isVerifiedStudent(request.resource.data.userId, '')) &&
+          (request.resource.data.get('userRole', '') == 'admin' || request.resource.data.get('userId', '') == request.auth.uid) &&
           request.resource.data.keys().hasOnly([
             'id', 'userId', 'userRole', 'title', 'message', 'complaintId', 'trackingId', 'timestamp', 'isRead'
           ])
         )
       );
 
-      // Recipients can ONLY toggle 'isRead'
+      // Update: Recipients can ONLY toggle 'isRead'
       allow update: if isAuthenticated() && (
         isAdmin() ||
         (
-          (
-            resource.data.recipientId == request.auth.uid || 
-            (userDocExists() && resource.data.recipientId == getUserData().studentId)
-          ) &&
+          (resource.data.get('userId', '') == request.auth.uid || resource.data.get('recipientUid', '') == request.auth.uid) &&
           request.resource.data.diff(resource.data).affectedKeys().hasOnly(['isRead', 'updatedAt'])
         )
       );
