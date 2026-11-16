@@ -395,6 +395,13 @@ export const ComplaintProvider = ({ children }) => {
       }
 
       showToast(`Complaint ${updated.trackingId} has been reopened.`, 'warning');
+
+      // Sync to Firestore
+      if (isFirebaseConfigured) {
+        updateComplaintInFirestore(complaintId, updated).catch(err => {
+          console.warn('Firestore [complaints] reopen sync notice:', err.message);
+        });
+      }
     }
   };
 
@@ -440,6 +447,13 @@ export const ComplaintProvider = ({ children }) => {
       });
 
       showToast(`Complaint ${updated.trackingId} escalated successfully`, 'error');
+
+      // Sync to Firestore
+      if (isFirebaseConfigured) {
+        updateComplaintInFirestore(complaintId, updated).catch(err => {
+          console.warn('Firestore [complaints] escalate sync notice:', err.message);
+        });
+      }
     }
   };
 
