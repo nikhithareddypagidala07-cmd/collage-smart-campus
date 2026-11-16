@@ -10,8 +10,8 @@ service cloud.firestore {
       return request.auth != null;
     }
 
-    // STRICT: Admin and Staff permissions rely EXCLUSIVELY on trusted server-minted Custom Claims.
-    // Editable Firestore document roles are NEVER trusted for authorization.
+    // Role verification strictly relies on server-minted Firebase Custom Claims.
+    // Client-editable Firestore documents are completely untrusted for authorization.
     function isAdmin() {
       return isAuthenticated() && (
         request.auth.token.role == 'admin' ||
@@ -30,11 +30,43 @@ service cloud.firestore {
       return isAuthenticated() && request.auth.uid == userId;
     }
 
+    // Staff permission scoped strictly to their assigned department or explicit assignment
+    function isStaffForComplaint() {
+      return isStaff() && (
+        isAdmin() ||
+        (request.auth.token.get('department', '') == resource.data.get('department', '')) ||
+        (resource.data.get('assignedStaffUid', '') == request.auth.uid) ||
+        (resource.data.get('assignedStaffId', '') == request.auth.uid) ||
+        (resource.data.get('assignedStaffId', '') == request.auth.token.get('staffId', ''))
+      );
+    }
+
+    // Validates that student notifications are strictly legitimate and cannot spoof arbitrary recipients
+    function isLegitimateStudentNotification() {
+      let d = request.resource.data;
+      // Case 1: Student generating a self-notification
+      let isSelfNotification = (d.userId == request.auth.uid && d.userRole == 'student');
+      // Case 2: Student alerting Admin regarding their own existing complaint
+      let isAdminAlert = (
+        d.userRole == 'admin' &&
+        d.userId in ['admin', 'adm-01'] &&
+        'complaintId' in d &&
+        exists(/databases/$(database)/documents/complaints/$(d.complaintId)) &&
+        (
+          get(/databases/$(database)/documents/complaints/$(d.complaintId)).data.get('studentUid', '') == request.auth.uid ||
+          get(/databases/$(database)/documents/complaints/$(d.complaintId)).data.get('studentId', '') == request.auth.uid
+        )
+      );
+      return (isSelfNotification || isAdminAlert) &&
+             d.keys().hasOnly(['id', 'userId', 'userRole', 'title', 'message', 'complaintId', 'trackingId', 'timestamp', 'isRead']) &&
+             d.isRead == false;
+    }
+
     // ===============================================================
     // 2. USERS COLLECTION (Profile Management)
     // ===============================================================
     match /users/{userId} {
-      // Users can read their own profile; Staff and Admin have read access; Staff profiles are visible to all
+      // Students can read their own profile; Staff/Admin can read all; Staff directory is public
       allow read: if isAuthenticated() && (
         isOwner(userId) ||
         isStaff() ||
@@ -42,7 +74,7 @@ service cloud.firestore {
       );
 
       // Self-registration: Regular users can only create role='student'
-      // Custom claim creation/promotion is strictly reserved for Admin SDK / Admin
+      // Custom claim creation/promotion is strictly reserved for Admin SDK
       allow create: if isAuthenticated() && (
         isAdmin() ||
         (
@@ -84,7 +116,7 @@ service cloud.firestore {
         resource.data.get('isPublic', false) == true
       );
 
-      // Create: Student identity is verified directly using authenticated Firebase UID (request.auth.uid)
+      // Create: Student identity is verified strictly using authenticated Firebase UID (request.auth.uid)
       allow create: if isAuthenticated() && (
         isAdmin() ||
         (
@@ -94,23 +126,24 @@ service cloud.firestore {
         )
       );
 
-      // Updates: Partitioned strictly by role and action type
+      // Updates: Partitioned strictly by role and department assignment
       allow update: if isAuthenticated() && (
         // A. Admin has complete workflow authority
         isAdmin() ||
 
-        // B. Department Staff: Can update workflow resolution fields only
+        // B. Department Staff: Restricted to complaints in their department or explicitly assigned to them
         (
-          isStaff() &&
+          isStaffForComplaint() &&
           request.resource.data.diff(resource.data).affectedKeys().hasOnly([
             'status', 'remarks', 'resolvedDate', 'assignedStaffId', 'assignedStaffName', 'history', 'updatedAt'
           ]) &&
           request.resource.data.status in ['Under Review', 'In Progress', 'Resolved', 'Rejected']
         ) ||
 
-        // C. Complaint Owner (Student) - Case 1: Submitting feedback
+        // C. Complaint Owner (Student) - Case 1: Submitting feedback on resolved complaint
         (
           (resource.data.get('studentUid', '') == request.auth.uid || resource.data.get('studentId', '') == request.auth.uid) &&
+          resource.data.status == 'Resolved' &&
           request.resource.data.diff(resource.data).affectedKeys().hasOnly(['feedback', 'comments', 'updatedAt'])
         ) ||
 
@@ -124,7 +157,7 @@ service cloud.firestore {
           ]) &&
           !request.resource.data.diff(resource.data).affectedKeys().hasAny([
             'studentUid', 'studentId', 'studentEmail', 'trackingId', 'category', 'department', 
-            'title', 'description', 'priority', 'submissionDate', 'assignedStaffId'
+            'title', 'description', 'priority', 'submissionDate', 'assignedStaffId', 'assignedStaffName', 'evidenceImage'
           ])
         ) ||
 
@@ -162,32 +195,17 @@ service cloud.firestore {
     match /attendance_sessions/{sessionId} {
       allow read: if isAuthenticated();
 
-      // Only faculty/staff and admin can initiate attendance sessions
-      allow create: if isStaff() || isAdmin();
-
-      // Update: Staff/Admin control session.
-      // Students can ONLY append their own authenticated UID during active session
-      allow update: if isAuthenticated() && (
-        isStaff() ||
-        isAdmin() ||
-        (
-          resource.data.status == 'ACTIVE' &&
-          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['checkedInStudents', 'updatedAt']) &&
-          !resource.data.checkedInStudents.hasAny([request.auth.uid]) &&
-          request.resource.data.checkedInStudents.hasAny([request.auth.uid]) &&
-          request.resource.data.checkedInStudents.hasAll(resource.data.checkedInStudents) &&
-          request.resource.data.checkedInStudents.size() == resource.data.checkedInStudents.size() + 1
-        )
-      );
-
-      allow delete: if isAdmin();
+      // SECURITY ENFORCEMENT: Students CANNOT write to attendance sessions from client.
+      // Sessions are created and managed strictly by faculty/staff and admin.
+      // Check-ins must be executed via trusted Cloud Function or faculty device.
+      allow create, update, delete: if isStaff() || isAdmin();
     }
 
     // ===============================================================
     // 5. STUDENT ATTENDANCE RECORDS (Anti-Forgery Hardening)
     // ===============================================================
     match /student_attendance/{recordId} {
-      // Students can only view their own attendance records; Staff/Admin can view all
+      // Students can only view their own verified attendance records; Staff/Admin can view all
       allow read: if isAuthenticated() && (
         isAdmin() ||
         isStaff() ||
@@ -198,8 +216,7 @@ service cloud.firestore {
       // SECURITY ENFORCEMENT: Students CANNOT create or modify attendance records directly from client.
       // Official attendance records must be generated via trusted Cloud Functions (Admin SDK)
       // or recorded directly by authorized faculty/staff/admin.
-      allow create: if isStaff() || isAdmin();
-      allow update: if isStaff() || isAdmin();
+      allow create, update: if isStaff() || isAdmin();
       allow delete: if isAdmin();
     }
 
@@ -228,16 +245,11 @@ service cloud.firestore {
         isAdmin()
       );
 
-      // Creation: Staff/Admin can notify; Students can ONLY notify 'admin' or themselves
+      // Creation: Staff/Admin can notify; Students can ONLY notify 'admin' or themselves regarding their verified complaint
       allow create: if isAuthenticated() && (
         isAdmin() ||
         isStaff() ||
-        (
-          (request.resource.data.get('userRole', '') == 'admin' || request.resource.data.get('userId', '') == request.auth.uid) &&
-          request.resource.data.keys().hasOnly([
-            'id', 'userId', 'userRole', 'title', 'message', 'complaintId', 'trackingId', 'timestamp', 'isRead'
-          ])
-        )
+        isLegitimateStudentNotification()
       );
 
       // Update: Recipients can ONLY toggle 'isRead'
