@@ -29,7 +29,7 @@ export const AssignedComplaints = () => {
 
   // Filter department complaints
   const deptComplaints = complaints.filter(
-    c => c.department === currentUser?.department || c.assignedStaffId === currentUser?.id
+    c => c.department === currentUser?.department || c.assignedStaffId === currentUser?.id || c.assignedStaffUid === currentUser?.uid
   );
 
   const filtered = deptComplaints.filter(c => {

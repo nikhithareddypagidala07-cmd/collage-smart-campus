@@ -29,8 +29,10 @@ export const MyComplaints = () => {
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [viewMode, setViewMode] = useState('table'); // 'table' | 'cards'
 
-  // Filter complaints by student
-  const myComplaints = complaints.filter(c => c.studentId === currentUser?.studentId);
+  // Filter complaints by student (supports both Firebase UID and demo studentId)
+  const myComplaints = complaints.filter(
+    c => (c.studentUid && c.studentUid === currentUser?.uid) || (c.studentId && c.studentId === currentUser?.studentId)
+  );
 
   // Apply search and filters
   const filteredComplaints = myComplaints.filter(c => {

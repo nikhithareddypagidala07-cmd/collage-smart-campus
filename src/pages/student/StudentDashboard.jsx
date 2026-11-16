@@ -27,8 +27,10 @@ export const StudentDashboard = () => {
   const [searchError, setSearchError] = useState('');
   const navigate = useNavigate();
 
-  // Filter complaints submitted by current student
-  const studentComplaints = complaints.filter(c => c.studentId === currentUser?.studentId);
+  // Filter complaints submitted by current student (supports Firebase UID and studentId)
+  const studentComplaints = complaints.filter(
+    c => (c.studentUid && c.studentUid === currentUser?.uid) || (c.studentId && c.studentId === currentUser?.studentId)
+  );
 
   // Statistics
   const total = studentComplaints.length;

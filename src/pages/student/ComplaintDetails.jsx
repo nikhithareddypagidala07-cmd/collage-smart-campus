@@ -24,13 +24,14 @@ import {
   Eye,
   Lock,
   MessageSquare,
-  Sparkles
+  Sparkles,
+  Star
 } from 'lucide-react';
 
 export const ComplaintDetails = () => {
   const { id } = useParams();
   const { currentUser } = useAuth();
-  const { complaints, reopenComplaint, showToast } = useComplaints();
+  const { complaints, reopenComplaint, submitFeedback, showToast } = useComplaints();
   const navigate = useNavigate();
 
   const [copied, setCopied] = useState(false);
@@ -38,6 +39,9 @@ export const ComplaintDetails = () => {
   const [isReopenModalOpen, setIsReopenModalOpen] = useState(false);
   const [reopenReason, setReopenReason] = useState('');
   const [isReopening, setIsReopening] = useState(false);
+  const [feedbackRating, setFeedbackRating] = useState(5);
+  const [feedbackComment, setFeedbackComment] = useState('');
+  const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
 
   // Find complaint by id or trackingId
   const complaint = complaints.find(
@@ -80,6 +84,18 @@ export const ComplaintDetails = () => {
       setIsReopenModalOpen(false);
       setReopenReason('');
     }, 400);
+  };
+
+  const handleFeedbackSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmittingFeedback(true);
+    try {
+      await submitFeedback(complaint.id, feedbackRating, feedbackComment);
+      setIsSubmittingFeedback(false);
+      setFeedbackComment('');
+    } catch (err) {
+      setIsSubmittingFeedback(false);
+    }
   };
 
   const isResolved = complaint.status === 'Resolved';
@@ -235,6 +251,94 @@ export const ComplaintDetails = () => {
           <div className="bg-charcoal-900 rounded-2xl border border-charcoal-800 p-6 sm:p-8 shadow-xs">
             <Timeline history={complaint.history} currentStatus={complaint.status} />
           </div>
+
+          {/* Student Resolution Feedback Card */}
+          {isResolved && (
+            <div className="bg-charcoal-900 rounded-2xl border border-charcoal-800 p-6 sm:p-8 shadow-xs space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-bold text-sand-100 flex items-center gap-2">
+                  <Star className="w-4 h-4 text-amber-400" />
+                  <span>Student Resolution Feedback</span>
+                </h3>
+                {complaint.feedback && (
+                  <span className="text-[11px] font-bold text-emerald-400 bg-emerald-950/70 border border-emerald-800 px-2.5 py-0.5 rounded-full">
+                    Feedback Recorded
+                  </span>
+                )}
+              </div>
+
+              {complaint.feedback ? (
+                <div className="p-4 bg-charcoal-950 rounded-xl border border-charcoal-800 space-y-2">
+                  <div className="flex items-center gap-1.5">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <Star
+                        key={star}
+                        className={`w-4 h-4 ${star <= (complaint.feedback.rating || 5) ? 'text-amber-400 fill-amber-400' : 'text-charcoal-700'}`}
+                      />
+                    ))}
+                    <span className="text-xs font-bold text-sand-200 ml-2">
+                      {complaint.feedback.rating || 5} / 5 Stars
+                    </span>
+                  </div>
+                  {complaint.feedback.comment && (
+                    <p className="text-xs text-sand-300 italic">
+                      "{complaint.feedback.comment}"
+                    </p>
+                  )}
+                  <p className="text-[10px] text-sand-400">
+                    Recorded on {formatDate(complaint.feedback.submittedAt)}
+                  </p>
+                </div>
+              ) : (
+                <form onSubmit={handleFeedbackSubmit} className="space-y-4">
+                  <p className="text-xs text-sand-300">
+                    How satisfied are you with the resolution provided by campus facilities?
+                  </p>
+                  <div>
+                    <label className="block text-xs font-semibold text-sand-400 mb-1.5">
+                      Satisfaction Rating
+                    </label>
+                    <div className="flex items-center gap-2">
+                      {[1, 2, 3, 4, 5].map((num) => (
+                        <button
+                          key={num}
+                          type="button"
+                          onClick={() => setFeedbackRating(num)}
+                          className={`p-2 rounded-xl border transition flex items-center gap-1 text-xs font-bold ${
+                            feedbackRating >= num
+                              ? 'bg-amber-950/40 border-amber-500/60 text-amber-300'
+                              : 'bg-charcoal-950 border-charcoal-800 text-sand-400 hover:border-charcoal-700'
+                          }`}
+                        >
+                          <Star className={`w-4 h-4 ${feedbackRating >= num ? 'text-amber-400 fill-amber-400' : 'text-sand-400'}`} />
+                          <span>{num}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-sand-400 mb-1">
+                      Comments (Optional)
+                    </label>
+                    <textarea
+                      rows={3}
+                      value={feedbackComment}
+                      onChange={(e) => setFeedbackComment(e.target.value)}
+                      placeholder="Share your thoughts on the speed and quality of resolution..."
+                      className="w-full p-3 bg-charcoal-950 border border-charcoal-800 rounded-xl text-xs sm:text-sm text-sand-100 focus:outline-none focus:ring-2 focus:ring-amber-500"
+                    ></textarea>
+                  </div>
+                  <button
+                    type="submit"
+                    disabled={isSubmittingFeedback}
+                    className="px-5 py-2.5 bg-electric-500 hover:bg-electric-600 text-white rounded-xl text-xs font-bold transition shadow-xs disabled:opacity-50"
+                  >
+                    {isSubmittingFeedback ? 'Recording...' : 'Submit Resolution Feedback'}
+                  </button>
+                </form>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Right Column: Metadata & Department Sidebar */}

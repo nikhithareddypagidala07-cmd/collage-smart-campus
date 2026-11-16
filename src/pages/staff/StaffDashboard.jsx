@@ -31,7 +31,7 @@ export const StaffDashboard = () => {
   // If currentUser is staff01 (Electrical Maintenance), show Electrical Maintenance complaints
   // Or show complaints assigned to this staff member
   const departmentComplaints = complaints.filter(
-    c => c.department === currentUser?.department || c.assignedStaffId === currentUser?.id
+    c => c.department === currentUser?.department || c.assignedStaffId === currentUser?.id || c.assignedStaffUid === currentUser?.uid
   );
 
   // Statistics

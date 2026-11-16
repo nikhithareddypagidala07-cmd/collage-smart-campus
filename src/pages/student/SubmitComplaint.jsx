@@ -129,16 +129,22 @@ export const SubmitComplaint = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
 
     setIsSubmitting(true);
-    setTimeout(() => {
-      const newCmp = submitComplaint(formData, currentUser);
+    try {
+      const newCmp = await submitComplaint(formData, currentUser);
       setIsSubmitting(false);
       setCreatedComplaint(newCmp);
-    }, 400);
+    } catch (err) {
+      setIsSubmitting(false);
+      setErrors(prev => ({
+        ...prev,
+        submit: err.message || 'Failed to submit complaint to Firestore. Please try again.'
+      }));
+    }
   };
 
   if (createdComplaint) {
@@ -218,6 +224,11 @@ export const SubmitComplaint = () => {
       </div>
 
       <form onSubmit={handleSubmit} className="bg-charcoal-900 rounded-2xl border border-charcoal-800 p-6 sm:p-8 shadow-xl space-y-6 text-sand-100">
+        {errors.submit && (
+          <div className="p-4 bg-rose-950/70 border border-rose-800 rounded-xl text-rose-300 text-xs flex items-center gap-2">
+            <span className="font-bold">Error:</span> {errors.submit}
+          </div>
+        )}
         {/* Category & Mapped Department Selection */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           <div>

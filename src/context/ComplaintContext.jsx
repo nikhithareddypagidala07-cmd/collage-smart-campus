@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import {
   INITIAL_COMPLAINTS,
   INITIAL_CATEGORIES,
@@ -7,10 +7,14 @@ import {
 } from '../data/mockData';
 import { generateTrackingId } from '../utils/helpers';
 import { isFirebaseConfigured } from '../firebase';
+import { useAuth } from './AuthContext';
 import {
-  subscribeToComplaints,
+  subscribeToRoleScopedComplaints,
   addComplaintToFirestore,
-  updateComplaintInFirestore
+  updateComplaintInFirestore,
+  subscribeToUserNotifications,
+  addNotificationToFirestore,
+  markNotificationReadInFirestore
 } from '../services/firestoreService';
 
 const ComplaintContext = createContext();
@@ -21,6 +25,8 @@ const STORAGE_KEY_DEPARTMENTS = 'smartcampus_departments';
 const STORAGE_KEY_NOTIFS = 'smartcampus_notifications';
 
 export const ComplaintProvider = ({ children }) => {
+  const { currentUser } = useAuth();
+
   // Complaints State
   const [complaints, setComplaints] = useState(() => {
     const saved = localStorage.getItem(STORAGE_KEY_COMPLAINTS);
@@ -75,36 +81,13 @@ export const ComplaintProvider = ({ children }) => {
 
   // Toast Notification State
   const [toasts, setToasts] = useState([]);
+  const [firestoreLoading, setFirestoreLoading] = useState(false);
+  const [firestoreError, setFirestoreError] = useState(null);
 
-  // Sync to LocalStorage
+  // Sync to LocalStorage (local persistence & offline cache)
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY_COMPLAINTS, JSON.stringify(complaints));
   }, [complaints]);
-
-  // Real-time Cloud Firestore synchronization
-  useEffect(() => {
-    if (!isFirebaseConfigured) return;
-
-    const unsubscribe = subscribeToComplaints((firestoreComplaints) => {
-      if (firestoreComplaints && firestoreComplaints.length > 0) {
-        setComplaints(prev => {
-          const map = new Map(firestoreComplaints.map(item => [item.id || item.trackingId, item]));
-          const merged = [...firestoreComplaints];
-          prev.forEach(item => {
-            const key = item.id || item.trackingId;
-            if (!map.has(key)) {
-              merged.push(item);
-            }
-          });
-          return merged;
-        });
-      }
-    });
-
-    return () => {
-      if (typeof unsubscribe === 'function') unsubscribe();
-    };
-  }, []);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY_CATEGORIES, JSON.stringify(categories));
@@ -119,25 +102,100 @@ export const ComplaintProvider = ({ children }) => {
   }, [notifications]);
 
   // Toast Helper
-  const showToast = (message, type = 'success') => {
+  const showToast = useCallback((message, type = 'success') => {
     const id = Date.now() + Math.random();
     setToasts(prev => [...prev, { id, message, type }]);
     setTimeout(() => {
       setToasts(prev => prev.filter(t => t.id !== id));
     }, 4000);
-  };
+  }, []);
 
-  const removeToast = (id) => {
+  const removeToast = useCallback((id) => {
     setToasts(prev => prev.filter(t => t.id !== id));
-  };
+  }, []);
 
-  // Add Notification Helper
-  const createNotification = ({ userId, recipientUid, senderUid, userRole, title, message, complaintId, trackingId }) => {
+  // ================= REAL-TIME FIRESTORE SUBSCRIPTIONS =================
+
+  // 1. Complaint Subscription (Strictly Role-Scoped)
+  useEffect(() => {
+    if (!isFirebaseConfigured || !currentUser || currentUser.isDemoMode) {
+      setFirestoreLoading(false);
+      return;
+    }
+
+    setFirestoreLoading(true);
+    setFirestoreError(null);
+
+    const unsubscribe = subscribeToRoleScopedComplaints(
+      currentUser,
+      (firestoreComplaints) => {
+        setFirestoreLoading(false);
+        setFirestoreError(null);
+        if (firestoreComplaints) {
+          setComplaints(prev => {
+            const map = new Map(firestoreComplaints.map(item => [item.id || item.trackingId, item]));
+            // Also preserve local items if they have not yet synced
+            const merged = [...firestoreComplaints];
+            prev.forEach(item => {
+              const key = item.id || item.trackingId;
+              if (!map.has(key) && item.studentUid === currentUser.uid) {
+                merged.push(item);
+              }
+            });
+            return merged;
+          });
+        }
+      },
+      (error) => {
+        setFirestoreLoading(false);
+        const errMsg = error.message || 'Permission denied or network error reaching Firestore.';
+        setFirestoreError(errMsg);
+        console.warn('Firestore complaints subscription notice:', errMsg);
+      }
+    );
+
+    return () => {
+      if (typeof unsubscribe === 'function') unsubscribe();
+    };
+  }, [currentUser]);
+
+  // 2. Real-time Notifications Subscription
+  useEffect(() => {
+    if (!isFirebaseConfigured || !currentUser || currentUser.isDemoMode) {
+      return;
+    }
+
+    const unsubscribe = subscribeToUserNotifications(
+      currentUser,
+      (firestoreNotifs) => {
+        if (firestoreNotifs && firestoreNotifs.length > 0) {
+          setNotifications(prev => {
+            const map = new Map(firestoreNotifs.map(n => [n.id, n]));
+            const merged = [...firestoreNotifs];
+            prev.forEach(n => {
+              if (!map.has(n.id)) merged.push(n);
+            });
+            return merged;
+          });
+        }
+      },
+      (err) => {
+        console.warn('Notifications subscription notice:', err.message);
+      }
+    );
+
+    return () => {
+      if (typeof unsubscribe === 'function') unsubscribe();
+    };
+  }, [currentUser]);
+
+  // Add Notification Helper (Local + Firestore)
+  const createNotification = useCallback(async ({ userId, recipientUid, senderUid, userRole, title, message, complaintId, trackingId }) => {
     const newNotif = {
       id: `notif-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
-      userId,
+      userId: userId || 'student',
       recipientUid: recipientUid || userId,
-      senderUid: senderUid || 'system',
+      senderUid: senderUid || currentUser?.uid || 'system',
       userRole,
       title,
       message,
@@ -146,11 +204,22 @@ export const ComplaintProvider = ({ children }) => {
       timestamp: new Date().toISOString(),
       isRead: false
     };
+
     setNotifications(prev => [newNotif, ...prev]);
-  };
+
+    if (isFirebaseConfigured && !currentUser?.isDemoMode) {
+      try {
+        await addNotificationToFirestore(newNotif);
+      } catch (e) {
+        console.warn('Firestore notification write notice:', e.message);
+      }
+    }
+  }, [currentUser]);
+
+  // ================= COMPLAINT ACTIONS =================
 
   // Submit Complaint
-  const submitComplaint = (formData, studentUser) => {
+  const submitComplaint = async (formData, studentUser) => {
     const trackingId = generateTrackingId();
     const now = new Date();
 
@@ -159,8 +228,9 @@ export const ComplaintProvider = ({ children }) => {
     const slaHours = categoryObj ? categoryObj.slaHours : 48;
     const targetDate = new Date(now.getTime() + slaHours * 60 * 60 * 1000);
 
+    const docId = `cmp-${Date.now()}`;
     const newComplaint = {
-      id: `cmp-${Date.now()}`,
+      id: docId,
       trackingId,
       title: formData.title,
       category: formData.category,
@@ -168,11 +238,11 @@ export const ComplaintProvider = ({ children }) => {
       description: formData.description,
       priority: formData.priority || 'Medium',
       status: 'Submitted',
-      studentUid: studentUser.uid || studentUser.id,
-      studentId: studentUser.studentId,
-      studentName: studentUser.name,
-      studentEmail: studentUser.email,
-      studentPhone: studentUser.phone || '',
+      studentUid: studentUser?.uid || studentUser?.id,
+      studentId: studentUser?.studentId || 'N/A',
+      studentName: studentUser?.name || 'Student',
+      studentEmail: studentUser?.email || '',
+      studentPhone: studentUser?.phone || '',
       location: formData.location || 'Campus Premise',
       isConfidential: !!formData.isConfidential,
       submissionDate: now.toISOString(),
@@ -185,28 +255,37 @@ export const ComplaintProvider = ({ children }) => {
         {
           status: 'Submitted',
           timestamp: now.toISOString(),
-          performer: formData.isConfidential ? 'Anonymous Student (Confidential)' : `${studentUser.name} (Student)`,
+          performer: formData.isConfidential ? 'Anonymous Student (Confidential)' : `${studentUser?.name || 'Student'} (Student)`,
           remarks: 'Complaint registered via portal with picture evidence.'
         }
       ],
       remarks: 'Awaiting department review and staff assignment.'
     };
 
+    // If Firebase is active and not demo mode, persist to Cloud Firestore first
+    if (isFirebaseConfigured && !studentUser?.isDemoMode) {
+      try {
+        await addComplaintToFirestore(newComplaint);
+      } catch (err) {
+        showToast(`Failed to submit complaint to Cloud Firestore: ${err.message}`, 'error');
+        throw err; // Strict: No silent local fallback on Firebase failure
+      }
+    }
+
     setComplaints(prev => [newComplaint, ...prev]);
 
-    // Notify student
+    // Send notifications
     createNotification({
       userId: studentUser.studentId,
       recipientUid: studentUser.uid || studentUser.id,
       senderUid: studentUser.uid || studentUser.id,
       userRole: 'student',
       title: 'Complaint Registered',
-      message: `Your complaint "${newComplaint.title}" has been registered successfully with ID ${trackingId}.`,
+      message: `Your complaint "${newComplaint.title}" has been registered successfully with tracking ID ${trackingId}.`,
       complaintId: newComplaint.id,
       trackingId: newComplaint.trackingId
     });
 
-    // Notify Admin
     createNotification({
       userId: 'adm-01',
       recipientUid: 'admin',
@@ -219,261 +298,283 @@ export const ComplaintProvider = ({ children }) => {
     });
 
     showToast(`Complaint submitted successfully! Tracking ID: ${trackingId}`, 'success');
-
-    // Cloud Firestore Persistence
-    if (isFirebaseConfigured) {
-      addComplaintToFirestore(newComplaint).catch(err => {
-        console.warn('Firestore [complaints] add notice:', err.message);
-      });
-    }
-
     return newComplaint;
   };
 
-  // Update Status
-  const updateComplaintStatus = (complaintId, newStatus, remarks = '', performerName = 'Staff Member') => {
+  // Update Status (Staff / Admin)
+  const updateComplaintStatus = async (complaintId, newStatus, remarks = '', performerName = 'Staff Member') => {
     const now = new Date().toISOString();
     let updatedComplaint = null;
 
-    setComplaints(prev =>
-      prev.map(c => {
-        if (c.id === complaintId) {
-          const newHistoryItem = {
-            status: newStatus,
-            timestamp: now,
-            performer: performerName,
-            remarks: remarks || `Status transitioned to ${newStatus}.`
-          };
+    const targetComplaint = complaints.find(c => c.id === complaintId);
+    if (!targetComplaint) return null;
 
-          updatedComplaint = {
-            ...c,
-            status: newStatus,
-            remarks: remarks || c.remarks,
-            resolvedDate: newStatus === 'Resolved' ? now : (newStatus === 'Reopened' ? null : c.resolvedDate),
-            history: [...c.history, newHistoryItem]
-          };
-          return updatedComplaint;
-        }
-        return c;
-      })
-    );
+    const newHistoryItem = {
+      status: newStatus,
+      timestamp: now,
+      performer: performerName,
+      remarks: remarks || `Status transitioned to ${newStatus}.`
+    };
 
-    if (updatedComplaint) {
-      // Notify student
-      createNotification({
-        userId: updatedComplaint.studentId,
-        userRole: 'student',
-        title: `Status Changed: ${newStatus}`,
-        message: `Your complaint ${updatedComplaint.trackingId} status has changed to "${newStatus}". Remarks: ${remarks || 'No remarks provided.'}`,
-        complaintId: updatedComplaint.id,
-        trackingId: updatedComplaint.trackingId
-      });
+    updatedComplaint = {
+      ...targetComplaint,
+      status: newStatus,
+      remarks: remarks || targetComplaint.remarks,
+      resolvedDate: newStatus === 'Resolved' ? now : (newStatus === 'Reopened' ? null : targetComplaint.resolvedDate),
+      history: [...(targetComplaint.history || []), newHistoryItem]
+    };
 
-      showToast(`Complaint ${updatedComplaint.trackingId} updated to ${newStatus}`, 'info');
-
-      // Sync to Firestore
-      if (isFirebaseConfigured) {
-        updateComplaintInFirestore(complaintId, updatedComplaint).catch(err => {
-          console.warn('Firestore [complaints] update notice:', err.message);
+    // Cloud Firestore Sync
+    if (isFirebaseConfigured && !currentUser?.isDemoMode) {
+      try {
+        await updateComplaintInFirestore(complaintId, {
+          status: newStatus,
+          remarks: updatedComplaint.remarks,
+          resolvedDate: updatedComplaint.resolvedDate,
+          history: updatedComplaint.history
         });
+      } catch (err) {
+        showToast(`Cloud Firestore status update error: ${err.message}`, 'error');
+        throw err;
       }
     }
 
+    setComplaints(prev => prev.map(c => c.id === complaintId ? updatedComplaint : c));
+
+    // Notify student
+    createNotification({
+      userId: updatedComplaint.studentId,
+      recipientUid: updatedComplaint.studentUid,
+      senderUid: currentUser?.uid || 'staff',
+      userRole: 'student',
+      title: `Status Changed: ${newStatus}`,
+      message: `Your complaint ${updatedComplaint.trackingId} status has changed to "${newStatus}". Remarks: ${remarks || 'No remarks provided.'}`,
+      complaintId: updatedComplaint.id,
+      trackingId: updatedComplaint.trackingId
+    });
+
+    showToast(`Complaint ${updatedComplaint.trackingId} updated to ${newStatus}`, 'info');
     return updatedComplaint;
   };
 
-  // Assign Staff
-  const assignStaff = (complaintId, staffObj, remarks = '', assignedBy = 'Administrator') => {
+  // Assign Staff (Admin)
+  const assignStaff = async (complaintId, staffObj, remarks = '', assignedBy = 'Administrator') => {
     const now = new Date().toISOString();
-    let target = null;
+    const target = complaints.find(c => c.id === complaintId);
+    if (!target) return null;
 
-    setComplaints(prev =>
-      prev.map(c => {
-        if (c.id === complaintId) {
-          const newStatus = c.status === 'Submitted' ? 'Under Review' : c.status;
-          const newHistory = [
-            ...c.history,
-            {
-              status: newStatus,
-              timestamp: now,
-              performer: assignedBy,
-              remarks: `Assigned to ${staffObj.name} (${staffObj.department}). ${remarks}`
-            }
-          ];
+    const newStatus = target.status === 'Submitted' ? 'Under Review' : target.status;
+    const newHistory = [
+      ...(target.history || []),
+      {
+        status: newStatus,
+        timestamp: now,
+        performer: assignedBy,
+        remarks: `Assigned to ${staffObj.name} (${staffObj.department}). ${remarks}`
+      }
+    ];
 
-          target = {
-            ...c,
-            status: newStatus,
-            assignedStaffId: staffObj.id,
-            assignedStaffName: staffObj.name,
-            remarks: remarks || `Assigned to ${staffObj.name}`,
-            history: newHistory
-          };
-          return target;
-        }
-        return c;
-      })
-    );
+    const updated = {
+      ...target,
+      status: newStatus,
+      assignedStaffId: staffObj.id,
+      assignedStaffName: staffObj.name,
+      assignedStaffUid: staffObj.uid || staffObj.id,
+      remarks: remarks || `Assigned to ${staffObj.name}`,
+      history: newHistory
+    };
 
-    if (target) {
-      // Notify Staff
-      createNotification({
-        userId: staffObj.id,
-        userRole: 'staff',
-        title: 'New Complaint Assigned',
-        message: `You have been assigned complaint ${target.trackingId}: "${target.title}".`,
-        complaintId: target.id,
-        trackingId: target.trackingId
-      });
-
-      // Notify Student
-      createNotification({
-        userId: target.studentId,
-        userRole: 'student',
-        title: 'Staff Assigned',
-        message: `Complaint ${target.trackingId} has been assigned to ${staffObj.name} from ${staffObj.department}.`,
-        complaintId: target.id,
-        trackingId: target.trackingId
-      });
-
-      showToast(`Complaint assigned to ${staffObj.name}`, 'success');
-
-      // Sync to Firestore
-      if (isFirebaseConfigured) {
-        updateComplaintInFirestore(complaintId, target).catch(err => {
-          console.warn('Firestore [complaints] assign sync notice:', err.message);
+    if (isFirebaseConfigured && !currentUser?.isDemoMode) {
+      try {
+        await updateComplaintInFirestore(complaintId, {
+          status: newStatus,
+          assignedStaffId: updated.assignedStaffId,
+          assignedStaffName: updated.assignedStaffName,
+          assignedStaffUid: updated.assignedStaffUid,
+          remarks: updated.remarks,
+          history: updated.history
         });
+      } catch (err) {
+        showToast(`Cloud Firestore assignment sync error: ${err.message}`, 'error');
+        throw err;
       }
     }
+
+    setComplaints(prev => prev.map(c => c.id === complaintId ? updated : c));
+
+    // Notify Staff
+    createNotification({
+      userId: staffObj.id,
+      recipientUid: staffObj.uid || staffObj.id,
+      senderUid: currentUser?.uid || 'admin',
+      userRole: 'staff',
+      title: 'New Complaint Assigned',
+      message: `You have been assigned complaint ${updated.trackingId}: "${updated.title}".`,
+      complaintId: updated.id,
+      trackingId: updated.trackingId
+    });
+
+    // Notify Student
+    createNotification({
+      userId: updated.studentId,
+      recipientUid: updated.studentUid,
+      senderUid: currentUser?.uid || 'admin',
+      userRole: 'student',
+      title: 'Staff Assigned',
+      message: `Complaint ${updated.trackingId} has been assigned to ${staffObj.name} (${staffObj.department}).`,
+      complaintId: updated.id,
+      trackingId: updated.trackingId
+    });
+
+    showToast(`Complaint assigned to ${staffObj.name}`, 'success');
+    return updated;
   };
 
-  // Reopen Complaint
-  const reopenComplaint = (complaintId, studentRemarks = '', studentName = 'Student') => {
+  // Reopen Complaint (Student)
+  const reopenComplaint = async (complaintId, studentRemarks = '', studentName = 'Student') => {
     const now = new Date().toISOString();
-    let updated = null;
+    const target = complaints.find(c => c.id === complaintId);
+    if (!target) return null;
 
-    setComplaints(prev =>
-      prev.map(c => {
-        if (c.id === complaintId) {
-          const newHistory = [
-            ...c.history,
-            {
-              status: 'Reopened',
-              timestamp: now,
-              performer: `${studentName} (Student)`,
-              remarks: `Reopened by student: ${studentRemarks || 'Issue persists after initial resolution.'}`
-            }
-          ];
-
-          updated = {
-            ...c,
-            status: 'Reopened',
-            resolvedDate: null,
-            remarks: `Reopened: ${studentRemarks}`,
-            history: newHistory
-          };
-          return updated;
-        }
-        return c;
-      })
-    );
-
-    if (updated) {
-      // Notify Admin
-      createNotification({
-        userId: 'adm-01',
-        userRole: 'admin',
-        title: 'Complaint Reopened',
-        message: `Complaint ${updated.trackingId} was reopened by student with remark: "${studentRemarks}".`,
-        complaintId: updated.id,
-        trackingId: updated.trackingId
-      });
-
-      // Notify assigned staff if any
-      if (updated.assignedStaffId) {
-        createNotification({
-          userId: updated.assignedStaffId,
-          userRole: 'staff',
-          title: 'Complaint Reopened',
-          message: `Complaint ${updated.trackingId} has been reopened by student. Immediate review requested.`,
-          complaintId: updated.id,
-          trackingId: updated.trackingId
-        });
+    const newHistory = [
+      ...(target.history || []),
+      {
+        status: 'Reopened',
+        timestamp: now,
+        performer: `${studentName} (Student)`,
+        remarks: `Reopened by student: ${studentRemarks || 'Issue persists after initial resolution.'}`
       }
+    ];
 
-      showToast(`Complaint ${updated.trackingId} has been reopened.`, 'warning');
+    const updated = {
+      ...target,
+      status: 'Reopened',
+      resolvedDate: null,
+      remarks: `Reopened: ${studentRemarks}`,
+      history: newHistory
+    };
 
-      // Sync to Firestore
-      if (isFirebaseConfigured) {
-        updateComplaintInFirestore(complaintId, updated).catch(err => {
-          console.warn('Firestore [complaints] reopen sync notice:', err.message);
+    if (isFirebaseConfigured && !currentUser?.isDemoMode) {
+      try {
+        await updateComplaintInFirestore(complaintId, {
+          status: 'Reopened',
+          resolvedDate: null,
+          remarks: updated.remarks,
+          history: updated.history
         });
+      } catch (err) {
+        showToast(`Cloud Firestore reopen sync error: ${err.message}`, 'error');
+        throw err;
       }
     }
+
+    setComplaints(prev => prev.map(c => c.id === complaintId ? updated : c));
+
+    // Notify Admin
+    createNotification({
+      userId: 'adm-01',
+      recipientUid: 'admin',
+      senderUid: currentUser?.uid || 'student',
+      userRole: 'admin',
+      title: 'Complaint Reopened',
+      message: `Complaint ${updated.trackingId} was reopened by student with remark: "${studentRemarks}".`,
+      complaintId: updated.id,
+      trackingId: updated.trackingId
+    });
+
+    showToast(`Complaint ${updated.trackingId} has been reopened.`, 'warning');
+    return updated;
   };
 
-  // Escalate Complaint
-  const escalateComplaint = (complaintId, escalationReason = '', adminName = 'Administrator') => {
+  // Escalate Complaint (Admin)
+  const escalateComplaint = async (complaintId, escalationReason = '', adminName = 'Administrator') => {
     const now = new Date().toISOString();
-    let updated = null;
+    const target = complaints.find(c => c.id === complaintId);
+    if (!target) return null;
 
-    setComplaints(prev =>
-      prev.map(c => {
-        if (c.id === complaintId) {
-          const newHistory = [
-            ...c.history,
-            {
-              status: 'Escalated',
-              timestamp: now,
-              performer: `${adminName} (Admin Office)`,
-              remarks: `Escalated: ${escalationReason || 'Complaint overdue or requires high-level intervention.'}`
-            }
-          ];
+    const newHistory = [
+      ...(target.history || []),
+      {
+        status: 'Escalated',
+        timestamp: now,
+        performer: `${adminName} (Admin Office)`,
+        remarks: `Escalated: ${escalationReason || 'Complaint overdue or requires high-level intervention.'}`
+      }
+    ];
 
-          updated = {
-            ...c,
-            status: 'Escalated',
-            priority: 'Urgent',
-            remarks: `Escalated: ${escalationReason}`,
-            history: newHistory
-          };
-          return updated;
-        }
-        return c;
-      })
-    );
+    const updated = {
+      ...target,
+      status: 'Escalated',
+      priority: 'Urgent',
+      remarks: `Escalated: ${escalationReason}`,
+      history: newHistory
+    };
 
-    if (updated) {
-      createNotification({
-        userId: updated.studentId,
-        userRole: 'student',
-        title: 'Complaint Escalated',
-        message: `Your complaint ${updated.trackingId} has been escalated for high-priority management.`,
-        complaintId: updated.id,
-        trackingId: updated.trackingId
-      });
-
-      showToast(`Complaint ${updated.trackingId} escalated successfully`, 'error');
-
-      // Sync to Firestore
-      if (isFirebaseConfigured) {
-        updateComplaintInFirestore(complaintId, updated).catch(err => {
-          console.warn('Firestore [complaints] escalate sync notice:', err.message);
+    if (isFirebaseConfigured && !currentUser?.isDemoMode) {
+      try {
+        await updateComplaintInFirestore(complaintId, {
+          status: 'Escalated',
+          priority: 'Urgent',
+          remarks: updated.remarks,
+          history: updated.history
         });
+      } catch (err) {
+        showToast(`Cloud Firestore escalation error: ${err.message}`, 'error');
+        throw err;
       }
     }
+
+    setComplaints(prev => prev.map(c => c.id === complaintId ? updated : c));
+    showToast(`Complaint ${updated.trackingId} escalated successfully`, 'error');
+    return updated;
   };
 
-  // Notification methods
+  // Submit Feedback (Student on Resolved Complaint)
+  const submitFeedback = async (complaintId, rating, comment = '') => {
+    const target = complaints.find(c => c.id === complaintId);
+    if (!target) return null;
+
+    const feedbackPayload = {
+      rating: Math.min(5, Math.max(1, parseInt(rating, 10) || 5)),
+      comment: String(comment || '').trim(),
+      submittedAt: new Date().toISOString(),
+      submittedByUid: currentUser?.uid || currentUser?.id || 'anonymous'
+    };
+
+    if (isFirebaseConfigured && !currentUser?.isDemoMode) {
+      try {
+        await updateComplaintInFirestore(complaintId, {
+          feedback: feedbackPayload
+        });
+      } catch (err) {
+        showToast(`Feedback submission error: ${err.message}`, 'error');
+        throw err;
+      }
+    }
+
+    const updated = {
+      ...target,
+      feedback: feedbackPayload
+    };
+
+    setComplaints(prev => prev.map(c => c.id === complaintId ? updated : c));
+    showToast('Thank you! Your resolution feedback has been recorded.', 'success');
+    return updated;
+  };
+
+  // Notification management
   const markNotificationRead = (notifId) => {
     setNotifications(prev =>
       prev.map(n => n.id === notifId ? { ...n, isRead: true } : n)
     );
+    if (isFirebaseConfigured && !currentUser?.isDemoMode) {
+      markNotificationReadInFirestore(notifId);
+    }
   };
 
   const markAllNotificationsRead = (userId) => {
     setNotifications(prev =>
-      prev.map(n => (!userId || n.userId === userId) ? { ...n, isRead: true } : n)
+      prev.map(n => (!userId || n.userId === userId || n.recipientUid === userId) ? { ...n, isRead: true } : n)
     );
   };
 
@@ -505,7 +606,7 @@ export const ComplaintProvider = ({ children }) => {
     showToast(`Department "${newDept.name}" created`, 'success');
   };
 
-  // Reset to initial mock data
+  // Reset to initial default state
   const resetDemoData = () => {
     localStorage.removeItem(STORAGE_KEY_COMPLAINTS);
     localStorage.removeItem(STORAGE_KEY_CATEGORIES);
@@ -533,6 +634,8 @@ export const ComplaintProvider = ({ children }) => {
         departments,
         notifications,
         toasts,
+        firestoreLoading,
+        firestoreError,
         showToast,
         removeToast,
         submitComplaint,
@@ -540,6 +643,7 @@ export const ComplaintProvider = ({ children }) => {
         assignStaff,
         reopenComplaint,
         escalateComplaint,
+        submitFeedback,
         markNotificationRead,
         markAllNotificationsRead,
         addCategory,
