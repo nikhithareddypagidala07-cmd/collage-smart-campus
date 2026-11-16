@@ -22,7 +22,9 @@ export const firebaseConfig = {
 
 // Check whether actual configuration keys have been provided
 export const isFirebaseConfigured = Boolean(
-  firebaseConfig.apiKey && firebaseConfig.apiKey.trim() !== ""
+  firebaseConfig.apiKey &&
+  firebaseConfig.apiKey.trim() !== "" &&
+  !firebaseConfig.apiKey.toUpperCase().includes("YOUR_API_KEY")
 );
 
 // Initialize Firebase (singleton pattern)
